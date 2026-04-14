@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProFinder - Busca de Serviços</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-primaria: #298e94;
+            --cor-primaria-hover: #22767c;
+            --cor-texto-escuro: #2c3e50;
+            --cor-fundo: #f8fcfc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-fundo);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-profinder {
+            background-color: var(--cor-primaria);
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            height: 100px;
+            margin-left: -40px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .navbar-brand:hover img {
+            opacity: 0.85; 
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 15px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 40px 20px;
+        }
+
+        .titulo-resultados {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .subtitulo-resultados {
+            color: #6c757d;
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(41, 142, 148, 0.2);
+        }
+
+        .search-input {
+            border: none;
+            box-shadow: none !important;
+            font-size: 1.05rem;
+            padding: 10px 20px;
+            background-color: transparent;
+        }
+
+        .btn-search {
+            background-color: var(--cor-primaria);
+            color: white;
+            font-weight: 600;
+            padding: 8px 25px;
+            border-radius: 6px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-search:hover {
+            background-color: var(--cor-primaria-hover);
+            color: white;
+        }
+
+        .card-categoria {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid rgba(41, 142, 148, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none; 
+            cursor: pointer;
+        }
+
+        .card-categoria:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(41, 142, 148, 0.15);
+            border-color: var(--cor-primaria);
+        }
+
+        .foto-container {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background-color: #e9ecef;
+            position: relative;
+        }
+
+        .foto-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .card-categoria:hover .foto-container img {
+            transform: scale(1.08); 
+        }
+
+        .card-body-custom {
+            padding: 15px;
+            text-align: center;
+            background-color: white;
+            z-index: 2; 
+        }
+
+        .nome-categoria {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0;
+            transition: color 0.3s ease;
+        }
+
+        .card-categoria:hover .nome-categoria {
+            color: var(--cor-primaria-hover);
+        }
+
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                position: absolute;
+                top: 100%;
+                left: 15px;
+                right: 15px;
+                width: calc(100% - 30px);
+                background-color: rgba(33, 114, 121, 0.95);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 16px;
+                padding: 15px 20px 25px 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 1050;
+            }
+            .navbar-nav { gap: 5px; }
+            .nav-item { width: 100%; text-align: left; }
+            .nav-link {
+                margin-left: 0;
+                font-size: 1.05rem;
+                padding: 12px 15px !important;
+                border-radius: 8px;
+            }
+            .nav-link:hover, .nav-link:active {
+                background-color: rgba(255, 255, 255, 0.1);
+                padding-left: 20px !important;
+            }
+            .nav-link::after { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
+            .search-box {
+                flex-direction: column;
+                background: transparent;
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                gap: 10px;
+            }
+            .search-input {
+                border-radius: 8px !important;
+                width: 100% !important;
+                font-size: 0.95rem;
+                padding: 12px 15px;
+                background-color: white;
+                border: 1px solid rgba(41, 142, 148, 0.2);
+            }
+            .btn-search {
+                border-radius: 8px !important;
+                width: 100%;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}" title="Sair / Voltar ao Início">
+                <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder - Sair">
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/></svg>
+            </button>
+            
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('busca_servicos') }}">Buscar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container main-container">
+        
+        <div class="text-center">
+            <h1 class="titulo-resultados">O que você precisa hoje?</h1>
+            <p class="subtitulo-resultados">Selecione uma categoria abaixo para encontrar os melhores profissionais.</p>
+        </div>
+
+        <div class="search-container">
+            <div class="input-group search-box">
+                <input type="text" class="form-control search-input" id="inputPesquisaCategoria" placeholder="Buscar categoria (ex: Pintor, Encanador...)" onkeyup="filtrarCards()">
+                <button class="btn btn-search" type="button">Procurar</button>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="gridCategorias">
+            
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Pedreiro') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Pedreiro">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Pedreiro</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Pintor') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Pintor">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Pintor</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Eletricista') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Eletricista">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Eletricista</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Encanador') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Encanador">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Encanador</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Diarista') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Diarista">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Diarista</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Montador de Móveis') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Montador de Móveis">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Montador de Móveis</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Jardineiro') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1592424001807-55099252c809?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Jardineiro">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Jardineiro</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Carpinteiro') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Carpinteiro">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Carpinteiro</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Mecânico') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Mecânico">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Mecânico</h3>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col card-item">
+                <a href="{{ url_for('busca_profissionais', categoria='Técnico de Informática') }}" class="card-categoria">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Técnico de Informática">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-categoria">Técnico de Informática</h3>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+
+        <div id="mensagemSemResultados" class="text-center mt-5" style="display: none;">
+            <i class="bi bi-search" style="font-size: 3rem; color: #ccc;"></i>
+            <h4 class="mt-3" style="color: var(--cor-texto-escuro);">Nenhuma categoria encontrada</h4>
+            <p class="text-muted">Tente buscar por outro termo.</p>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function filtrarCards() {
+            let input = document.getElementById('inputPesquisaCategoria').value.toLowerCase();
+            let cards = document.getElementsByClassName('card-item');
+            let encontrouAlgum = false;
+
+            for (let i = 0; i < cards.length; i++) {
+                let tituloCard = cards[i].querySelector('.nome-categoria').innerText.toLowerCase();
+                
+                if (tituloCard.includes(input)) {
+                    cards[i].style.display = "";
+                    encontrouAlgum = true;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+
+            let msgErro = document.getElementById('mensagemSemResultados');
+            if (encontrouAlgum) {
+                msgErro.style.display = "none";
+            } else {
+                msgErro.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

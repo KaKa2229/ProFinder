@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProFinder - Ajuda com Login e Cadastro</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-primaria: #298e94;
+            --cor-primaria-hover: #22767c;
+            --cor-texto-escuro: #2c3e50;
+            --cor-texto-mutado: #6c757d;
+            --cor-fundo: #f8fcfc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-fundo);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-profinder {
+            background-color: var(--cor-primaria);
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            height: 100px;
+            margin-left: -40px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .navbar-brand:hover img {
+            opacity: 0.85; 
+        }
+
+        .btn-voltar-nav {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-voltar-nav:hover {
+            color: white;
+            opacity: 0.8;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 40px 20px 80px 20px;
+            max-width: 900px; 
+        }
+
+        .cabecalho-ajuda {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .titulo-ajuda {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo-ajuda {
+            color: var(--cor-texto-mutado);
+            font-size: 1.1rem;
+        }
+
+        .card-ajuda {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid rgba(41, 142, 148, 0.15);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-ajuda:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(41, 142, 148, 0.1);
+        }
+
+        .icone-ajuda {
+            background-color: #f0f8f8;
+            color: var(--cor-primaria);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0; 
+        }
+
+        .conteudo-ajuda h3 {
+            color: var(--cor-texto-escuro);
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .conteudo-ajuda p {
+            color: var(--cor-texto-mutado);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .alerta-seguranca {
+            background-color: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .alerta-seguranca i {
+            color: #ffc107;
+            font-size: 1.5rem;
+        }
+
+        .alerta-seguranca p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #665213;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
+            .card-ajuda {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .icone-ajuda {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-profinder sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="{{ url_for('index') }}" title="Voltar ao Início">
+                <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder">
+            </a>
+            
+            <a href="javascript:history.back()" class="btn-voltar-nav">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </nav>
+
+    <main class="container main-container">
+        
+        <div class="cabecalho-ajuda mt-3">
+            <h1 class="titulo-ajuda">Problemas para acessar?</h1>
+            <p class="subtitulo-ajuda">Confira as soluções para os problemas mais comuns no Login e Cadastro.</p>
+        </div>
+
+        <div class="card-ajuda">
+            <div class="icone-ajuda">
+                <i class="bi bi-key"></i>
+            </div>
+            <div class="conteudo-ajuda">
+                <h3>Esqueci minha senha</h3>
+                <p>Se você não lembra a sua senha, não se preocupe. Na tela de Login, procure pela opção "Esqueci minha senha". Nós enviaremos um link de recuperação diretamente para o e-mail que você cadastrou. Certifique-se de verificar sua caixa de Spam ou Lixo Eletrônico.</p>
+            </div>
+        </div>
+
+        <div class="card-ajuda">
+            <div class="icone-ajuda">
+                <i class="bi bi-people"></i>
+            </div>
+            <div class="conteudo-ajuda">
+                <h3>Qual cadastro devo escolher?</h3>
+                <p><strong>Sou Cliente:</strong> Escolha esta opção se você deseja apenas procurar serviços, visualizar perfis e avaliar os profissionais que contratar.<br>
+                <strong>Sou Profissional:</strong> Escolha esta opção se você quer anunciar os seus serviços, criar um perfil com a sua foto e aparecer nas buscas dos clientes. <em>Atenção: A conta de profissional também permite buscar outros serviços.</em></p>
+            </div>
+        </div>
+
+        <div class="card-ajuda">
+            <div class="icone-ajuda">
+                <i class="bi bi-person-vcard"></i>
+            </div>
+            <div class="conteudo-ajuda">
+                <h3>Por que meu CPF não é aceito?</h3>
+                <p>Certifique-se de digitar o seu CPF <strong>apenas com números</strong>, sem pontos (.) ou traços (-). Além disso, cada CPF só pode ser cadastrado uma única vez em nossa plataforma. Se o sistema informar que o CPF já existe, tente fazer o Login em vez de criar uma conta nova.</p>
+            </div>
+        </div>
+
+        <div class="card-ajuda">
+            <div class="icone-ajuda">
+                <i class="bi bi-envelope-at"></i>
+            </div>
+            <div class="conteudo-ajuda">
+                <h3>O sistema diz que meu e-mail não existe</h3>
+                <p>Isso geralmente ocorre por um erro de digitação durante o cadastro (como escrever @gnail.com em vez de @gmail.com) ou se você está tentando acessar uma conta que ainda não foi criada. Tente clicar em "Cadastre-se" e criar a conta novamente.</p>
+            </div>
+        </div>
+
+        <div class="alerta-seguranca">
+            <i class="bi bi-shield-lock-fill"></i>
+            <p><strong>Privacidade Garantida:</strong> O seu CPF e o seu E-mail são armazenados de forma segura e criptografada em nossa base de dados. O CPF nunca será exibido publicamente para outros usuários da plataforma. Ele é exigido estritamente para manter a segurança e a confiabilidade de todos no ProFinder.</p>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

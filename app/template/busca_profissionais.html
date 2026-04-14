@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProFinder - Profissionais Encontrados</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-primaria: #298e94;
+            --cor-primaria-hover: #22767c;
+            --cor-texto-escuro: #2c3e50;
+            --cor-fundo: #f8fcfc; 
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-fundo);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-profinder {
+            background-color: var(--cor-primaria);
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            height: 100px;
+            margin-left: -40px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .navbar-brand:hover img {
+            opacity: 0.85;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 15px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 40px 20px;
+        }
+
+        .cabecalho-busca {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .titulo-resultados {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 2.2rem;
+        }
+
+        .subtitulo-resultados {
+            color: #6c757d;
+            font-size: 1.05rem;
+            margin-bottom: 0;
+        }
+
+        .btn-voltar {
+            color: var(--cor-primaria);
+            border: 2px solid var(--cor-primaria);
+            background: transparent;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-voltar:hover {
+            background-color: var(--cor-primaria);
+            color: white;
+        }
+
+
+        .filtros-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(41, 142, 148, 0.1);
+        }
+
+        .filtro-label {
+            font-weight: 600;
+            color: var(--cor-texto-escuro);
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-select-custom {
+            padding: 10px 15px;
+            border: 1px solid rgba(41, 142, 148, 0.3);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--cor-texto-escuro);
+            outline: none;
+            min-width: 250px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-select-custom:focus {
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 0.2rem rgba(41, 142, 148, 0.25);
+        }
+
+        .card-profissional {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid rgba(41, 142, 148, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-profissional:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(41, 142, 148, 0.15);
+            border-color: var(--cor-primaria);
+        }
+
+        .foto-container {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            background-color: #e9ecef; 
+            border-bottom: 3px solid var(--cor-primaria);
+        }
+
+        .foto-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            transition: transform 0.4s ease;
+        }
+
+        .card-profissional:hover .foto-container img {
+            transform: scale(1.05);
+        }
+
+        .card-body-custom {
+            padding: 25px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .nome-profissional {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 1.35rem;
+            margin-bottom: 5px;
+        }
+
+        .localizacao-profissional {
+            color: #6c757d;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .estrelas {
+            color: #ffd700; 
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        .estrela-vazia {
+            color: #e4e5e9; 
+        }
+
+        .btn-perfil {
+            background-color: var(--cor-primaria);
+            color: white;
+            font-weight: 600;
+            padding: 10px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: auto; 
+            transition: background-color 0.3s;
+            width: 100%; 
+        }
+
+        .btn-perfil:hover {
+            background-color: var(--cor-primaria-hover);
+            color: white;
+        }
+        
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                position: absolute;
+                top: 100%;
+                left: 15px;
+                right: 15px;
+                width: calc(100% - 30px);
+                background-color: rgba(33, 114, 121, 0.95);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 16px;
+                padding: 15px 20px 25px 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 1050;
+            }
+            .navbar-nav { gap: 5px; }
+            .nav-item { width: 100%; text-align: left; }
+            .nav-link {
+                margin-left: 0;
+                font-size: 1.05rem;
+                padding: 12px 15px !important;
+                border-radius: 8px;
+            }
+            .nav-link:hover, .nav-link:active {
+                background-color: rgba(255, 255, 255, 0.1);
+                padding-left: 20px !important;
+            }
+            .nav-link::after { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
+            .filtros-container {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            .form-select-custom {
+                width: 100%;
+                min-width: auto;
+            }
+            .cabecalho-busca {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}" title="Sair / Voltar ao Início">
+                <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder">
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/></svg>
+            </button>
+            
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('busca_servicos') }}">Buscar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container main-container">
+        
+        <div class="cabecalho-busca">
+            <div>
+                <!-- futuramente título dinâmico -->
+                <h1 class="titulo-resultados">Pedreiros</h1>
+                <p class="subtitulo-resultados">Profissionais encontrados para esta categoria.</p>
+            </div>
+            <a href="{{ url_for('busca_servicos') }}" class="btn-voltar">
+                <i class="bi bi-arrow-left"></i> Voltar às Categorias
+            </a>
+        </div>
+
+        <div class="filtros-container">
+            <label class="filtro-label">
+                <i class="bi bi-geo-alt" style="font-size: 1.2rem;"></i> Selecione sua região:
+            </label>
+            <select class="form-select-custom" id="filtroRegiao">
+                <option value="todas" selected>Toda o Vale de Itajaí </option>
+                <option value="centro_itajai">Centro</option>
+                <option value="fazenda">Fazenda</option>
+                <option value="cabecudas">Cabeçudas</option>
+                <option value="cordeiros">Cordeiros</option>
+                <option value="vila_operaria">Vila Operária</option>
+                <option value="ressacada">Ressacada</option>
+                <option value="dom_bosco">Dom Bosco</option>
+            </select>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            
+            <!-- Cards dos profissionais, futuramente dinâmico  -->
+            <div class="col">
+                <div class="card-profissional">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Foto de Jorge Cabral">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-profissional">Jorge Cabral</h3>
+                        <p class="localizacao-profissional"><i class="bi bi-geo-fill"></i> Bairro Alto</p>
+                        
+                        <div class="estrelas">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill estrela-vazia"></i>
+                        </div>
+
+                        <a href="#" class="btn-perfil">Ver Perfil</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card-profissional">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1534398079543-7ae6d016b86c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Foto de Marcos Silva">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-profissional">Marcos Silva</h3>
+                        <p class="localizacao-profissional"><i class="bi bi-geo-fill"></i> Centro</p>
+                        
+                        <div class="estrelas">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+
+                        <a href="#" class="btn-perfil">Ver Perfil</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="card-profissional">
+                    <div class="foto-container">
+                        <img src="https://images.unsplash.com/photo-1622313620959-1586526ddfae?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Foto de Roberto Nunes">
+                    </div>
+                    <div class="card-body-custom">
+                        <h3 class="nome-profissional">Roberto Nunes</h3>
+                        <p class="localizacao-profissional"><i class="bi bi-geo-fill"></i> Santa Teresinha</p>
+                        
+                        <div class="estrelas">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill estrela-vazia"></i>
+                            <i class="bi bi-star-fill estrela-vazia"></i>
+                        </div>
+
+                        <a href="#" class="btn-perfil">Ver Perfil</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

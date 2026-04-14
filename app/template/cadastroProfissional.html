@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProFinder - Cadastro Profissional</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-primaria: #298e94;
+            --cor-primaria-hover: #22767c;
+            --cor-texto-escuro: #2c3e50;
+            --cor-placeholder: #a0aab5;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-primaria);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-cadastro {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo-header img {
+            height: 110px;
+            border-radius: 4px;
+        }
+
+        .btn-ajuda {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 1.05rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 8px 25px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-ajuda:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-cadastro {
+            background-color: #fcfbfc;
+            border-radius: 12px;
+            padding: 50px 60px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+            transform: translateY(-30px);
+        }
+
+        .titulo-card {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 5px;
+            margin-top: 0;
+        }
+
+        .subtitulo-card {
+            color: var(--cor-primaria);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .foto-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 35px;
+            cursor: pointer;
+        }
+
+        .foto-circle {
+            width: 90px;
+            height: 90px;
+            border: 2px dashed var(--cor-primaria);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--cor-primaria);
+            font-size: 30px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .foto-upload-container:hover .foto-circle {
+            background-color: rgba(41, 142, 148, 0.08);
+            transform: scale(1.05);
+        }
+
+        .foto-label {
+            color: var(--cor-primaria);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .form-label-custom {
+            color: var(--cor-primaria);
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            display: block;
+        }
+
+        .form-control-custom, .form-select-custom {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--cor-primaria);
+            border-radius: 0px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            color: var(--cor-texto-escuro);
+            outline: none;
+            transition: all 0.3s;
+            background-color: transparent;
+        }
+
+        .form-control-custom::placeholder {
+            color: var(--cor-placeholder);
+        }
+
+        .form-control-custom:focus, .form-select-custom:focus {
+            border-color: var(--cor-primaria-hover);
+            box-shadow: 0 0 0 0.2rem rgba(41, 142, 148, 0.25);
+        }
+
+        .form-select-custom:invalid {
+            color: var(--cor-placeholder);
+        }
+        .form-select-custom option {
+            color: var(--cor-texto-escuro);
+        }
+
+        .row-espaco {
+            margin-bottom: 20px;
+        }
+
+        .btn-submit {
+            background-color: var(--cor-primaria);
+            color: white;
+            font-weight: 600;
+            padding: 12px 60px; 
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 30px; 
+            margin-top: 25px;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--cor-primaria-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 142, 148, 0.3);
+        }
+
+        .links-inferiores {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #888; 
+            margin-top: 15px;
+        }
+
+        .links-inferiores a {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .links-inferiores a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header-cadastro {
+                padding: 15px 20px;
+            }
+            .logo-header img {
+                height: 80px;
+            }
+            .card-cadastro {
+                padding: 35px 25px;
+                border-radius: 8px;
+                transform: translateY(0); 
+            }
+            .titulo-card {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-cadastro">
+        <a href="{{ url_for('index') }}" class="logo-header">
+            <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder">
+        </a>
+        <a href="{{ url_for('ajuda') }}" class="btn-ajuda">
+            <i class="bi bi-info-circle"></i>
+            <span>Ajuda</span>
+        </a>
+    </header>
+
+    <main class="main-container">
+        <div class="card-cadastro">
+            
+            <h1 class="titulo-card">Perfil do Profissional</h1>
+            <p class="subtitulo-card">Crie a sua vitrine e comece a receber avaliações dos seus clientes</p>
+
+            <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
+                <div class="foto-circle">
+                    <i class="bi bi-camera"></i>
+                </div>
+                <span class="foto-label">Adicionar Foto de Perfil</span>
+                <input type="file" id="inputFoto" style="display: none;" accept="image/*">
+            </div>
+
+            <form action="{{ url_for('cadastro_profissional') }}" method="POST">
+                
+                <div class="row row-espaco">
+                    <div class="col-12">
+                        <label class="form-label-custom">Digite seu Nome Completo:</label>
+                        <input type="text" class="form-control-custom" name="nome" placeholder="Como deseja ser chamado pelos clientes" required>
+                    </div>
+                </div>
+
+                <div class="row row-espaco">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="form-label-custom">Digite seu CPF:</label>
+                        <input type="text" class="form-control-custom" name="cpf" placeholder="000.000.000-00" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-custom">Digite seu E-mail:</label>
+                        <input type="email" class="form-control-custom" name="email" placeholder="exemplo@email.com" required>
+                    </div>
+                </div>
+
+                <div class="row row-espaco">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="form-label-custom">Digite sua senha:</label>
+                        <input type="password" class="form-control-custom" name="senha" placeholder="Mínimo de 6 caracteres" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-custom">Confirme sua senha:</label>
+                        <input type="password" class="form-control-custom" name="confirma_senha" placeholder="Repita a senha" required>
+                    </div>
+                </div>
+
+                <div class="row row-espaco">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="form-label-custom">Qual sua profissão / serviço</label>
+                        <input type="text" class="form-control-custom" name="profissao" placeholder="Ex: Diarista, Pedreiro, Pintor ..." required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-custom">Região de Atuação:</label>
+                        <select class="form-select-custom" name="regiao" required>
+                            <option value="" disabled selected>Selecione sua região</option>
+                            <option value="centro">Piracicaba - Centro</option>
+                            <option value="bairro_alto">Piracicaba - Bairro Alto</option>
+                            <option value="vila_rezende">Piracicaba - Vila Rezende</option>
+                            <option value="santa_teresinha">Piracicaba - Santa Teresinha</option>
+                            <option value="toda_cidade">Toda a cidade de Piracicaba</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row row-espaco">
+                    <div class="col-12">
+                        <label class="form-label-custom">Descrição profissional:</label>
+                        <textarea class="form-control-custom" name="descricao" rows="4" placeholder="Descreva os seus serviços, anos de experiência e o que o diferencia ..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn-submit">Criar Perfil</button>
+                    
+                    <div class="links-inferiores">
+                        Já possuo uma conta. <a href="{{ url_for('login') }}">Fazer Login</a>
+                    </div>
+                </div>
+                
+            </form>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
