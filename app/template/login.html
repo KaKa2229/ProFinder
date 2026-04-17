@@ -170,6 +170,15 @@
             text-decoration: underline;
         }
 
+        .erro-alerta {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         @media (max-width: 576px) {
             body {
                 height: auto;
@@ -217,6 +226,16 @@
                 <input type="email" class="form-control-custom" name="email" placeholder="Digite seu E-mail:" required autocomplete="email">
                 
                 <input type="password" class="form-control-custom" name="senha" placeholder="Digite sua senha:" required>
+                
+                {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="erro-alerta">
+                                <i class="bi bi-exclamation-circle me-1"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 
                 <a href="#" class="esqueceu-senha">Esqueceu a senha?</a>
 

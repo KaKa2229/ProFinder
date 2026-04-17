@@ -12,7 +12,7 @@
     <style>
         :root {
             --cor-primaria: #298e94;
-            --cor-primaria-hover: #22767c;
+            --cor-primaria-hover: #217279;
             --cor-texto-escuro: #2c3e50;
             --cor-placeholder: #a0aab5;
         }
@@ -66,7 +66,7 @@
         }
 
         .card-cadastro {
-            background-color: #fcfbfc;
+            background-color: white;
             border-radius: 12px;
             padding: 50px 60px;
             width: 100%;
@@ -159,12 +159,22 @@
         .form-select-custom:invalid {
             color: var(--cor-placeholder);
         }
+        
         .form-select-custom option {
             color: var(--cor-texto-escuro);
         }
 
         .row-espaco {
             margin-bottom: 20px;
+        }
+
+        .erro-alerta {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
         }
 
         .btn-submit {
@@ -175,7 +185,7 @@
             font-size: 1.1rem;
             border: none;
             border-radius: 30px; 
-            margin-top: 25px;
+            margin-top: 15px;
             transition: all 0.3s;
         }
 
@@ -251,47 +261,62 @@
                 
                 <div class="row row-espaco">
                     <div class="col-12">
-                        <label class="form-label-custom">Digite seu Nome Completo:</label>
-                        <input type="text" class="form-control-custom" name="nome" placeholder="Como deseja ser chamado pelos clientes" required>
+                        <label class="form-label-custom">Digite o seu Nome Completo:</label>
+                        <input type="text" class="form-control-custom" name="nome" placeholder="Como deseja ser chamado pelos clientes" value="{{ nome or '' }}" required>
                     </div>
                 </div>
 
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Digite seu CPF:</label>
-                        <input type="text" class="form-control-custom" name="cpf" placeholder="000.000.000-00" required>
+                        <label class="form-label-custom">Digite o seu CPF:</label>
+                        <input type="text" class="form-control-custom" name="cpf" placeholder="000.000.000-00" oninput="mascaraCPF(this)" minlength="14" maxlength="14" value="{{ cpf or '' }}" required autocomplete="off">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-custom">Digite seu E-mail:</label>
-                        <input type="email" class="form-control-custom" name="email" placeholder="exemplo@email.com" required>
+                        <label class="form-label-custom">Digite o seu E-mail:</label>
+                        <input type="email" class="form-control-custom" name="email" placeholder="exemplo@email.com" value="{{ email or '' }}" required autocomplete="email">
                     </div>
                 </div>
 
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Digite sua senha:</label>
+                        <label class="form-label-custom">Digite a sua senha:</label>
                         <input type="password" class="form-control-custom" name="senha" placeholder="Mínimo de 6 caracteres" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-custom">Confirme sua senha:</label>
+                        <label class="form-label-custom">Confirme a sua senha:</label>
                         <input type="password" class="form-control-custom" name="confirma_senha" placeholder="Repita a senha" required>
                     </div>
                 </div>
 
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Qual sua profissão / serviço</label>
-                        <input type="text" class="form-control-custom" name="profissao" placeholder="Ex: Diarista, Pedreiro, Pintor ..." required>
+                        <label class="form-label-custom">Qual a sua profissão / serviço?</label>
+                        <select class="form-select-custom" name="profissao" required>
+                            <option value="" disabled {% if not profissao %}selected{% endif %}>Selecione a sua profissão</option>
+                            <option value="Carpinteiro" {% if profissao == 'Carpinteiro' %}selected{% endif %}>Carpinteiro</option>
+                            <option value="Diarista" {% if profissao == 'Diarista' %}selected{% endif %}>Diarista</option>
+                            <option value="Eletricista" {% if profissao == 'Eletricista' %}selected{% endif %}>Eletricista</option>
+                            <option value="Encanador" {% if profissao == 'Encanador' %}selected{% endif %}>Encanador</option>
+                            <option value="Jardineiro" {% if profissao == 'Jardineiro' %}selected{% endif %}>Jardineiro</option>
+                            <option value="Mecânico" {% if profissao == 'Mecânico' %}selected{% endif %}>Mecânico</option>
+                            <option value="Montador de Móveis" {% if profissao == 'Montador de Móveis' %}selected{% endif %}>Montador de Móveis</option>
+                            <option value="Pedreiro" {% if profissao == 'Pedreiro' %}selected{% endif %}>Pedreiro</option>
+                            <option value="Pintor" {% if profissao == 'Pintor' %}selected{% endif %}>Pintor</option>
+                            <option value="Técnico de Informática" {% if profissao == 'Técnico de Informática' %}selected{% endif %}>Técnico de Informática</option>
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">Região de Atuação:</label>
                         <select class="form-select-custom" name="regiao" required>
-                            <option value="" disabled selected>Selecione sua região</option>
-                            <option value="centro">Piracicaba - Centro</option>
-                            <option value="bairro_alto">Piracicaba - Bairro Alto</option>
-                            <option value="vila_rezende">Piracicaba - Vila Rezende</option>
-                            <option value="santa_teresinha">Piracicaba - Santa Teresinha</option>
-                            <option value="toda_cidade">Toda a cidade de Piracicaba</option>
+                            <option value="" disabled {% if not regiao %}selected{% endif %}>Selecione a sua região</option>
+                            <option value="centro_itajai" {% if regiao == 'centro_itajai' %}selected{% endif %}>Centro</option>
+                            <option value="fazenda" {% if regiao == 'fazenda' %}selected{% endif %}>Fazenda</option>
+                            <option value="cabecudas" {% if regiao == 'cabecudas' %}selected{% endif %}>Cabeçudas</option>
+                            <option value="cordeiros" {% if regiao == 'cordeiros' %}selected{% endif %}>Cordeiros</option>
+                            <option value="vila_operaria" {% if regiao == 'vila_operaria' %}selected{% endif %}>Vila Operária</option>
+                            <option value="ressacada" {% if regiao == 'ressacada' %}selected{% endif %}>Ressacada</option>
+                            <option value="dom_bosco" {% if regiao == 'dom_bosco' %}selected{% endif %}>Dom Bosco</option>
+                            <option value="todas" {% if regiao == 'todas' %}selected{% endif %}>Todo o Vale do Itajaí</option>
                         </select>
                     </div>
                 </div>
@@ -299,9 +324,19 @@
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Descrição profissional:</label>
-                        <textarea class="form-control-custom" name="descricao" rows="4" placeholder="Descreva os seus serviços, anos de experiência e o que o diferencia ..." required></textarea>
+                        <textarea class="form-control-custom" name="descricao" rows="4" placeholder="Descreva os seus serviços, anos de experiência e o que o diferencia ..." required>{{ descricao or '' }}</textarea>
                     </div>
                 </div>
+
+                {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="erro-alerta">
+                                <i class="bi bi-exclamation-circle me-1"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
                 <div class="text-center">
                     <button type="submit" class="btn-submit">Criar Perfil</button>
@@ -317,5 +352,21 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function mascaraCPF(campo) {
+            let v = campo.value.replace(/\D/g, ''); 
+            
+            if (v.length > 11) {
+                v = v.substring(0, 11);
+            }
+            
+            v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
+            v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
+            v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
+            
+            campo.value = v;
+        }
+    </script>
 </body>
 </html>
