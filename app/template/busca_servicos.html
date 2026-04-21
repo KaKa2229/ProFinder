@@ -70,6 +70,19 @@
             width: 100%;
         }
 
+        .btn-login-nav {
+            transition: all 0.3s ease !important;
+        }
+
+        .btn-login-nav::after {
+            display: none !important;
+        }
+
+        .btn-login-nav:hover {
+            background-color: white !important;
+            color: var(--cor-primaria) !important;
+        }
+
         .main-container {
             flex: 1;
             padding: 40px 20px;
@@ -209,6 +222,25 @@
                 padding-left: 20px !important;
             }
             .nav-link::after { display: none; }
+            .btn-login-nav {
+                background-color: white !important;
+                color: var(--cor-primaria) !important;
+                border: none !important;
+                padding: 15px !important;
+                margin-top: 15px;
+                font-weight: 700;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                border-radius: 30px !important;
+                display: block;
+                width: 100%;
+                text-align: center;
+                transition: transform 0.2s ease, background-color 0.2s ease !important;
+            }
+            .btn-login-nav:hover, .btn-login-nav:active {
+                background-color: #f0f4f4 !important;
+                transform: scale(0.98);
+                padding-left: 15px !important; 
+            }
         }
 
         @media (max-width: 768px) {
@@ -260,6 +292,23 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a>
                     </li>
+                    
+                    <!-- FLASK-LOGIN (IF/ELSE DINÂMICO) -->
+                    {% if current_user.is_authenticated %}
+                        <!-- Se estiver logado, exibe uma mensagem de boas-vindas com o primeiro nome -->
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
+                            <span class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                        </li>
+                        <!-- Botão de Sair -->
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
+                        </li>
+                    {% else %}
+                        <!-- Se NÃO estiver logado, exibe o botão original -->
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -279,6 +328,7 @@
             </div>
         </div>
 
+        <!-- GRID DE CATEGORIAS -->
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="gridCategorias">
             
             <div class="col card-item">

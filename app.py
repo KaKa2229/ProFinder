@@ -80,6 +80,11 @@ def busca_profissionais(categoria):
     profissionais_encontrados = Profissional.query.filter_by(profissao=categoria).all()
     return render_template('busca_profissionais.html', profissionais=profissionais_encontrados, categoria=categoria)
 
+@app.route('/perfil/<int:id>')
+def perfil(id):
+    profissional_selecionado = Profissional.query.get_or_404(id)
+    return render_template('perfil.html', profissional=profissional_selecionado)
+
 # Rotas de sessões
 
 @app.route('/cadastro', methods=['GET', 'POST'])

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProFinder - Perfil do Profissional</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-primaria: #298e94;
+            --cor-primaria-hover: #22767c;
+            --cor-texto-escuro: #2c3e50;
+            --cor-texto-mutado: #6c757d;
+            --cor-fundo: #f8fcfc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-fundo);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Barra de Navegação --- */
+        .navbar-profinder {
+            background-color: var(--cor-primaria);
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            height: 100px;
+            margin-left: -40px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 15px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .btn-login-nav {
+            transition: all 0.3s ease !important;
+        }
+        .btn-login-nav::after {
+            display: none !important;
+        }
+        .btn-login-nav:hover {
+            background-color: white !important;
+            color: var(--cor-primaria) !important;
+        }
+
+        /* --- Estrutura Principal --- */
+        .main-container {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 1000px;
+        }
+
+        .cabecalho-perfil {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .titulo-secao {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .btn-voltar {
+            color: var(--cor-primaria);
+            background: transparent;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-voltar:hover {
+            color: var(--cor-primaria-hover);
+            transform: translateX(-5px);
+        }
+
+        /* --- Cartão do Perfil --- */
+        .card-perfil {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(41, 142, 148, 0.1);
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        .foto-perfil-container {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--cor-primaria);
+            margin: 0 auto;
+            box-shadow: 0 8px 20px rgba(41, 142, 148, 0.2);
+        }
+
+        .foto-perfil-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nome-profissional {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        .info-basica {
+            color: var(--cor-texto-mutado);
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .titulo-descricao {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .texto-descricao {
+            color: var(--cor-texto-escuro);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            background-color: #fcfdfe;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--cor-primaria);
+        }
+
+        .bloco-avaliacoes {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .estrelas {
+            color: #ffd700;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+        }
+
+        .estrela-vazia {
+            color: #e4e5e9;
+        }
+
+        .numero-avaliacoes {
+            color: var(--cor-texto-mutado);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* --- Botões de Ação --- */
+        .btn-mensagem {
+            background-color: var(--cor-primaria);
+            color: white;
+            font-weight: 600;
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 5px 15px rgba(41, 142, 148, 0.3);
+        }
+
+        .btn-mensagem:hover {
+            background-color: var(--cor-primaria-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(41, 142, 148, 0.4);
+        }
+
+        .btn-avaliacoes {
+            background-color: transparent;
+            color: var(--cor-texto-mutado);
+            border: 1px solid #dee2e6;
+            font-weight: 600;
+            padding: 10px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-avaliacoes:hover {
+            background-color: #f8f9fa;
+            color: var(--cor-texto-escuro);
+        }
+
+        /* --- Responsividade --- */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                position: absolute;
+                top: 100%;
+                left: 15px;
+                right: 15px;
+                width: calc(100% - 30px);
+                background-color: rgba(33, 114, 121, 0.95);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 16px;
+                padding: 15px 20px 25px 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 1050;
+            }
+            .navbar-nav { gap: 5px; }
+            .nav-item { width: 100%; text-align: left; }
+            .nav-link {
+                margin-left: 0;
+                font-size: 1.05rem;
+                padding: 12px 15px !important;
+                border-radius: 8px;
+            }
+            .nav-link:hover, .nav-link:active {
+                background-color: rgba(255, 255, 255, 0.1);
+                padding-left: 20px !important;
+            }
+            .nav-link::after { display: none; }
+            .btn-login-nav {
+                background-color: white !important;
+                color: var(--cor-primaria) !important;
+                border: none !important;
+                padding: 15px !important;
+                margin-top: 15px;
+                font-weight: 700;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                border-radius: 30px !important;
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+            .card-perfil {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
+            .foto-perfil-container {
+                width: 160px;
+                height: 160px;
+                margin-bottom: 20px;
+            }
+            .nome-profissional {
+                font-size: 1.8rem;
+                text-align: center;
+            }
+            .info-basica {
+                justify-content: center;
+                text-align: center;
+            }
+            .bloco-avaliacoes {
+                justify-content: center;
+            }
+            .botoes-acao {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .btn-mensagem, .btn-avaliacoes {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de Navegação -->
+    <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}" title="Sair / Voltar ao Início">
+                <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder">
+            </a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/></svg>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('busca_servicos') }}">Buscar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a></li>
+                    
+                    <!-- MÁGICA DO FLASK-LOGIN -->
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
+                            <span class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container main-container">
+        
+        <div class="cabecalho-perfil">
+            <h2 class="titulo-secao"><i class="bi bi-person-badge me-2"></i> Perfil do Profissional</h2>
+            <a href="javascript:history.back()" class="btn-voltar">
+                <i class="bi bi-arrow-left"></i> Voltar à lista
+            </a>
+        </div>
+
+        <div class="card-perfil">
+            <div class="row">
+                
+                <!-- Coluna Esquerda: Foto -->
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    <div class="foto-perfil-container">
+                        <img src="{{ profissional.foto }}" alt="Foto de {{ profissional.nome }}">
+                    </div>
+                </div>
+                
+                <!-- Coluna Direita: Informações -->
+                <div class="col-md-8">
+                    <h1 class="nome-profissional">{{ profissional.nome }}</h1>
+                    
+                    <div class="info-basica">
+                        <span>{{ profissional.profissao }}</span>
+                        <i class="bi bi-dot text-muted"></i>
+                        <span><i class="bi bi-geo-alt-fill text-danger"></i> {{ profissional.bairro.replace('_', ' ').title() }}</span>
+                    </div>
+
+                    <h3 class="titulo-descricao">Descrição</h3>
+                    <p class="texto-descricao">
+                        <!-- O "| default" garante que se a base de dados não tiver descrição, um texto padrão é exibido -->
+                        {{ profissional.descricao | default("Profissional qualificado e altamente recomendado pela comunidade ProFinder. Especialista na sua área de atuação, sempre com foco em entregar o melhor resultado para os clientes.", true) }}
+                    </p>
+
+                    <div class="bloco-avaliacoes">
+                        <div class="estrelas">
+                            {% for i in range(5) %}
+                                {% if i < profissional.avaliacao|int %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-star-fill estrela-vazia"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="numero-avaliacoes">
+                            <!-- Número aleatório apenas para visualização do protótipo -->
+                            {{ (profissional.avaliacao * 24)|int }} avaliações
+                        </span>
+                    </div>
+
+                    <div class="botoes-acao mt-4">
+                        <a href="#" class="btn-mensagem me-md-3 mb-3 mb-md-0" onclick="alert('Funcionalidade de Chat irá ser implementada na próxima fase do projeto, assim como o portifólio do profissional')">
+                            <i class="bi bi-chat-dots-fill"></i> Enviar Mensagem
+                        </a>
+                        <a href="#" class="btn-avaliacoes">
+                            Ver Avaliações <i class="bi bi-chevron-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

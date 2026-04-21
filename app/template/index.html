@@ -66,7 +66,6 @@
             width: 100%;
         }
 
-        /* --- Botão Login/Cadastro Específico --- */
         .btn-login-nav {
             transition: all 0.3s ease !important;
         }
@@ -80,7 +79,6 @@
             color: var(--cor-primaria) !important;
         }
 
-        /* --- Menu Mobile --- */
         @media (max-width: 991px) {
             .navbar-collapse {
                 position: absolute;
@@ -290,9 +288,21 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a>
                     </li>
-                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                        <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
-                    </li>
+                    
+                    <!--  FLASK-LOGIN (IF/ELSE DINÂMICO) -->
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
+                            <span class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
+                        </li>
+                    {% endif %}
+                    
                 </ul>
             </div>
         </div>
@@ -341,7 +351,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Lógica da Busca (direto para página de categoria específica da profissão selecioanda) -->
     <script>
         const servicosDisponiveis = [
             'Eletricista', 'Pintor', 'Pedreiro', 
@@ -388,7 +397,9 @@
             }
         });
 
-        const usuarioEstaLogado = true; 
+        // Aqui o Python (Jinja2) diz ao JavaScript se a pessoa está logada de verdade!
+        // Envolvendo o código Jinja em aspas para evitar erros de sintaxe no JavaScript ao pré-visualizar
+        const usuarioEstaLogado = "{{ 'true' if current_user.is_authenticated else 'false' }}" === "true"; 
 
         // Busca Direta
         function realizarBusca() {

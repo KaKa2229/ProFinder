@@ -21,6 +21,19 @@
         .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background-color: white; transition: width 0.3s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
+        .btn-login-nav {
+            transition: all 0.3s ease !important;
+        }
+
+        .btn-login-nav::after {
+            display: none !important;
+        }
+
+        .btn-login-nav:hover {
+            background-color: white !important;
+            color: var(--cor-primaria) !important;
+        }
+
         .main-container { flex: 1; padding: 40px 20px; }
         .cabecalho-busca { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
         .titulo-resultados { color: var(--cor-primaria); font-weight: 700; margin-bottom: 5px; font-size: 2.2rem; }
@@ -54,6 +67,25 @@
             .nav-link { margin-left: 0; font-size: 1.05rem; padding: 12px 15px !important; border-radius: 8px; }
             .nav-link:hover, .nav-link:active { background-color: rgba(255, 255, 255, 0.1); padding-left: 20px !important; }
             .nav-link::after { display: none; }
+            .btn-login-nav {
+                background-color: white !important;
+                color: var(--cor-primaria) !important;
+                border: none !important;
+                padding: 15px !important;
+                margin-top: 15px;
+                font-weight: 700;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                border-radius: 30px !important;
+                display: block;
+                width: 100%;
+                text-align: center;
+                transition: transform 0.2s ease, background-color 0.2s ease !important;
+            }
+            .btn-login-nav:hover, .btn-login-nav:active {
+                background-color: #f0f4f4 !important;
+                transform: scale(0.98);
+                padding-left: 15px !important; 
+            }
         }
         @media (max-width: 768px) {
             .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
@@ -78,6 +110,23 @@
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link active" href="{{ url_for('busca_servicos') }}">Buscar</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a></li>
+                    
+                    <!-- MÁGICA DO FLASK-LOGIN (IF/ELSE DINÂMICO) -->
+                    {% if current_user.is_authenticated %}
+                        <!-- Se estiver logado, exibe uma mensagem de boas-vindas com o primeiro nome -->
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
+                            <span class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                        </li>
+                        <!-- Botão de Sair -->
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
+                        </li>
+                    {% else %}
+                        <!-- Se NÃO estiver logado, exibe o botão original -->
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -154,7 +203,7 @@
                                 {% endfor %}
                             </div>
 
-                            <a href="#" class="btn-perfil">Ver Perfil</a>
+                            <a href="{{ url_for('perfil', id=pro.id) }}" class="btn-perfil">Ver Perfil</a>
                         </div>
                     </div>
                 </div>
@@ -179,7 +228,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Lógica de filtrar por região será mudada posteriormente para uma versão mais abrangente e complexa-->
+    <!-- Lógica de filtrar por região -->
     <script>
         function filtrarPorRegiao() {
             const regiaoSelecionada = document.getElementById('filtroRegiao').value.trim().toLowerCase();
