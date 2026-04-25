@@ -5,27 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Encontre Profissionais Confiáveis</title>
     
-    <!-- Framework para Responsividade: BootStrap + Google Fonts: Poppins-->
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* Variáveis de Cores Baseadas no ProFinder */
         :root {
-            --cor-primaria: #298e94;
-            --cor-primaria-hover: #22767c;
-            --cor-texto-destaque: #4ad1d0;
+            --cor-primaria: #298e94; 
+            --cor-primaria-hover: #22767c; 
+            --cor-texto-destaque: #4ad1d0; 
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            overflow: hidden; 
         }
 
+        /* --- Navbar Personalizada --- */
         .navbar-profinder {
             background-color: var(--cor-primaria);
-            padding: 0;
+            padding: 0; 
         }
 
         .navbar-brand {
@@ -66,6 +70,7 @@
             width: 100%;
         }
 
+        /* --- Botão Login/Cadastro Específico --- */
         .btn-login-nav {
             transition: all 0.3s ease !important;
         }
@@ -79,6 +84,7 @@
             color: var(--cor-primaria) !important;
         }
 
+        /* --- Menu Mobile --- */
         @media (max-width: 991px) {
             .navbar-collapse {
                 position: absolute;
@@ -96,8 +102,15 @@
                 z-index: 1050;
             }
             
-            .navbar-nav { gap: 5px; }
-            .nav-item { width: 100%; text-align: left; }
+            .navbar-nav {
+                gap: 5px;
+            }
+
+            .nav-item {
+                width: 100%;
+                text-align: left; 
+            }
+
             .nav-link {
                 margin-left: 0;
                 font-size: 1.05rem;
@@ -105,12 +118,20 @@
                 border-radius: 8px;
                 transition: all 0.3s ease;
             }
-            .nav-item:not(:last-child) { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+
+            .nav-item:not(:last-child) {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
             .nav-link:hover, .nav-link:active {
                 background-color: rgba(255, 255, 255, 0.1);
                 padding-left: 20px !important; 
             }
-            .nav-link::after { display: none; }
+
+            .nav-link::after {
+                display: none; 
+            }
+
             .btn-login-nav {
                 background-color: white !important;
                 color: var(--cor-primaria) !important;
@@ -125,6 +146,7 @@
                 text-align: center;
                 transition: transform 0.2s ease, background-color 0.2s ease !important;
             }
+
             .btn-login-nav:hover, .btn-login-nav:active {
                 background-color: #f0f4f4 !important;
                 transform: scale(0.98);
@@ -132,6 +154,7 @@
             }
         }
 
+        /* --- Seção Hero (Fundo com Imagem) --- */
         .hero-section {
             background-image: url('https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
@@ -171,6 +194,7 @@
             color: var(--cor-texto-destaque);
         }
 
+        /* --- Barra de Pesquisa --- */
         .search-box {
             background: white;
             border-radius: 8px;
@@ -202,6 +226,7 @@
             color: white;
         }
 
+        /* --- Dropdown Customizado --- */
         .custom-dropdown {
             position: absolute;
             top: 100%; 
@@ -238,10 +263,18 @@
             border-bottom: none;
         }
 
+        /* --- Responsividade --- */
         @media (max-width: 768px) {
-            body { overflow: auto; }
-            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
-            .hero-title { font-size: 2.2rem; }
+            body {
+                overflow: auto; 
+            }
+            .navbar-brand img {
+                margin-left: 0 !important; 
+                height: 70px !important; 
+            }
+            .hero-title {
+                font-size: 2.2rem;
+            }
             .search-box {
                 flex-direction: column;
                 background: transparent;
@@ -255,18 +288,24 @@
                 font-size: 0.95rem; 
                 padding: 12px 15px;
             }
-            .search-input::placeholder { font-size: 0.9rem; }
+            .search-input::placeholder {
+                font-size: 0.9rem;
+            }
             .btn-search {
                 border-radius: 8px !important;
                 width: 100%;
                 padding: 15px;
             }
-            .custom-dropdown { top: 50px; max-height: 150px; }
+            .custom-dropdown {
+                top: 50px; 
+                max-height: 150px; 
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- NAVBAR BOOTSTRAP -->
     <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
@@ -289,10 +328,10 @@
                         <a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a>
                     </li>
                     
-                    <!--  FLASK-LOGIN (IF/ELSE DINÂMICO) -->
                     {% if current_user.is_authenticated %}
                         <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
-                            <span class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                            <!-- Aqui substituímos a tag span pela tag 'a' com a rota de meu_perfil -->
+                            <a href="{{ url_for('meu_perfil') }}" class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></a>
                         </li>
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
                             <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
@@ -302,12 +341,12 @@
                             <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
                         </li>
                     {% endif %}
-                    
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- SEÇÃO PRINCIPAL (HERO) -->
     <section class="hero-section">
         <div class="hero-overlay"></div>
         <div class="container hero-content">
@@ -322,16 +361,17 @@
                         <input type="text" class="form-control search-input" id="inputPesquisa" placeholder="Ex: Eletricista, Pintor, Encanador..." autocomplete="off" onkeyup="filtrarServicos()" onfocus="filtrarServicos()">
                         
                         <ul id="listaServicosCustom" class="custom-dropdown">
+                            <!-- Os itens serão injetados aqui via JavaScript -->
                         </ul>
 
-                        <button class="btn btn-search" type="button" onclick="realizarBusca()">Procurar</button>
+                        <button class="btn btn-search" type="button" onclick="simularBusca()">Procurar</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!--"Login Necessário" -->
+    <!-- MODAL DE SIMULAÇÃO -->
     <div class="modal fade" id="modalAviso" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -349,13 +389,15 @@
         </div>
     </div>
 
+    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Lógica JavaScript da Busca -->
     <script>
         const servicosDisponiveis = [
-            'Eletricista', 'Pintor', 'Pedreiro', 
-            'Encanador', 'Montador de Móveis', 'Diarista',
-            'Jardineiro', 'Carpinteiro', 'Mecânico', 'Técnico de Informática'
+            'Eletricista Residencial', 'Pintor', 'Pedreiro', 
+            'Encanador', 'Montador de Móveis', 'Desenvolvedor Web', 
+            'Design Gráfico', 'Diarista'
         ];
 
         function filtrarServicos() {
@@ -397,51 +439,40 @@
             }
         });
 
-        // Aqui o Python (Jinja2) diz ao JavaScript se a pessoa está logada de verdade!
-        // Envolvendo o código Jinja em aspas para evitar erros de sintaxe no JavaScript ao pré-visualizar
-        const usuarioEstaLogado = "{{ 'true' if current_user.is_authenticated else 'false' }}" === "true"; 
+        // Simulamos que o utilizador tem sessão iniciada para o redirecionamento imediato funcionar
+        const usuarioEstaLogado = true; 
 
-        // Busca Direta
-        function realizarBusca() {
-            const inputEl = document.getElementById('inputPesquisa');
-            const servicoBuscado = inputEl.value.trim();
+        function simularBusca() {
+            const servicoBuscado = document.getElementById('inputPesquisa').value.trim();
+            const modalTitulo = document.getElementById('modalTitulo');
+            const modalMensagem = document.getElementById('modalMensagem');
+            const btnAcao = document.getElementById('btnAcaoModal');
             const dropdown = document.getElementById('listaServicosCustom');
+            
             dropdown.style.display = 'none';
 
-            if (usuarioEstaLogado) {
-                if (servicoBuscado === "") {
-                    // Se deixou em branco, vai para a tela com TODAS as categorias
-                    window.location.href = "{{ url_for('busca_servicos') }}";
-                } else {
-                    // Se digitou algo, procura no array para formatar as maiúsculas "pedreiro" -> "Pedreiro")
-                    let categoriaExata = servicoBuscado;
-                    const servicoFormatado = servicosDisponiveis.find(s => s.toLowerCase() === servicoBuscado.toLowerCase());
-                    
-                    if (servicoFormatado) {
-                        categoriaExata = servicoFormatado;
-                    }
+            const meuModal = new bootstrap.Modal(document.getElementById('modalAviso'));
 
-                    // Flask para gerar a URL base e substituir no JavaScript
-                    let urlDestino = "{{ url_for('busca_profissionais', categoria='CAT_PLACEHOLDER') }}";
-                    urlDestino = urlDestino.replace('CAT_PLACEHOLDER', encodeURIComponent(categoriaExata));
-                    
-                    // Vai direto para a lista de profissionais daquela profissão
-                    window.location.href = urlDestino;
-                }
+            if (servicoBuscado === "") {
+                modalTitulo.innerText = "Aviso";
+                modalMensagem.innerHTML = "Por favor, <strong>digite ou selecione um serviço</strong> na lista para pesquisar.";
+                btnAcao.style.display = 'none';
+                meuModal.show();
+                return;
+            }
+
+            if (usuarioEstaLogado) {
+                // Redireciona para a página de categorias de serviço
+                window.location.href = "{{ url_for('busca_servicos') }}";
+                return;
             } else {
-                // Caso não estivesse logado, exibir aviso de login/cadastro
-                const modalTitulo = document.getElementById('modalTitulo');
-                const modalMensagem = document.getElementById('modalMensagem');
-                const btnAcao = document.getElementById('btnAcaoModal');
-                const meuModal = new bootstrap.Modal(document.getElementById('modalAviso'));
-                
                 modalTitulo.innerText = "Acesso Necessário";
                 modalMensagem.innerHTML = `Pesquisou por <strong>"${servicoBuscado}"</strong>.<br><br>Para visualizar as avaliações e contactar os profissionais, precisa de fazer login ou criar a sua conta gratuitamente.`;
                 btnAcao.innerText = "Fazer Login/Cadastro";
                 btnAcao.style.display = 'block';
-                
-                meuModal.show();
             }
+
+            meuModal.show();
         }
     </script>
 </body>

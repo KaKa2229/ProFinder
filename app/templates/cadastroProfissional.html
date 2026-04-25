@@ -102,8 +102,8 @@
         }
 
         .foto-circle {
-            width: 90px;
-            height: 90px;
+            width: 100px; 
+            height: 100px;
             border: 2px dashed var(--cor-primaria);
             border-radius: 50%;
             display: flex;
@@ -113,6 +113,15 @@
             font-size: 30px;
             margin-bottom: 12px;
             transition: all 0.3s;
+            overflow: hidden; 
+            background-color: white;
+        }
+
+        .foto-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .foto-upload-container:hover .foto-circle {
@@ -162,6 +171,29 @@
         
         .form-select-custom option {
             color: var(--cor-texto-escuro);
+        }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container .form-control-custom {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 14px;
+            cursor: pointer;
+            color: var(--cor-primaria);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--cor-primaria-hover);
         }
 
         .row-espaco {
@@ -249,16 +281,18 @@
             <h1 class="titulo-card">Perfil do Profissional</h1>
             <p class="subtitulo-card">Crie a sua vitrine e comece a receber avaliações dos seus clientes</p>
 
-            <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
-                <div class="foto-circle">
-                    <i class="bi bi-camera"></i>
-                </div>
-                <span class="foto-label">Adicionar Foto de Perfil</span>
-                <input type="file" id="inputFoto" style="display: none;" accept="image/*">
-            </div>
+            <!-- Adicionado enctype para garantir que as fotos possam ser enviadas para o backend futuro -->
+            <form action="{{ url_for('cadastro_profissional') }}" method="POST" enctype="multipart/form-data">
 
-            <form action="{{ url_for('cadastro_profissional') }}" method="POST">
-                
+                <!-- Campo de Upload alterado para ter name="foto" e acionar a função de preview -->
+                <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
+                    <div class="foto-circle" id="fotoPreviewContainer">
+                        <i class="bi bi-camera" id="iconeCamera"></i>
+                    </div>
+                    <span class="foto-label">Adicionar Foto de Perfil</span>
+                    <input type="file" id="inputFoto" name="foto" style="display: none;" accept="image/*" onchange="previewFoto(event)">
+                </div>
+
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Digite o seu Nome Completo:</label>
@@ -280,11 +314,17 @@
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Digite a sua senha:</label>
-                        <input type="password" class="form-control-custom" name="senha" placeholder="Mínimo de 6 caracteres" required>
+                        <div class="password-container">
+                            <input type="password" class="form-control-custom" name="senha" id="senha" placeholder="Mínimo de 6 caracteres" required>
+                            <i class="bi bi-eye toggle-password" onclick="togglePassword('senha', this)"></i>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">Confirme a sua senha:</label>
-                        <input type="password" class="form-control-custom" name="confirma_senha" placeholder="Repita a senha" required>
+                        <div class="password-container">
+                            <input type="password" class="form-control-custom" name="confirma_senha" id="confirma_senha" placeholder="Repita a senha" required>
+                            <i class="bi bi-eye toggle-password" onclick="togglePassword('confirma_senha', this)"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -354,6 +394,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Lógica de Preview de Imagem
+        function previewFoto(event) {
+            const input = event.target;
+            const container = document.getElementById('fotoPreviewContainer');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Substitui o conteúdo do círculo pela imagem carregada
+                    container.innerHTML = `<img src="${e.target.result}" alt="Preview da Foto">`;
+                    // Remove a borda tracejada após selecionar uma foto
+                    container.style.border = "none";
+                }
+                
+                // Lê o ficheiro e converte em Data URL para mostrar na tela
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Formatação CPF
         function mascaraCPF(campo) {
             let v = campo.value.replace(/\D/g, ''); 
             
@@ -366,6 +427,19 @@
             v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
             
             campo.value = v;
+        }
+
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
         }
     </script>
 </body>
