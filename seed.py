@@ -1,68 +1,105 @@
 from app import app, db, Profissional
+from werkzeug.security import generate_password_hash
 
-# Profissionais teste para popular a base de dados
-profissionais_teste = [
+# Lista de Pedreiros Baseada EXCLUSIVAMENTE nas imagens locais
+pedreiros_realistas = [
     Profissional(
-        nome='Jorge Cabral',
-        cpf='11111111111',
-        email='jorge@profinder.com',
-        senha='senha_segura_123',
+        nome='Sr. José Almeida',
+        cpf='10101010101',
+        email='jose.almeida@profinder.com',
+        senha=generate_password_hash('senha123'), 
         profissao='Pedreiro',
-        bairro='cabecudas',
+        bairro='vila_rezende',
+        avaliacao=4.9,
+        descricao='Mais de 35 anos de experiência. Especialista em fundações, alvenaria estrutural e leitura de plantas. Trabalho sério e com garantia.',
+        foto='/static/img/profissionais/pedreiro.webp'
+    ),
+    Profissional(
+        nome='Marcos Oliveira',
+        cpf='10202020202',
+        email='marcos.oliveira@profinder.com',
+        senha=generate_password_hash('senha123'),
+        profissao='Pedreiro',
+        bairro='centro',
+        avaliacao=4.7,
+        descricao='Faço todo tipo de reforma, do básico ao acabamento fino. Assentamento de porcelanato, azulejos e pastilhas com capricho e limpeza.',
+        foto='/static/img/profissionais/pedreiro2.jpg'
+    ),
+    Profissional(
+        nome='Carlos "Alemão" da Silva',
+        cpf='10303030303',
+        email='carlos.silva@profinder.com',
+        senha=generate_password_hash('senha123'),
+        profissao='Pedreiro',
+        bairro='santa_teresinha',
         avaliacao=4.5,
-        foto='https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+        descricao='Especializado em levantamento de paredes, reboco e contrapiso. Serviço rápido, organizado e com orçamento justo. Pequenos e grandes reparos.',
+        foto='/static/img/profissionais/pedreiro 3.jpg'
     ),
     Profissional(
-        nome='Marcos Silva',
-        cpf='22222222222',
-        email='marcos@profinder.com',
-        senha='senha_segura_123',
+        nome='Mestre Roberto',
+        cpf='10404040404',
+        email='roberto.mestre@profinder.com',
+        senha=generate_password_hash('senha123'),
         profissao='Pedreiro',
-        bairro='centro_itajai',
+        bairro='bairro_alto',
         avaliacao=5.0,
-        foto='https://images.unsplash.com/photo-1534398079543-7ae6d016b86c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+        descricao='Experiência como mestre de obras. Leitura e execução rigorosa de projetos arquitetônicos e estruturais. Acompanho sua obra do início ao fim.',
+        foto='/static/img/profissionais/pedreiro 4.jpg'
     ),
     Profissional(
-        nome='Roberto Nunes',
-        cpf='33333333333',
-        email='roberto@profinder.com',
-        senha='senha_segura_123',
+        nome='Paulo Mendes',
+        cpf='10505050505',
+        email='paulo.mendes@profinder.com',
+        senha=generate_password_hash('senha123'),
         profissao='Pedreiro',
-        bairro='dom_bosco',
-        avaliacao=3.0,
-        foto='https://images.unsplash.com/photo-1622313620959-1586526ddfae?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-    ),
-    Profissional(
-        nome='Ana Costa',
-        cpf='44444444444',
-        email='ana@profinder.com',
-        senha='senha_segura_123',
-        profissao='Jardineiro',
-        bairro='fazenda',
+        bairro='centro',
         avaliacao=4.8,
-        foto='https://images.unsplash.com/photo-1592424001807-55099252c809?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+        descricao='Pedreiro caprichoso, focado em reformas de banheiros e cozinhas. Instalação de pias, bancadas, nichos e revestimentos em geral.',
+        foto='/static/img/profissionais/pedreiro 5.jpg'
     ),
     Profissional(
-        nome='Carlos Mendes',
-        cpf='55555555555',
-        email='carlos@profinder.com',
-        senha='senha_segura_123',
-        profissao='Encanador',
-        bairro='cordeiros',
-        avaliacao=4.2,
-        foto='https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+        nome='Fernando Costa',
+        cpf='10606060606',
+        email='fernando.costa@profinder.com',
+        senha=generate_password_hash('senha123'),
+        profissao='Pedreiro',
+        bairro='vila_rezende',
+        avaliacao=4.3,
+        descricao='Experiência em serviços pesados: calçadas, muros de arrimo, concretagem de lajes e fundações. Trabalho resistente e duradouro.',
+        foto='/static/img/profissionais/pedreiro 6.jpg'
+    ),
+    Profissional(
+        nome='Seu Jorge "Telhadista"',
+        cpf='10707070707',
+        email='jorge.telhados@profinder.com',
+        senha=generate_password_hash('senha123'),
+        profissao='Pedreiro',
+        bairro='santa_teresinha',
+        avaliacao=4.6,
+        descricao='Especialista em coberturas. Construção e reforma de telhados, instalação de calhas e rufo, impermeabilização de lajes e eliminação de goteiras.',
+        foto='/static/img/profissionais/pedreiro 7.jpg'
     )
 ]
 
-# O contexto da aplicação é necessário para interagir com a base de dados
 with app.app_context():
-    # Evitar loop, com profissionais duplicados
-    print("limpaando a tabela de profissionais antigos...")
-    db.session.query(Profissional).delete()
+    print("--- INICIANDO POVOAMENTO DA BASE DE DADOS ---")
     
-    print("adicionando novos profissionais de teste...")
-    for p in profissionais_teste:
-        db.session.add(p)
+    # Limpa APENAS os pedreiros antigos para recriá-los com as novas fotos
+    print("A limpar pedreiros antigos...")
+    db.session.query(Profissional).filter_by(profissao='Pedreiro').delete()
+    
+    print(f"A adicionar {len(pedreiros_realistas)} novos perfis de Pedreiros realistas...")
+    
+    count = 0
+    for p in pedreiros_realistas:
+        existe = Profissional.query.filter_by(cpf=p.cpf).first()
+        if not existe:
+            db.session.add(p)
+            count += 1
+            print(f" -> Adicionado: {p.nome} ({p.profissao})")
+        else:
+             print(f" -> Pulado (CPF já existe): {p.nome}")
     
     db.session.commit()
-    print("Base de dados populada com sucesso.")
+    print(f"--- SUCESSO! {count} novos pedreiros foram adicionados à base de dados. ---")
