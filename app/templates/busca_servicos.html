@@ -323,123 +323,52 @@
 
         <div class="search-container">
             <div class="input-group search-box">
-                <input type="text" class="form-control search-input" id="inputPesquisaCategoria" placeholder="Buscar categoria (ex: Pintor, Encanador...)" onkeyup="filtrarCards()">
+                <input type="text" class="form-control search-input" id="inputPesquisaCategoria" placeholder="Buscar categoria (ex: Pintores, Encanadores...)" onkeyup="filtrarCards()">
                 <button class="btn btn-search" type="button">Procurar</button>
             </div>
         </div>
 
-        <!-- GRID DE CATEGORIAS -->
+        {% set plurais = {
+            'Pedreiro': 'Pedreiros',
+            'Pintor': 'Pintores',
+            'Eletricista': 'Eletricistas',
+            'Encanador': 'Encanadores',
+            'Diarista': 'Diaristas',
+            'Montador de Móveis': 'Montadores de Móveis',
+            'Jardineiro': 'Jardineiros',
+            'Carpinteiro': 'Carpinteiros',
+            'Mecânico': 'Mecânicos',
+            'Técnico de Informática': 'Técnicos de Informática'
+        } %}
+
+        {% set categorias = [
+            {'nome': 'Pedreiro', 'img': url_for('static', filename='img/profissionais/pedreiroCard.webp')},
+            {'nome': 'Pintor', 'img': 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'},
+            {'nome': 'Eletricista', 'img': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'},
+            {'nome': 'Encanador', 'img': url_for('static', filename='img/profissionais/encanadorcard.jpg')},
+            {'nome': 'Diarista', 'img': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'},
+            {'nome': 'Montador de Móveis', 'img': url_for('static', filename='img/profissionais/montadormoveiscard.jpeg')},
+            {'nome': 'Jardineiro', 'img': url_for('static', filename='img/profissionais/jardineirocard.jpg')},
+            {'nome': 'Carpinteiro', 'img': url_for('static', filename='img/profissionais/carpinteirocard.jpg')},
+            {'nome': 'Mecânico', 'img': 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'},
+            {'nome': 'Técnico de Informática', 'img': 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'}
+        ] %}
+
+        <!-- GRID DE CATEGORIAS DINÂMICO -->
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="gridCategorias">
             
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Pedreiro') }}" class="card-categoria">
+            {% for cat in categorias %}
+            <div class="col card-item" data-singular="{{ cat.nome | lower }}">
+                <a href="{{ url_for('busca_profissionais', categoria=cat.nome) }}" class="card-categoria">
                     <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Pedreiro">
+                        <img src="{{ cat.img }}" alt="{{ cat.nome }}">
                     </div>
                     <div class="card-body-custom">
-                        <h3 class="nome-categoria">Pedreiro</h3>
+                        <h3 class="nome-categoria">{{ plurais.get(cat.nome, cat.nome ~ 's') }}</h3>
                     </div>
                 </a>
             </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Pintor') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Pintor">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Pintor</h3>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Eletricista') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Eletricista">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Eletricista</h3>
-                    </div>
-                </a>
-            </div>
-            
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Encanador') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Encanador">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Encanador</h3>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Diarista') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Diarista">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Diarista</h3>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Montador de Móveis') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Montador de Móveis">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Montador de Móveis</h3>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Jardineiro') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1592424001807-55099252c809?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Jardineiro">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Jardineiro</h3>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Carpinteiro') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Carpinteiro">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Carpinteiro</h3>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Mecânico') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Mecânico">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Mecânico</h3>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col card-item">
-                <a href="{{ url_for('busca_profissionais', categoria='Técnico de Informática') }}" class="card-categoria">
-                    <div class="foto-container">
-                        <img src="https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Técnico de Informática">
-                    </div>
-                    <div class="card-body-custom">
-                        <h3 class="nome-categoria">Técnico de Informática</h3>
-                    </div>
-                </a>
-            </div>
+            {% endfor %}
 
         </div>
 
@@ -460,9 +389,10 @@
             let encontrouAlgum = false;
 
             for (let i = 0; i < cards.length; i++) {
-                let tituloCard = cards[i].querySelector('.nome-categoria').innerText.toLowerCase();
+                let tituloPlural = cards[i].querySelector('.nome-categoria').innerText.toLowerCase();
+                let tituloSingular = cards[i].getAttribute('data-singular'); 
                 
-                if (tituloCard.includes(input)) {
+                if (tituloPlural.includes(input) || tituloSingular.includes(input)) {
                     cards[i].style.display = "";
                     encontrouAlgum = true;
                 } else {

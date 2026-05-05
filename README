@@ -1,0 +1,36 @@
+🔍 ProFinder - Conectando você aos melhores profissionais
+
+O ProFinder é uma plataforma web desenvolvida para facilitar a conexão entre clientes e prestadores de serviços confiáveis (Pedreiros, Encanadores, Eletricistas, Diaristas, etc.). O sistema permite buscar por categorias, filtrar por região e visualizar perfis detalhados com avaliações da comunidade.
+
+Funcionalidades acordadas com o Professor para entrega da M1 
+
+● Página Home / Sobre Nós: Exibir telas estáticas da Home e da página com
+informações sobre nós (FAQ). ✅
+
+● Cadastro de Usuários: Permitir o registro de novos usuários com os campos: CPF,
+Nome Completo, E-mail e Senha. ✅
+
+● Diferenciação de Perfis: Na hora de logar ou criar conta deve haver uma
+diferenciação entre Cliente ou Profissional. ✅
+
+● Login e Autenticação: Permitir que usuários cadastrados acessem o sistema
+utilizando E-mail e Senha. ✅
+
+● Gestão de Sessão (Sair/Logout): Permitir que o usuário encerre sua sessão com
+segurança (visível no menu superior das telas logadas) ✅
+
+● Busca de Serviços (Home): Barra de pesquisa por texto livre na página inicial para
+encontrar serviços específicos (ex: eletricista, pintor). ✅
+
+● Listagem do Tipo de Serviço: Exibir uma vitrine de tipos de serviços na plataforma
+através de "cards" contendo foto e nome de serviço. ✅ (Banco de Dados Provisório Integrado no próprio projeto)
+
+● Listagem de Profissionais: Exibir uma vitrine de profissionais cadastrados na
+plataforma através de "cards" contendo foto, nome, especialidade e nota média. ✅
+
+● Criação do Perfil do Profissional (lado do Profissional): Registro “completo” (Sem
+o portfólio) do Usuário Profissional / Prestador de Serviços. ✅
+
+● Criação da página de FAQ + página Ajuda: Página de “Perguntas Frequentes”,
+acessada à partir da página “Sobre Nós” e Página de ajuda acessada à partir de Login /
+Cadastros . ✅

@@ -54,9 +54,7 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
 
-# ==========================================
 # ROTAS DE NAVEGAÇÃO BÁSICAS
-# ==========================================
 
 @app.route('/')
 def index():
@@ -89,9 +87,7 @@ def perfil(id):
     return render_template('perfil.html', profissional=profissional_selecionado)
 
 
-# ==========================================
 # ROTAS DE AUTENTICAÇÃO E REGISTO
-# ==========================================
 
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro_cliente():
@@ -199,9 +195,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-# ==========================================
 # ROTA: MEU PERFIL (Dinâmica para Cliente ou Profissional)
-# ==========================================
 
 @app.route('/meu-perfil', methods=['GET', 'POST'])
 @login_required
