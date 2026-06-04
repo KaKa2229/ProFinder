@@ -403,6 +403,7 @@
                     {% endif %}
                 {% endwith %}
 
+                <!-- LINHA 1: NOME (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Nome Completo:</label>
@@ -410,17 +411,27 @@
                     </div>
                 </div>
 
+                <!-- LINHA 2: CPF e TELEFONE (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">CPF (Apenas visualização):</label>
                         <input type="text" class="form-control-custom form-control-disabled" id="cpf-visualizacao" value="{{ current_user.cpf }}" readonly>
                     </div>
                     <div class="col-md-6">
+                        <label class="form-label-custom">Telefone / WhatsApp:</label>
+                        <input type="text" class="form-control-custom" name="telefone" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" value="{{ current_user.telefone or '' }}" required autocomplete="tel">
+                    </div>
+                </div>
+
+                <!-- LINHA 3: E-MAIL (Largura Total) -->
+                <div class="row row-espaco">
+                    <div class="col-12">
                         <label class="form-label-custom">E-mail:</label>
                         <input type="email" class="form-control-custom" name="email" value="{{ current_user.email }}" required>
                     </div>
                 </div>
 
+                <!-- LINHA 4: PROFISSÃO E REGIÃO (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Qual a sua profissão / serviço?</label>
@@ -452,10 +463,10 @@
                     </div>
                 </div>
 
+                <!-- LINHA 5: DESCRIÇÃO (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Descrição profissional:</label>
-                        <!-- A variável current_user.descricao será renderizada aqui -->
                         <textarea class="form-control-custom" name="descricao" rows="5" placeholder="Descreva os seus serviços, anos de experiência e o que o diferencia ..." required>{{ current_user.descricao or '' }}</textarea>
                     </div>
                 </div>
@@ -546,6 +557,24 @@
                 cpfInput.value = v;
             }
         });
+
+        // Formatação de Telefone / WhatsApp
+        function mascaraTelefone(campo) {
+            let v = campo.value.replace(/\D/g, ''); 
+            
+            if (v.length > 11) {
+                v = v.substring(0, 11);
+            }
+            
+            if (v.length > 2) {
+                v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+            }
+            if (v.length > 9) { 
+                v = v.substring(0, 10) + '-' + v.substring(10);
+            }
+            
+            campo.value = v;
+        }
 
         document.getElementById('formPerfil').addEventListener('submit', function(event) {
             const senhaAtual = document.getElementById('senha_atual').value;

@@ -281,10 +281,8 @@
             <h1 class="titulo-card">Perfil do Profissional</h1>
             <p class="subtitulo-card">Crie a sua vitrine e comece a receber avaliações dos seus clientes</p>
 
-            <!-- Adicionado enctype para garantir que as fotos possam ser enviadas para o backend futuro -->
             <form action="{{ url_for('cadastro_profissional') }}" method="POST" enctype="multipart/form-data">
 
-                <!-- Campo de Upload alterado para ter name="foto" e acionar a função de preview -->
                 <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
                     <div class="foto-circle" id="fotoPreviewContainer">
                         <i class="bi bi-camera" id="iconeCamera"></i>
@@ -293,6 +291,7 @@
                     <input type="file" id="inputFoto" name="foto" style="display: none;" accept="image/*" onchange="previewFoto(event)">
                 </div>
 
+                <!-- LINHA 1: NOME (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Digite o seu Nome Completo:</label>
@@ -300,17 +299,27 @@
                     </div>
                 </div>
 
+                <!-- LINHA 2: CPF e TELEFONE (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Digite o seu CPF:</label>
                         <input type="text" class="form-control-custom" name="cpf" placeholder="000.000.000-00" oninput="mascaraCPF(this)" minlength="14" maxlength="14" value="{{ cpf or '' }}" required autocomplete="off">
                     </div>
                     <div class="col-md-6">
+                        <label class="form-label-custom">Telefone / WhatsApp:</label>
+                        <input type="text" class="form-control-custom" name="telefone" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" value="{{ telefone or '' }}" required autocomplete="tel">
+                    </div>
+                </div>
+
+                <!-- LINHA 3: E-MAIL (Largura Total) -->
+                <div class="row row-espaco">
+                    <div class="col-12">
                         <label class="form-label-custom">Digite o seu E-mail:</label>
                         <input type="email" class="form-control-custom" name="email" placeholder="exemplo@email.com" value="{{ email or '' }}" required autocomplete="email">
                     </div>
                 </div>
 
+                <!-- LINHA 4: SENHAS (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Digite a sua senha:</label>
@@ -328,6 +337,7 @@
                     </div>
                 </div>
 
+                <!-- LINHA 5: PROFISSÃO E REGIÃO (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Qual a sua profissão / serviço?</label>
@@ -361,6 +371,7 @@
                     </div>
                 </div>
 
+                <!-- LINHA 6: DESCRIÇÃO (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Descrição profissional:</label>
@@ -403,13 +414,10 @@
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
-                    // Substitui o conteúdo do círculo pela imagem carregada
                     container.innerHTML = `<img src="${e.target.result}" alt="Preview da Foto">`;
-                    // Remove a borda tracejada após selecionar uma foto
                     container.style.border = "none";
                 }
                 
-                // Lê o ficheiro e converte em Data URL para mostrar na tela
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -425,6 +433,24 @@
             v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
             v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
             v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
+            
+            campo.value = v;
+        }
+
+        // Formatação de Telefone / WhatsApp
+        function mascaraTelefone(campo) {
+            let v = campo.value.replace(/\D/g, ''); 
+            
+            if (v.length > 11) {
+                v = v.substring(0, 11);
+            }
+            
+            if (v.length > 2) {
+                v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+            }
+            if (v.length > 9) { 
+                v = v.substring(0, 10) + '-' + v.substring(10);
+            }
             
             campo.value = v;
         }
