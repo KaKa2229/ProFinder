@@ -403,7 +403,6 @@
                     {% endif %}
                 {% endwith %}
 
-                <!-- LINHA 1: NOME (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Nome Completo:</label>
@@ -411,7 +410,6 @@
                     </div>
                 </div>
 
-                <!-- LINHA 2: CPF e TELEFONE (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">CPF (Apenas visualização):</label>
@@ -419,11 +417,11 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">Telefone / WhatsApp:</label>
+                        <!-- CORRIGIDO: Removido ".perfil_profissional" -->
                         <input type="text" class="form-control-custom" name="telefone" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" value="{{ current_user.telefone or '' }}" required autocomplete="tel">
                     </div>
                 </div>
 
-                <!-- LINHA 3: E-MAIL (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">E-mail:</label>
@@ -431,11 +429,11 @@
                     </div>
                 </div>
 
-                <!-- LINHA 4: PROFISSÃO E REGIÃO (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Qual a sua profissão / serviço?</label>
                         <select class="form-select-custom" name="profissao" required>
+                            <!-- CORRIGIDO: Removido ".perfil_profissional" de todos os ifs -->
                             <option value="Carpinteiro" {% if current_user.profissao == 'Carpinteiro' %}selected{% endif %}>Carpinteiro</option>
                             <option value="Diarista" {% if current_user.profissao == 'Diarista' %}selected{% endif %}>Diarista</option>
                             <option value="Eletricista" {% if current_user.profissao == 'Eletricista' %}selected{% endif %}>Eletricista</option>
@@ -451,6 +449,7 @@
                     <div class="col-md-6">
                         <label class="form-label-custom">Região de Atuação:</label>
                         <select class="form-select-custom" name="regiao" required>
+                            <!-- CORRIGIDO: Removido ".perfil_profissional" de todos os ifs -->
                             <option value="centro_itajai" {% if current_user.bairro == 'centro_itajai' %}selected{% endif %}>Centro</option>
                             <option value="fazenda" {% if current_user.bairro == 'fazenda' %}selected{% endif %}>Fazenda</option>
                             <option value="cabecudas" {% if current_user.bairro == 'cabecudas' %}selected{% endif %}>Cabeçudas</option>
@@ -463,10 +462,10 @@
                     </div>
                 </div>
 
-                <!-- LINHA 5: DESCRIÇÃO (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Descrição profissional:</label>
+                        <!-- CORRIGIDO: Removido ".perfil_profissional" -->
                         <textarea class="form-control-custom" name="descricao" rows="5" placeholder="Descreva os seus serviços, anos de experiência e o que o diferencia ..." required>{{ current_user.descricao or '' }}</textarea>
                     </div>
                 </div>

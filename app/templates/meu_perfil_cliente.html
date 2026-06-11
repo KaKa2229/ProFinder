@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Meu Perfil</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --cor-primaria: #298e94;
@@ -340,6 +342,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
@@ -385,8 +388,14 @@
                 <!-- Upload de Foto -->
                 <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
                     <div class="foto-circle" id="fotoPreviewContainer">
-                        <!-- Se o usuário já tiver foto no futuro, o Jinja carrega aqui, senão, mostra a câmera -->
-                        <i class="bi bi-camera" id="iconeCamera"></i>
+                        
+                        <!-- Lógica Adicionada: Renderiza a foto do banco de dados se houver -->
+                        {% if current_user.foto and current_user.foto != 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' %}
+                            <img src="{{ current_user.foto }}" alt="Sua Foto">
+                        {% else %}
+                            <i class="bi bi-camera" id="iconeCamera"></i>
+                        {% endif %}
+
                     </div>
                     <span class="foto-label">Alterar Foto de Perfil</span>
                     <input type="file" id="inputFoto" name="foto" style="display: none;" accept="image/*" onchange="previewFoto(event)">
@@ -427,26 +436,26 @@
                 </div>
 
                 <hr class="mt-4 mb-4" style="border-color: rgba(0,0,0,0.1);">
-                <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;">Alterar Senha</h5>
+                <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;">Alterar Palavra-passe</h5>
 
                 <div class="row row-espaco">
                     <div class="col-12 mb-3">
-                        <label class="form-label-custom">Senha Atual:</label>
+                        <label class="form-label-custom">Palavra-passe Atual:</label>
                         <div class="password-container">
                             <input type="password" class="form-control-custom" name="senha_atual" id="senha_atual" placeholder="Digite sua senha atual para autorizar a mudança">
                             <i class="bi bi-eye toggle-password" onclick="togglePassword('senha_atual', this)"></i>
                         </div>
-                        <span class="aviso-senha">* Obrigatório caso deseje cadastrar uma nova senha.</span>
+                        <span class="aviso-senha">* Obrigatório caso deseje cadastrar uma nova palavra-passe.</span>
                     </div>
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Nova Senha:</label>
+                        <label class="form-label-custom">Nova Palavra-passe:</label>
                         <div class="password-container">
-                            <input type="password" class="form-control-custom" name="nova_senha" id="nova_senha" placeholder="Nova senha">
+                            <input type="password" class="form-control-custom" name="nova_senha" id="nova_senha" placeholder="Nova palavra-passe">
                             <i class="bi bi-eye toggle-password" onclick="togglePassword('nova_senha', this)"></i>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-custom">Confirmar Nova Senha:</label>
+                        <label class="form-label-custom">Confirmar Nova Palavra-passe:</label>
                         <div class="password-container">
                             <input type="password" class="form-control-custom" name="confirma_senha" id="confirma_senha" placeholder="Repita a nova senha">
                             <i class="bi bi-eye toggle-password" onclick="togglePassword('confirma_senha', this)"></i>
@@ -535,4 +544,5 @@
         });
     </script>
 </body>
+
 </html>
