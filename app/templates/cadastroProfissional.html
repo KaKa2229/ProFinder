@@ -135,12 +135,19 @@
             font-weight: 600;
         }
 
+        /* --- Novo Bloco para a Label e Tooltip lado a lado --- */
+        .label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
         .form-label-custom {
             color: var(--cor-primaria);
             font-weight: 600;
-            margin-bottom: 6px;
             font-size: 0.95rem;
-            display: block;
+            margin-bottom: 0; /* Margem movida para o container pai */
         }
 
         .form-control-custom, .form-select-custom {
@@ -171,6 +178,64 @@
         
         .form-select-custom option {
             color: var(--cor-texto-escuro);
+        }
+
+        /* --- Tooltip CSS Puro (Ícone de Informação do CPF) --- */
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .info-icon {
+            color: var(--cor-primaria);
+            font-size: 1.05rem;
+            cursor: help;
+            transition: color 0.3s;
+        }
+
+        .info-icon:hover {
+            color: var(--cor-primaria-hover);
+        }
+
+        .info-tooltip {
+            visibility: hidden;
+            background-color: var(--cor-texto-escuro);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 150%; 
+            right: -10px; /* Alinhado levemente à direita do ícone */
+            font-size: 0.75rem;
+            width: 220px;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            pointer-events: none;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        /* Seta apontando para baixo no tooltip */
+        .info-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            right: 12px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--cor-texto-escuro) transparent transparent transparent;
+        }
+
+        /* Ativa o tooltip ao passar o rato no ícone */
+        .info-icon:hover + .info-tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .password-container {
@@ -260,6 +325,12 @@
             .titulo-card {
                 font-size: 1.5rem;
             }
+            .info-tooltip {
+                right: -5px; /* Ajuste fino para não colar na borda do telemóvel */
+            }
+            .info-tooltip::after {
+                right: 7px;
+            }
         }
     </style>
 </head>
@@ -291,45 +362,48 @@
                     <input type="file" id="inputFoto" name="foto" style="display: none;" accept="image/*" onchange="previewFoto(event)">
                 </div>
 
-                <!-- LINHA 1: NOME (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
-                        <label class="form-label-custom">Digite o seu Nome Completo:</label>
+                        <label class="form-label-custom mb-1">Digite o seu Nome Completo:</label>
                         <input type="text" class="form-control-custom" name="nome" placeholder="Como deseja ser chamado pelos clientes" value="{{ nome or '' }}" required>
                     </div>
                 </div>
 
-                <!-- LINHA 2: CPF e TELEFONE (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Digite o seu CPF:</label>
+                        <!-- Novo container da Label com Tooltip incorporado -->
+                        <div class="label-container">
+                            <label class="form-label-custom">Digite o seu CPF:</label>
+                            <div class="tooltip-wrapper">
+                                <i class="bi bi-question-circle info-icon"></i>
+                                <div class="info-tooltip">Usado de forma criptografada apenas para segurança e verificação de duplicidade da sua conta.</div>
+                            </div>
+                        </div>
                         <input type="text" class="form-control-custom" name="cpf" placeholder="000.000.000-00" oninput="mascaraCPF(this)" minlength="14" maxlength="14" value="{{ cpf or '' }}" required autocomplete="off">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-custom">Telefone / WhatsApp:</label>
+                        <label class="form-label-custom mb-1">Telefone / WhatsApp:</label>
                         <input type="text" class="form-control-custom" name="telefone" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" value="{{ telefone or '' }}" required autocomplete="tel">
                     </div>
                 </div>
 
-                <!-- LINHA 3: E-MAIL (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
-                        <label class="form-label-custom">Digite o seu E-mail:</label>
+                        <label class="form-label-custom mb-1">Digite o seu E-mail:</label>
                         <input type="email" class="form-control-custom" name="email" placeholder="exemplo@email.com" value="{{ email or '' }}" required autocomplete="email">
                     </div>
                 </div>
 
-                <!-- LINHA 4: SENHAS (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Digite a sua senha:</label>
+                        <label class="form-label-custom mb-1">Digite a sua senha:</label>
                         <div class="password-container">
                             <input type="password" class="form-control-custom" name="senha" id="senha" placeholder="Mínimo de 6 caracteres" required>
                             <i class="bi bi-eye toggle-password" onclick="togglePassword('senha', this)"></i>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-custom">Confirme a sua senha:</label>
+                        <label class="form-label-custom mb-1">Confirme a sua senha:</label>
                         <div class="password-container">
                             <input type="password" class="form-control-custom" name="confirma_senha" id="confirma_senha" placeholder="Repita a senha" required>
                             <i class="bi bi-eye toggle-password" onclick="togglePassword('confirma_senha', this)"></i>
@@ -337,10 +411,9 @@
                     </div>
                 </div>
 
-                <!-- LINHA 5: PROFISSÃO E REGIÃO (Metade / Metade) -->
                 <div class="row row-espaco">
                     <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Qual a sua profissão / serviço?</label>
+                        <label class="form-label-custom mb-1">Qual a sua profissão / serviço?</label>
                         <select class="form-select-custom" name="profissao" required>
                             <option value="" disabled {% if not profissao %}selected{% endif %}>Selecione a sua profissão</option>
                             <option value="Carpinteiro" {% if profissao == 'Carpinteiro' %}selected{% endif %}>Carpinteiro</option>
@@ -356,7 +429,7 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-custom">Região de Atuação:</label>
+                        <label class="form-label-custom mb-1">Região de Atuação:</label>
                         <select class="form-select-custom" name="regiao" required>
                             <option value="" disabled {% if not regiao %}selected{% endif %}>Selecione a sua região</option>
                             <option value="centro_itajai" {% if regiao == 'centro_itajai' %}selected{% endif %}>Centro</option>
@@ -371,10 +444,9 @@
                     </div>
                 </div>
 
-                <!-- LINHA 6: DESCRIÇÃO (Largura Total) -->
                 <div class="row row-espaco">
                     <div class="col-12">
-                        <label class="form-label-custom">Descrição profissional:</label>
+                        <label class="form-label-custom mb-1">Descrição profissional:</label>
                         <textarea class="form-control-custom" name="descricao" rows="4" placeholder="Descreva os seus serviços, anos de experiência e o que o diferencia ..." required>{{ descricao or '' }}</textarea>
                     </div>
                 </div>

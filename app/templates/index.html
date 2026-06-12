@@ -316,7 +316,12 @@
                         <span class="text-destaque">confiáveis</span> perto de você!
                     </h1>
                     
-                    <div class="input-group search-box mt-4">
+                    <!-- NOVO: Texto Explicativo Moderno -->
+                    <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.15rem; font-weight: 300; margin-top: -15px; margin-bottom: 30px; max-width: 600px; line-height: 1.6;">
+                        O ProFinder liga você a prestadores de serviços avaliados pela comunidade. De pequenos reparos a grandes obras, a solução certa a um clique de distância.
+                    </p>
+                    
+                    <div class="input-group search-box">
                         <input type="text" class="form-control search-input" id="inputPesquisa" placeholder="Ex: Eletricista, Pintor, Encanador..." autocomplete="off" onkeyup="filtrarServicos()" onfocus="filtrarServicos()">
                         
                         <ul id="listaServicosCustom" class="custom-dropdown">
@@ -436,6 +441,7 @@
                     let urlDestino = "{{ url_for('busca_profissionais', categoria='CAT_PLACEHOLDER') }}";
                     urlDestino = urlDestino.replace('CAT_PLACEHOLDER', encodeURIComponent(categoriaExata));
                     
+                    // Vai direto para a lista de profissionais daquela profissão
                     window.location.href = urlDestino;
                 }
             } else {
