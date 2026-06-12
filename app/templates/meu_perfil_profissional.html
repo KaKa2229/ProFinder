@@ -82,7 +82,7 @@
             border-radius: 12px;
             padding: 40px 50px;
             width: 100%;
-            max-width: 850px; /* Um pouco mais largo para os campos extras */
+            max-width: 850px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.05);
             border: 1px solid rgba(41, 142, 148, 0.1);
         }
@@ -177,7 +177,6 @@
             box-shadow: 0 0 0 0.2rem rgba(41, 142, 148, 0.25);
         }
 
-        /* Input Bloqueado (CPF) */
         .form-control-disabled {
             background-color: #e9ecef;
             color: #6c757d;
@@ -190,7 +189,6 @@
             border-color: #ced4da;
         }
 
-        /* --- Ícone da Senha --- */
         .password-container {
             position: relative;
             width: 100%;
@@ -240,7 +238,6 @@
             border: 1px solid #f5c6cb;
         }
 
-        /* --- Botão --- */
         .btn-submit {
             background-color: var(--cor-primaria);
             color: white;
@@ -269,7 +266,7 @@
             display: block;
         }
 
-        /* --- Placeholder do Portfólio (Em Breve) --- */
+        /* --- Portfólio --- */
         .portfolio-placeholder {
             border: 2px dashed #cbd5e1;
             border-radius: 8px;
@@ -282,18 +279,18 @@
             align-items: center;
             gap: 12px;
             margin-top: 5px;
+            transition: all 0.3s ease;
         }
         
+        .portfolio-placeholder:hover {
+            background-color: #eef6f6;
+            border-color: var(--cor-primaria);
+            cursor: pointer;
+        }
+
         .portfolio-placeholder i {
             font-size: 2.8rem;
-            color: #94a3b8;
-        }
-        
-        .portfolio-placeholder p {
-            margin: 0;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #64748b;
+            color: var(--cor-primaria);
         }
 
         @media (max-width: 991px) {
@@ -332,6 +329,11 @@
                 display: block;
                 text-align: center;
             }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
+            .card-perfil { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -374,6 +376,7 @@
                 <p class="subtitulo-card">Mantenha a sua vitrine digital sempre atualizada.</p>
             </div>
 
+            <!-- Formulário Principal -->
             <form id="formPerfil" action="{{ url_for('meu_perfil') }}" method="POST" enctype="multipart/form-data">
 
                 <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
@@ -417,7 +420,6 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">Telefone / WhatsApp:</label>
-                        <!-- CORRIGIDO: Removido ".perfil_profissional" -->
                         <input type="text" class="form-control-custom" name="telefone" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" value="{{ current_user.telefone or '' }}" required autocomplete="tel">
                     </div>
                 </div>
@@ -433,7 +435,6 @@
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Qual a sua profissão / serviço?</label>
                         <select class="form-select-custom" name="profissao" required>
-                            <!-- CORRIGIDO: Removido ".perfil_profissional" de todos os ifs -->
                             <option value="Carpinteiro" {% if current_user.profissao == 'Carpinteiro' %}selected{% endif %}>Carpinteiro</option>
                             <option value="Diarista" {% if current_user.profissao == 'Diarista' %}selected{% endif %}>Diarista</option>
                             <option value="Eletricista" {% if current_user.profissao == 'Eletricista' %}selected{% endif %}>Eletricista</option>
@@ -449,7 +450,6 @@
                     <div class="col-md-6">
                         <label class="form-label-custom">Região de Atuação:</label>
                         <select class="form-select-custom" name="regiao" required>
-                            <!-- CORRIGIDO: Removido ".perfil_profissional" de todos os ifs -->
                             <option value="centro_itajai" {% if current_user.bairro == 'centro_itajai' %}selected{% endif %}>Centro</option>
                             <option value="fazenda" {% if current_user.bairro == 'fazenda' %}selected{% endif %}>Fazenda</option>
                             <option value="cabecudas" {% if current_user.bairro == 'cabecudas' %}selected{% endif %}>Cabeçudas</option>
@@ -465,19 +465,7 @@
                 <div class="row row-espaco">
                     <div class="col-12">
                         <label class="form-label-custom">Descrição profissional:</label>
-                        <!-- CORRIGIDO: Removido ".perfil_profissional" -->
                         <textarea class="form-control-custom" name="descricao" rows="5" placeholder="Descreva os seus serviços, anos de experiência e o que o diferencia ..." required>{{ current_user.descricao or '' }}</textarea>
-                    </div>
-                </div>
-
-                <!-- Secção de Portfólio (Em Breve) -->
-                <div class="row row-espaco mt-2 mb-4">
-                    <div class="col-12">
-                        <label class="form-label-custom">Meu Portfólio:</label>
-                        <div class="portfolio-placeholder">
-                            <i class="bi bi-images"></i>
-                            <p>A funcionalidade para exibir as fotos dos seus melhores trabalhos será adicionada em breve nas próximas atualizações da plataforma!</p>
-                        </div>
                     </div>
                 </div>
 
@@ -509,12 +497,87 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Salvar Alterações</button>
-                
+                <button type="submit" class="btn-submit mb-4">Salvar Alterações</button>
             </form>
+            <!-- FECHAMENTO DO FORMULÁRIO PRINCIPAL AQUI -->
+
+            <!-- SEÇÃO DE PORTFÓLIO (INDEPENDENTE) -->
+            <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.2rem; margin: 0;">Meu Portfólio de Trabalhos</h5>
+                <button type="button" class="btn btn-sm shadow-sm" style="background-color: var(--cor-primaria); color: white; border-radius: 30px; padding: 8px 20px; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#modalPortfolio">
+                    <i class="bi bi-plus-lg"></i> Adicionar Foto
+                </button>
+            </div>
+
+            <!-- Grelha de Exibição das Fotos -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                {% if trabalhos %}
+                    {% for trabalho in trabalhos %}
+                        <div class="col">
+                            <div class="card h-100 border-0 shadow-sm" style="border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05) !important;">
+                                <img src="{{ trabalho.imagem_url }}" class="card-img-top" alt="{{ trabalho.titulo }}" style="height: 160px; object-fit: cover;">
+                                <div class="card-body p-3 text-center">
+                                    <h6 class="card-title mb-1" style="color: var(--cor-primaria); font-weight: 600;">{{ trabalho.titulo }}</h6>
+                                    <small class="text-muted">{{ trabalho.data_conclusao }}</small>
+                                </div>
+                                <div class="card-footer bg-white border-0 text-center pb-3 pt-0">
+                                    <form action="{{ url_for('excluir_portfolio', id=trabalho.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este trabalho?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle" title="Excluir Trabalho" style="width: 35px; height: 35px; padding: 0; line-height: 35px;">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Placeholder Clicável (Abre o Modal) -->
+                    <div class="col-12">
+                        <div class="portfolio-placeholder" onclick="document.querySelector('[data-bs-target=\'#modalPortfolio\']').click();">
+                            <i class="bi bi-images"></i>
+                            <p>Ainda não adicionou nenhum trabalho. Clique aqui para enviar a sua primeira foto!</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
 
         </div>
     </main>
+
+    <!-- Modal Adicionar Trabalho ao Portfólio -->
+    <div class="modal fade" id="modalPortfolio" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" style="color: var(--cor-primaria); font-weight: 700;">Adicionar Trabalho</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Formulário Aponta para a Rota Nova do app.py -->
+                <form action="{{ url_for('adicionar_portfolio') }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body pb-4">
+                        <div class="mb-3">
+                            <label class="form-label-custom">Título do Projeto:</label>
+                            <input type="text" class="form-control-custom" name="titulo" placeholder="Ex: Reforma de Banheiro" required style="border-radius: 6px;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Data/Mês de Conclusão:</label>
+                            <input type="text" class="form-control-custom" name="data_conclusao" placeholder="Ex: Março de 2024" style="border-radius: 6px;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Foto do Trabalho:</label>
+                            <input type="file" class="form-control" name="foto_trabalho" accept="image/*" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 20px;">Cancelar</button>
+                        <button type="submit" class="btn btn-submit m-0" style="max-width: 150px; padding: 8px 20px;">Salvar Foto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -557,21 +620,11 @@
             }
         });
 
-        // Formatação de Telefone / WhatsApp
         function mascaraTelefone(campo) {
             let v = campo.value.replace(/\D/g, ''); 
-            
-            if (v.length > 11) {
-                v = v.substring(0, 11);
-            }
-            
-            if (v.length > 2) {
-                v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
-            }
-            if (v.length > 9) { 
-                v = v.substring(0, 10) + '-' + v.substring(10);
-            }
-            
+            if (v.length > 11) { v = v.substring(0, 11); }
+            if (v.length > 2) { v = '(' + v.substring(0, 2) + ') ' + v.substring(2); }
+            if (v.length > 9) { v = v.substring(0, 10) + '-' + v.substring(10); }
             campo.value = v;
         }
 

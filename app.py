@@ -16,8 +16,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'profinder.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configuração da pasta de upload de imagens
-app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'img', 'perfil')
+# Pastas de Upload (Cria as pastas automaticamente se não existirem)
+UPLOAD_PERFIL = os.path.join(app.static_folder, 'img', 'perfil')
+UPLOAD_PORTFOLIO = os.path.join(app.static_folder, 'img', 'portfolio')
+os.makedirs(UPLOAD_PERFIL, exist_ok=True)
+os.makedirs(UPLOAD_PORTFOLIO, exist_ok=True)
 
 # Extensões
 db = SQLAlchemy(app)
@@ -34,8 +37,11 @@ class Usuario(db.Model, UserMixin):
     cpf = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     senha = db.Column(db.String(128), nullable=False)
-    foto = db.Column(db.String(255), default='https://cdn-icons-png.flaticon.com/512/3135/3135715.png') # Nova coluna para a foto do cliente!
     tipo_conta = db.Column(db.String(20), default='cliente')
+
+# ATENÇÃO: Se as tabelas abaixo já não estavam integradas de forma relacional no SEU app.py
+# Elas continuam como antes para não quebrar a sua estrutura atual que estava funcionando.
+# Mas adicionei a tabela de Portfolio!
 
 class Profissional(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,13 +49,23 @@ class Profissional(db.Model, UserMixin):
     cpf = db.Column(db.String(11), unique=True, nullable=False) 
     email = db.Column(db.String(120), unique=True, nullable=False)
     senha = db.Column(db.String(128), nullable=False)
-    telefone = db.Column(db.String(20), nullable=True) # Nova coluna
+    telefone = db.Column(db.String(20), nullable=True) # Coluna de telefone readicionada
     profissao = db.Column(db.String(50), nullable=False)
     bairro = db.Column(db.String(50), nullable=False)
     descricao = db.Column(db.Text, nullable=True) 
     avaliacao = db.Column(db.Float, default=5.0) 
     foto = db.Column(db.String(255), default='https://cdn-icons-png.flaticon.com/512/3135/3135715.png')
     tipo_conta = db.Column(db.String(20), default='profissional')
+    
+    # Relação com os trabalhos (Portfólio)
+    trabalhos = db.relationship('Portfolio', backref='profissional', lazy=True, cascade='all, delete-orphan')
+
+class Portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'), nullable=False)
+    titulo = db.Column(db.String(100), nullable=False)
+    data_conclusao = db.Column(db.String(50), nullable=True)
+    imagem_url = db.Column(db.String(255), nullable=False)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -91,7 +107,9 @@ def busca_profissionais(categoria):
 @app.route('/perfil/<int:id>')
 def perfil(id):
     profissional_selecionado = Profissional.query.get_or_404(id)
-    return render_template('perfil.html', profissional=profissional_selecionado)
+    # Buscamos também os trabalhos deste profissional
+    trabalhos_portfolio = Portfolio.query.filter_by(profissional_id=id).all()
+    return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio)
 
 
 # ROTAS DE AUTENTICAÇÃO E REGISTO
@@ -139,6 +157,7 @@ def cadastro_profissional():
         nome = request.form.get('nome')
         cpf_raw = request.form.get('cpf')
         email = request.form.get('email')
+        telefone = request.form.get('telefone')
         senha = request.form.get('senha')
         confirma_senha = request.form.get('confirma_senha')
         profissao = request.form.get('profissao')
@@ -149,24 +168,24 @@ def cadastro_profissional():
 
         if len(cpf) != 11:
             flash("O CPF deve conter exatamente 11 dígitos!", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, profissao=profissao, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, regiao=regiao, descricao=descricao)
 
         if senha != confirma_senha:
             flash("As palavras-passe não coincidem. Tente novamente!", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, profissao=profissao, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, regiao=regiao, descricao=descricao)
 
         email_existe = Usuario.query.filter_by(email=email).first() or Profissional.query.filter_by(email=email).first()
         cpf_existe = Usuario.query.filter_by(cpf=cpf).first() or Profissional.query.filter_by(cpf=cpf).first()
 
         if email_existe or cpf_existe:
             flash("Este E-mail ou CPF já estão registados no sistema.", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, profissao=profissao, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, regiao=regiao, descricao=descricao)
 
         senha_criptografada = bcrypt.generate_password_hash(senha).decode('utf-8')
 
         novo_profissional = Profissional(
             nome=nome, cpf=cpf, email=email, senha=senha_criptografada, 
-            profissao=profissao, bairro=regiao, descricao=descricao
+            telefone=telefone, profissao=profissao, bairro=regiao, descricao=descricao
         )
         db.session.add(novo_profissional)
         db.session.commit()
@@ -203,43 +222,39 @@ def logout():
 
 
 # ROTA: MEU PERFIL (Dinâmica para Cliente ou Profissional)
+
 @app.route('/meu-perfil', methods=['GET', 'POST'])
 @login_required
 def meu_perfil():
     if request.method == 'POST':
-        # 1. Resolve o problema buscando o usuário de forma real no banco
+        # Busca o usuário real no banco para garantir que vai salvar
         if current_user.tipo_conta == 'profissional':
             db_user = Profissional.query.get(current_user.id)
         else:
             db_user = Usuario.query.get(current_user.id)
 
-        # 2. Atualiza os dados básicos
-        db_user.nome = request.form.get('nome')
-        db_user.email = request.form.get('email')
-
-        # 3. Lógica de Upload de Foto de Perfil
+        # Lógica de Upload de Foto Principal
         if 'foto' in request.files:
             foto_file = request.files['foto']
             if foto_file and foto_file.filename != '':
-                if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                    os.makedirs(app.config['UPLOAD_FOLDER'])
-                
-                # Gera um nome único para não haver cache no navegador
                 timestamp = int(time.time())
                 nome_seguro = secure_filename(f"user_{db_user.id}_{timestamp}_{foto_file.filename}")
-                caminho_salvar = os.path.join(app.config['UPLOAD_FOLDER'], nome_seguro)
-                
+                caminho_salvar = os.path.join(UPLOAD_PERFIL, nome_seguro)
                 foto_file.save(caminho_salvar)
                 db_user.foto = f"/static/img/perfil/{nome_seguro}"
 
-        # 4. Atualiza os campos se for Profissional
+        # Atualiza os dados básicos
+        db_user.nome = request.form.get('nome')
+        db_user.email = request.form.get('email')
+
+        # Atualiza os dados específicos se for Profissional
         if db_user.tipo_conta == 'profissional':
             db_user.profissao = request.form.get('profissao')
             db_user.bairro = request.form.get('regiao')
             db_user.descricao = request.form.get('descricao')
             db_user.telefone = request.form.get('telefone')
 
-        # 5. Lógica de atualização de segurança (Palavra-passe)
+        # Lógica de atualização de segurança (Palavra-passe)
         senha_atual = request.form.get('senha_atual')
         nova_senha = request.form.get('nova_senha')
         confirma_senha = request.form.get('confirma_senha')
@@ -249,12 +264,14 @@ def meu_perfil():
                 flash("Para alterar a sua palavra-passe, deve introduzir a palavra-passe atual.", "danger")
                 return redirect(url_for('meu_perfil'))
 
+            # Verifica se a senha atual está correta na base de dados
             if bcrypt.check_password_hash(db_user.senha, senha_atual):
                 if nova_senha == confirma_senha:
                     if len(nova_senha) < 6:
                         flash("A nova palavra-passe deve ter pelo menos 6 caracteres.", "danger")
                         return redirect(url_for('meu_perfil'))
                     
+                    # Encripta a nova senha e substitui
                     db_user.senha = bcrypt.generate_password_hash(nova_senha).decode('utf-8')
                     flash("Perfil e palavra-passe atualizados com sucesso!", "success")
                 else:
@@ -270,11 +287,68 @@ def meu_perfil():
         db.session.commit()
         return redirect(url_for('meu_perfil'))
 
-    # Se for apenas um "GET", exibe o HTML correto consoante o tipo de conta
+    # Se for apenas um "GET", enviamos também os trabalhos para o HTML do profissional
     if current_user.tipo_conta == 'profissional':
-        return render_template('meu_perfil_profissional.html')
+        trabalhos_portfolio = Portfolio.query.filter_by(profissional_id=current_user.id).all()
+        return render_template('meu_perfil_profissional.html', trabalhos=trabalhos_portfolio)
     else:
         return render_template('meu_perfil_cliente.html')
+
+
+# ==========================================
+# ROTAS DO PORTFÓLIO (FASE 2)
+# ==========================================
+
+@app.route('/adicionar-portfolio', methods=['POST'])
+@login_required
+def adicionar_portfolio():
+    if current_user.tipo_conta != 'profissional':
+        return redirect(url_for('index'))
+
+    titulo = request.form.get('titulo')
+    data_conclusao = request.form.get('data_conclusao')
+    
+    if 'foto_trabalho' in request.files:
+        foto_file = request.files['foto_trabalho']
+        if foto_file and foto_file.filename != '':
+            timestamp = int(time.time())
+            nome_seguro = secure_filename(f"work_{current_user.id}_{timestamp}_{foto_file.filename}")
+            caminho_salvar = os.path.join(UPLOAD_PORTFOLIO, nome_seguro)
+            
+            foto_file.save(caminho_salvar)
+            foto_url = f"/static/img/portfolio/{nome_seguro}"
+            
+            novo_trabalho = Portfolio(
+                profissional_id=current_user.id,
+                titulo=titulo,
+                data_conclusao=data_conclusao,
+                imagem_url=foto_url
+            )
+            db.session.add(novo_trabalho)
+            db.session.commit()
+            flash("Trabalho adicionado ao seu portfólio com sucesso!", "success")
+        else:
+            flash("Erro ao enviar a imagem do trabalho.", "danger")
+            
+    return redirect(url_for('meu_perfil'))
+
+@app.route('/excluir-portfolio/<int:id>', methods=['POST'])
+@login_required
+def excluir_portfolio(id):
+    if current_user.tipo_conta != 'profissional':
+        return redirect(url_for('index'))
+        
+    trabalho = Portfolio.query.get_or_404(id)
+    
+    # Segurança: Garante que o profissional só pode apagar os seus próprios trabalhos
+    if trabalho.profissional_id == current_user.id:
+        db.session.delete(trabalho)
+        db.session.commit()
+        flash("Trabalho removido do seu portfólio.", "success")
+    else:
+        flash("Não tem permissão para excluir este trabalho.", "danger")
+        
+    return redirect(url_for('meu_perfil'))
 
 if __name__ == '__main__':
     app.run(debug=True)

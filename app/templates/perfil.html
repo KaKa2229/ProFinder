@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Perfil do Profissional</title>
     
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -29,7 +26,7 @@
             flex-direction: column;
         }
 
-        /* --- Barra de Navegação --- */
+        /* --- Navbar --- */
         .navbar-profinder {
             background-color: var(--cor-primaria);
             padding: 0;
@@ -81,11 +78,11 @@
             color: var(--cor-primaria) !important;
         }
 
-        /* --- Estrutura Principal (LARGURA EXPANDIDA) --- */
+        /* --- Estrutura Principal --- */
         .main-container {
             flex: 1;
             padding: 40px 20px;
-            max-width: 1300px; /* Largura expandida para aproveitar a tela */
+            max-width: 1200px; 
             margin: 0 auto;
             width: 100%;
         }
@@ -129,7 +126,8 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             border: 1px solid rgba(41, 142, 148, 0.1);
             overflow: hidden;
-            padding: 40px;
+            padding: 50px;
+            margin-bottom: 40px;
         }
 
         .foto-perfil-container {
@@ -170,19 +168,52 @@
         .titulo-descricao {
             color: var(--cor-primaria);
             font-weight: 700;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
         }
 
         .texto-descricao {
             color: var(--cor-texto-escuro);
             font-size: 1.05rem;
             line-height: 1.7;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             background-color: #fcfdfe;
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
             border-left: 4px solid var(--cor-primaria);
+        }
+
+        /* --- Portfólio de Trabalhos --- */
+        .card-trabalho {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05) !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-trabalho:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(41, 142, 148, 0.15);
+        }
+
+        .img-portfolio {
+            cursor: zoom-in; /* Altera o cursor para lupa indicando que pode ampliar */
+            transition: opacity 0.3s ease;
+        }
+
+        .img-portfolio:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Ampliação de Imagem (Lightbox Customizado) --- */
+        .modal-img-expanded {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        
+        .modal-backdrop.show {
+            opacity: 0.85; /* Fundo mais escuro para destacar a foto */
         }
 
         .bloco-avaliacoes {
@@ -249,80 +280,6 @@
         .btn-avaliacoes:hover {
             background-color: #f8f9fa;
             color: var(--cor-texto-escuro);
-        }
-
-        /* --- Portfólio --- */
-        .titulo-portfolio {
-            color: var(--cor-primaria); /* Cor corrigida para o verde primário */
-            font-weight: 700;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .portfolio-card {
-            border-radius: 12px;
-            overflow: hidden;
-            background: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            cursor: pointer;
-            height: 100%;
-        }
-
-        .portfolio-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(41, 142, 148, 0.2);
-        }
-
-        .portfolio-img-container {
-            height: 250px; /* Altura ajustada para o portfólio largo */
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .portfolio-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .portfolio-card:hover .portfolio-img-container img {
-            transform: scale(1.1);
-        }
-
-        .portfolio-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-            padding: 30px 20px 15px;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-
-        .portfolio-card:hover .portfolio-overlay {
-            opacity: 1;
-        }
-
-        .portfolio-overlay h5 {
-            margin: 0 0 5px 0;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .portfolio-overlay small {
-            color: #d1d5db;
-            font-size: 0.85rem;
         }
 
         /* --- Responsividade --- */
@@ -400,10 +357,6 @@
                 width: 100%;
                 justify-content: center;
             }
-            .portfolio-overlay {
-                opacity: 1;
-                background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-            }
         }
     </style>
 </head>
@@ -452,15 +405,15 @@
         <div class="card-perfil">
             <div class="row">
                 
+                <!-- Coluna Esquerda: Foto -->
                 <div class="col-md-4 text-center mb-4 mb-md-0">
                     <div class="foto-perfil-container">
-                        <!-- Usando o banco de dados direto -->
                         <img src="{{ profissional.foto }}" alt="Foto de {{ profissional.nome }}">
                     </div>
                 </div>
                 
+                <!-- Coluna Direita: Informações -->
                 <div class="col-md-8">
-                    <!-- Usando o banco de dados direto -->
                     <h1 class="nome-profissional">{{ profissional.nome }}</h1>
                     
                     <div class="info-basica">
@@ -468,7 +421,6 @@
                         <i class="bi bi-dot text-muted"></i>
                         <span><i class="bi bi-geo-alt-fill text-danger"></i> {{ profissional.bairro.replace('_', ' ').title() }}</span>
                         
-                        <!-- Verificação do Telefone -->
                         {% if profissional.telefone %}
                             <i class="bi bi-dot text-muted"></i>
                             <span><i class="bi bi-telephone-fill" style="color: var(--cor-primaria);"></i> {{ profissional.telefone }}</span>
@@ -480,6 +432,7 @@
                         {{ profissional.descricao | default("Profissional qualificado e altamente recomendado pela comunidade ProFinder. Especialista na sua área de atuação, sempre com foco em entregar o melhor resultado para os clientes.", true) }}
                     </p>
 
+                    <!-- Avaliações e Botões -->
                     <div class="bloco-avaliacoes">
                         <div class="estrelas">
                             {% for i in range(5) %}
@@ -495,14 +448,13 @@
                         </span>
                     </div>
 
-                    <div class="botoes-acao mt-4">
-                        <!-- Botão Inteligente: Se tiver telefone abre WhatsApp, senão abre um Modal -->
+                    <div class="botoes-acao mt-4 mb-3">
                         {% if profissional.telefone %}
                             <a href="https://wa.me/55{{ profissional.telefone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') }}" target="_blank" class="btn-mensagem me-md-3 mb-3 mb-md-0" style="background-color: #25D366; border: none; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);">
                                 <i class="bi bi-whatsapp"></i> Chamar no WhatsApp
                             </a>
                         {% else %}
-                            <button class="btn-mensagem me-md-3 mb-3 mb-md-0" data-bs-toggle="modal" data-bs-target="#chatModal" style="background-color: #95a5a6; border: none; box-shadow: none;">
+                            <button type="button" class="btn-mensagem me-md-3 mb-3 mb-md-0" data-bs-toggle="modal" data-bs-target="#modalSemTelefone" style="background-color: #95a5a6; border: none; box-shadow: none;">
                                 <i class="bi bi-telephone-x"></i> Sem Telefone
                             </button>
                         {% endif %}
@@ -514,82 +466,79 @@
                 </div>
 
             </div>
-        </div>
 
-        <div class="portfolio-section mt-5 mb-4">
-            <!-- Título do Portfólio atualizado para a cor verde primaria -->
-            <h3 class="titulo-portfolio"><i class="bi bi-images"></i> Portfólio de Trabalhos</h3>
-            <p class="text-muted mb-4">Veja alguns dos projetos e serviços recentes realizados por {{ profissional.nome.split()[0] }}.</p>
+            <!-- SEÇÃO DE PORTFÓLIO -->
+            {% if portfolio %}
+            <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
+            <h3 class="titulo-descricao mb-4"><i class="bi bi-images me-2"></i> Portfólio de Trabalhos</h3>
             
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+                {% for trabalho in portfolio %}
                 <div class="col">
-                    <div class="portfolio-card">
-                        <div class="portfolio-img-container">
-                            <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Trabalho 1">
-                        </div>
-                        <div class="portfolio-overlay">
-                            <h5>Manutenção e Reforma</h5>
-                            <small><i class="bi bi-calendar3"></i> Concluído em: Outubro/2023</small>
+                    <div class="card h-100 card-trabalho shadow-sm">
+                        <!-- Adicionado onclick para abrir o modal de imagem ampliada -->
+                        <img src="{{ trabalho.imagem_url }}" class="card-img-top img-portfolio" alt="{{ trabalho.titulo }}" style="height: 260px; object-fit: cover;" onclick="ampliarImagem('{{ trabalho.imagem_url }}', '{{ trabalho.titulo }}')">
+                        <div class="card-body p-3 text-center bg-light">
+                            <h6 class="card-title mb-1" style="color: var(--cor-primaria); font-weight: 700; font-size: 1.1rem;">{{ trabalho.titulo }}</h6>
+                            <small class="text-muted" style="font-size: 0.95rem;"><i class="bi bi-calendar3"></i> {{ trabalho.data_conclusao }}</small>
                         </div>
                     </div>
                 </div>
-
-                <div class="col">
-                    <div class="portfolio-card">
-                        <div class="portfolio-img-container">
-                            <img src="https://images.unsplash.com/photo-1504307651254-35680f356f12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Trabalho 2">
-                        </div>
-                        <div class="portfolio-overlay">
-                            <h5>Projeto de Alvenaria</h5>
-                            <small><i class="bi bi-calendar3"></i> Concluído em: Agosto/2023</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="portfolio-card">
-                        <div class="portfolio-img-container">
-                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Trabalho 3">
-                        </div>
-                        <div class="portfolio-overlay">
-                            <h5>Acabamento Premium</h5>
-                            <small><i class="bi bi-calendar3"></i> Concluído em: Janeiro/2024</small>
-                        </div>
-                    </div>
-                </div>
-
+                {% endfor %}
             </div>
-            
-            <div class="text-center mt-5">
-                <button class="btn btn-outline-secondary rounded-pill px-4 py-2" style="font-weight: 500; border-color: #dee2e6;">
-                    Carregar mais projetos <i class="bi bi-arrow-clockwise ms-1"></i>
-                </button>
-            </div>
+            {% endif %}
+
         </div>
 
     </main>
 
-    <!-- Modal Elegante Substituindo o Alert() -->
-    <div class="modal fade" id="chatModal" tabindex="-1" aria-hidden="true">
+    <!-- Modal de Aviso Sem Telefone -->
+    <div class="modal fade" id="modalSemTelefone" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0" style="border-radius: 12px; overflow: hidden;">
-                <div class="modal-header text-white" style="background-color: var(--cor-primaria);">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-info-circle me-2"></i>Aviso</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" style="color: var(--cor-primaria);">Contato Indisponível</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4 text-center">
-                    <i class="bi bi-telephone-x text-muted mb-3 d-block" style="font-size: 3rem;"></i>
-                    <h5 class="fw-bold mb-3">Profissional Sem Contato</h5>
-                    <p class="text-muted mb-0">Este profissional não disponibilizou um número de telefone na plataforma. O sistema de Chat interno será ativado na próxima fase do projeto!</p>
+                <div class="modal-body pb-4">
+                    Este profissional ainda não adicionou um número de contato ao seu perfil. Tente contatá-lo via chat (em breve) ou escolha outro profissional na mesma categoria.
                 </div>
-                <div class="modal-footer border-0 justify-content-center pb-4">
-                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Entendi</button>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOVO: Modal para Ampliar Imagem (Lightbox) -->
+    <div class="modal fade" id="modalAmpliarImagem" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-header border-0 pb-0 justify-content-end">
+                    <!-- Botão de fechar branco para contrastar com o fundo escuro -->
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity: 1; text-shadow: 0px 0px 10px rgba(0,0,0,0.5);"></button>
+                </div>
+                <div class="modal-body text-center p-0">
+                    <img src="" id="imagemAmpliada" class="modal-img-expanded rounded shadow-lg" alt="Trabalho Ampliado">
+                    <h4 id="tituloImagemAmpliada" class="text-white mt-3 fw-bold" style="text-shadow: 1px 1px 5px rgba(0,0,0,0.8);"></h4>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para abrir a imagem no Modal -->
+    <script>
+        function ampliarImagem(src, titulo) {
+            // Atualiza o source da imagem do modal e o título
+            document.getElementById('imagemAmpliada').src = src;
+            document.getElementById('tituloImagemAmpliada').innerText = titulo;
+            
+            // Instancia e abre o modal usando Bootstrap JS
+            var myModal = new bootstrap.Modal(document.getElementById('modalAmpliarImagem'));
+            myModal.show();
+        }
+    </script>
 </body>
 </html>
