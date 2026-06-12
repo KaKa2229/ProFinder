@@ -389,8 +389,8 @@
                 <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
                     <div class="foto-circle" id="fotoPreviewContainer">
                         
-                        <!-- Lógica Adicionada: Renderiza a foto do banco de dados se houver -->
-                        {% if current_user.foto and current_user.foto != 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' %}
+                        <!-- Lógica Adicionada: Renderiza a foto do banco de dados se houver, bloqueando ambos placeholders padrão -->
+                        {% if current_user.foto and current_user.foto != 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' and current_user.foto != '/static/img/default-avatar.png' %}
                             <img src="{{ current_user.foto }}" alt="Sua Foto">
                         {% else %}
                             <i class="bi bi-camera" id="iconeCamera"></i>

@@ -16,7 +16,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'profinder.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Pastas de Upload (Cria as pastas automaticamente se não existirem)
+# Configuração de pastas de Upload
 UPLOAD_PERFIL = os.path.join(app.static_folder, 'img', 'perfil')
 UPLOAD_PORTFOLIO = os.path.join(app.static_folder, 'img', 'portfolio')
 os.makedirs(UPLOAD_PERFIL, exist_ok=True)
@@ -38,10 +38,10 @@ class Usuario(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     senha = db.Column(db.String(128), nullable=False)
     tipo_conta = db.Column(db.String(20), default='cliente')
+    foto = db.Column(db.String(255), default='/static/img/default-avatar.png')
 
-# ATENÇÃO: Se as tabelas abaixo já não estavam integradas de forma relacional no SEU app.py
-# Elas continuam como antes para não quebrar a sua estrutura atual que estava funcionando.
-# Mas adicionei a tabela de Portfolio!
+    def get_id(self):
+        return f"usuario_{self.id}"
 
 class Profissional(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,7 +49,7 @@ class Profissional(db.Model, UserMixin):
     cpf = db.Column(db.String(11), unique=True, nullable=False) 
     email = db.Column(db.String(120), unique=True, nullable=False)
     senha = db.Column(db.String(128), nullable=False)
-    telefone = db.Column(db.String(20), nullable=True) # Coluna de telefone readicionada
+    telefone = db.Column(db.String(20), nullable=True) 
     profissao = db.Column(db.String(50), nullable=False)
     bairro = db.Column(db.String(50), nullable=False)
     descricao = db.Column(db.Text, nullable=True) 
@@ -60,6 +60,9 @@ class Profissional(db.Model, UserMixin):
     # Relação com os trabalhos (Portfólio)
     trabalhos = db.relationship('Portfolio', backref='profissional', lazy=True, cascade='all, delete-orphan')
 
+    def get_id(self):
+        return f"profissional_{self.id}"
+
 class Portfolio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'), nullable=False)
@@ -69,10 +72,20 @@ class Portfolio(db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = Usuario.query.get(int(user_id))
-    if user:
-        return user
-    return Profissional.query.get(int(user_id))
+    try:
+        # Agora divide o prefixo do número real (Ex: "usuario_1" -> tipo="usuario", real_id=1)
+        tipo, real_id = user_id.split('_')
+        if tipo == 'usuario':
+            return Usuario.query.get(int(real_id))
+        elif tipo == 'profissional':
+            return Profissional.query.get(int(real_id))
+    except ValueError:
+        # Fallback de segurança para sessões antigas que só tinham o número
+        user = Usuario.query.get(int(user_id))
+        if user:
+            return user
+        return Profissional.query.get(int(user_id))
+    return None
 
 with app.app_context():
     db.create_all()
@@ -187,8 +200,26 @@ def cadastro_profissional():
             nome=nome, cpf=cpf, email=email, senha=senha_criptografada, 
             telefone=telefone, profissao=profissao, bairro=regiao, descricao=descricao
         )
+        
+        # 1. Primeiro guardamos no banco para gerar um ID para este profissional
         db.session.add(novo_profissional)
         db.session.commit()
+
+        # 2. AGORA SIM: Se ele enviou uma foto no momento do cadastro, nós guardamos!
+        if 'foto' in request.files:
+            foto_file = request.files['foto']
+            if foto_file and foto_file.filename != '':
+                timestamp = int(time.time())
+                # Usamos o ID recém-criado para nomear o ficheiro de forma segura
+                nome_seguro = secure_filename(f"user_{novo_profissional.id}_{timestamp}_{foto_file.filename}")
+                caminho_salvar = os.path.join(UPLOAD_PERFIL, nome_seguro)
+                
+                # Salva a imagem na pasta estática
+                foto_file.save(caminho_salvar)
+                
+                # Atualiza a foto do profissional e faz um segundo commit
+                novo_profissional.foto = f"/static/img/perfil/{nome_seguro}"
+                db.session.commit()
 
         login_user(novo_profissional)
         return redirect(url_for('index'))
@@ -247,18 +278,18 @@ def meu_perfil():
         db_user.nome = request.form.get('nome')
         db_user.email = request.form.get('email')
 
-        # Atualiza os dados específicos se for Profissional
+        # Se o utilizador for Profissional, atualiza os campos extra
         if db_user.tipo_conta == 'profissional':
             db_user.profissao = request.form.get('profissao')
             db_user.bairro = request.form.get('regiao')
             db_user.descricao = request.form.get('descricao')
             db_user.telefone = request.form.get('telefone')
 
-        # Lógica de atualização de segurança (Palavra-passe)
         senha_atual = request.form.get('senha_atual')
         nova_senha = request.form.get('nova_senha')
         confirma_senha = request.form.get('confirma_senha')
 
+        # Lógica de atualização de segurança (Palavra-passe)
         if nova_senha or confirma_senha:
             if not senha_atual:
                 flash("Para alterar a sua palavra-passe, deve introduzir a palavra-passe atual.", "danger")
@@ -287,13 +318,12 @@ def meu_perfil():
         db.session.commit()
         return redirect(url_for('meu_perfil'))
 
-    # Se for apenas um "GET", enviamos também os trabalhos para o HTML do profissional
+    # Se for apenas um "GET" (entrar na página), exibe o HTML correto consoante o tipo de conta
     if current_user.tipo_conta == 'profissional':
         trabalhos_portfolio = Portfolio.query.filter_by(profissional_id=current_user.id).all()
         return render_template('meu_perfil_profissional.html', trabalhos=trabalhos_portfolio)
     else:
         return render_template('meu_perfil_cliente.html')
-
 
 # ==========================================
 # ROTAS DO PORTFÓLIO (FASE 2)
