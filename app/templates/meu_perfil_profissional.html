@@ -27,7 +27,6 @@
             flex-direction: column;
         }
 
-        /* --- Navbar --- */
         .navbar-profinder {
             background-color: var(--cor-primaria);
             padding: 0;
@@ -67,7 +66,6 @@
             color: var(--cor-primaria) !important;
         }
 
-        /* --- Container Principal --- */
         .main-container {
             flex: 1;
             padding: 40px 20px;
@@ -76,7 +74,6 @@
             align-items: flex-start;
         }
 
-        /* --- Card do Perfil --- */
         .card-perfil {
             background-color: white;
             border-radius: 12px;
@@ -150,7 +147,6 @@
             text-decoration: underline;
         }
 
-        /* --- Estilo dos Inputs --- */
         .form-label-custom {
             color: var(--cor-primaria);
             font-weight: 600;
@@ -183,11 +179,6 @@
             border-color: #ced4da;
             cursor: not-allowed;
         }
-        
-        .form-control-disabled:focus {
-            box-shadow: none;
-            border-color: #ced4da;
-        }
 
         .password-container {
             position: relative;
@@ -216,7 +207,6 @@
             margin-bottom: 22px;
         }
 
-        /* --- Alertas --- */
         .alerta-mensagem {
             font-size: 0.95rem;
             font-weight: 500;
@@ -281,17 +271,17 @@
             margin-top: 5px;
             transition: all 0.3s ease;
         }
-        
-        .portfolio-placeholder:hover {
-            background-color: #eef6f6;
-            border-color: var(--cor-primaria);
-            cursor: pointer;
+        .portfolio-placeholder p {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #64748b;
         }
 
-        .portfolio-placeholder i {
-            font-size: 2.8rem;
-            color: var(--cor-primaria);
-        }
+        /* --- Cores Dinâmicas dos Pedidos --- */
+        .border-left-pendente { border-left: 4px solid #f1c40f !important; }
+        .border-left-aceito { border-left: 4px solid #2ecc71 !important; }
+        .border-left-recusado { border-left: 4px solid #e74c3c !important; }
 
         @media (max-width: 991px) {
             .navbar-collapse {
@@ -329,11 +319,6 @@
                 display: block;
                 text-align: center;
             }
-        }
-
-        @media (max-width: 768px) {
-            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
-            .card-perfil { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -376,7 +361,6 @@
                 <p class="subtitulo-card">Mantenha a sua vitrine digital sempre atualizada.</p>
             </div>
 
-            <!-- Formulário Principal -->
             <form id="formPerfil" action="{{ url_for('meu_perfil') }}" method="POST" enctype="multipart/form-data">
 
                 <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
@@ -499,9 +483,7 @@
 
                 <button type="submit" class="btn-submit mb-4">Salvar Alterações</button>
             </form>
-            <!-- FECHAMENTO DO FORMULÁRIO PRINCIPAL AQUI -->
 
-            <!-- SEÇÃO DE PORTFÓLIO (INDEPENDENTE) -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -511,7 +493,6 @@
                 </button>
             </div>
 
-            <!-- Grelha de Exibição das Fotos -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
                 {% if trabalhos %}
                     {% for trabalho in trabalhos %}
@@ -533,12 +514,55 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <!-- Placeholder Clicável (Abre o Modal) -->
                     <div class="col-12">
                         <div class="portfolio-placeholder" onclick="document.querySelector('[data-bs-target=\'#modalPortfolio\']').click();">
                             <i class="bi bi-images"></i>
                             <p>Ainda não adicionou nenhum trabalho. Clique aqui para enviar a sua primeira foto!</p>
                         </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.2rem; margin: 0;"><i class="bi bi-inbox me-2"></i> Caixa de Pedidos (Clientes)</h5>
+            </div>
+
+            <div class="row row-cols-1 g-3 mb-4">
+                {% if solicitacoes %}
+                    {% for pedido in solicitacoes %}
+                    <div class="col">
+                        <div class="card border-0 shadow-sm border-left-{{ pedido.status }}" style="border-radius: 10px;">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold mb-0" style="color: var(--cor-texto-escuro);">{{ pedido.cliente.nome }}</h6>
+                                    <span class="badge {% if pedido.status == 'pendente' %}bg-warning text-dark{% elif pedido.status == 'aceito' %}bg-success{% else %}bg-danger{% endif %} text-uppercase" style="font-size: 0.75rem;">{{ pedido.status }}</span>
+                                </div>
+                                <p class="text-muted small mb-3"><i class="bi bi-calendar3"></i> {{ pedido.data_solicitacao.strftime('%d/%m/%Y às %H:%M') }}</p>
+                                <p style="font-size: 0.95rem; color: var(--cor-texto-escuro);">{{ pedido.descricao }}</p>
+                                
+                                {% if pedido.status == 'pendente' %}
+                                <div class="d-flex gap-2 mt-3">
+                                    <form action="{{ url_for('atualizar_solicitacao', id=pedido.id, acao='aceitar') }}" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-success px-3" style="border-radius: 20px; font-weight: 600;"><i class="bi bi-check-lg"></i> Aceitar</button>
+                                    </form>
+                                    <form action="{{ url_for('atualizar_solicitacao', id=pedido.id, acao='recusar') }}" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-3" style="border-radius: 20px; font-weight: 600;"><i class="bi bi-x-lg"></i> Recusar</button>
+                                    </form>
+                                </div>
+                                {% elif pedido.status == 'aceito' %}
+                                <div class="mt-3 p-2 bg-light rounded" style="font-size: 0.9rem;">
+                                    <i class="bi bi-info-circle text-success me-1"></i> E-mail de contato do cliente: <strong>{{ pedido.cliente.email }}</strong>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center py-4 bg-light rounded">
+                        <p class="text-muted mb-0">Você ainda não recebeu nenhuma solicitação de serviço.</p>
                     </div>
                 {% endif %}
             </div>
@@ -554,7 +578,6 @@
                     <h5 class="modal-title" style="color: var(--cor-primaria); font-weight: 700;">Adicionar Trabalho</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <!-- Formulário Aponta para a Rota Nova do app.py -->
                 <form action="{{ url_for('adicionar_portfolio') }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-body pb-4">
                         <div class="mb-3">
