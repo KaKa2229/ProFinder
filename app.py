@@ -28,7 +28,7 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-login_manager.login_message = "Por favor, faça login para acessar esta página."
+login_manager.login_message = "Por favor, inicie sessão para aceder a esta página."
 login_manager.login_message_category = "info"
 
 # --- MODELOS DA BASE DE DADOS ---
@@ -81,14 +81,29 @@ class SolicitacaoServico(db.Model):
     descricao = db.Column(db.Text, nullable=False)
     data_solicitacao = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(20), default='pendente') # Pode ser: 'pendente', 'aceito', 'recusado'
+    avaliado = db.Column(db.Boolean, default=False) # FASE 4: Controlo para saber se já foi avaliado
     
-    # Facilita aceder aos dados do cliente a partir de uma solicitação
+    # Facilita o acesso aos dados do cliente a partir de uma solicitação
     cliente = db.relationship('Usuario', backref='minhas_solicitacoes', lazy=True)
+
+# --- FASE 4: MODELO DE AVALIAÇÃO ---
+class Avaliacao(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'), nullable=False)
+    nota = db.Column(db.Integer, nullable=False) # Vai de 1 a 5
+    comentario = db.Column(db.Text, nullable=True)
+    data_avaliacao = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relações para facilitar as buscas
+    cliente = db.relationship('Usuario', backref='avaliacoes_dadas', lazy=True)
+    profissional = db.relationship('Profissional', backref='avaliacoes_recebidas', lazy=True)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     try:
-        # Agora divide o prefixo do número real (Ex: "usuario_1" -> tipo="usuario", real_id=1)
+        # Divide o prefixo do número real (Ex: "usuario_1" -> tipo="usuario", real_id=1)
         tipo, real_id = user_id.split('_')
         if tipo == 'usuario':
             return Usuario.query.get(int(real_id))
@@ -136,7 +151,9 @@ def busca_profissionais(categoria):
 def perfil(id):
     profissional_selecionado = Profissional.query.get_or_404(id)
     trabalhos_portfolio = Portfolio.query.filter_by(profissional_id=id).all()
-    return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio)
+    # Adicionado envio de avaliações (FASE 4)
+    avaliacoes = Avaliacao.query.filter_by(profissional_id=id).order_by(Avaliacao.data_avaliacao.desc()).all()
+    return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio, avaliacoes=avaliacoes)
 
 
 # ROTAS DE AUTENTICAÇÃO E REGISTO
@@ -311,25 +328,23 @@ def meu_perfil():
                     return redirect(url_for('meu_perfil'))
             else:
                 flash("A palavra-passe atual está incorreta. A sua alteração não foi guardada.", "danger")
-        # Guarda definitivamente as alterações e recarrega a página
+                return redirect(url_for('meu_perfil'))
+        else:
+            flash("O seu perfil foi atualizado com sucesso!", "success")
+
         db.session.commit()
         return redirect(url_for('meu_perfil'))
 
-    # Se for apenas um "GET" (entrar na página), exibe o HTML correto consoante o tipo de conta
     if current_user.tipo_conta == 'profissional':
-        # Busca portfólio (se existir a funcionalidade)
         trabalhos_portfolio = Portfolio.query.filter_by(profissional_id=current_user.id).all()
-        # BUSCA AS SOLICITAÇÕES RECEBIDAS PELO PROFISSIONAL
         solicitacoes_recebidas = SolicitacaoServico.query.filter_by(profissional_id=current_user.id).order_by(SolicitacaoServico.data_solicitacao.desc()).all()
-        
         return render_template('meu_perfil_profissional.html', trabalhos=trabalhos_portfolio, solicitacoes=solicitacoes_recebidas)
     else:
-        # BUSCA AS SOLICITAÇÕES ENVIADAS PELO CLIENTE
         minhas_solicitacoes = SolicitacaoServico.query.filter_by(cliente_id=current_user.id).order_by(SolicitacaoServico.data_solicitacao.desc()).all()
         return render_template('meu_perfil_cliente.html', solicitacoes=minhas_solicitacoes)
 
 # ==========================================
-# ROTAS DO PORTFÓLIO E FASE 3
+# ROTAS DO PORTFÓLIO E FASE 3 E 4
 # ==========================================
 
 @app.route('/adicionar-portfolio', methods=['POST'])
@@ -382,11 +397,9 @@ def excluir_portfolio(id):
         
     return redirect(url_for('meu_perfil'))
 
-# NOVA ROTA (FASE 3): Processar a solicitação enviada pelo cliente
 @app.route('/solicitar-servico/<int:id>', methods=['POST'])
 @login_required
 def solicitar_servico(id):
-    # Apenas clientes podem solicitar serviços
     if current_user.tipo_conta != 'cliente':
         flash("Apenas clientes registados podem solicitar serviços. Por favor, inicie sessão com uma conta de cliente.", "danger")
         return redirect(url_for('perfil', id=id))
@@ -408,7 +421,6 @@ def solicitar_servico(id):
     flash("A sua solicitação foi enviada com sucesso! O profissional irá ser notificado.", "success")
     return redirect(url_for('perfil', id=id))
 
-# NOVA ROTA (FASE 3): Aceitar ou Recusar Solicitações (Profissional)
 @app.route('/atualizar-solicitacao/<int:id>/<acao>', methods=['POST'])
 @login_required
 def atualizar_solicitacao(id, acao):
@@ -417,7 +429,6 @@ def atualizar_solicitacao(id, acao):
         
     solicitacao = SolicitacaoServico.query.get_or_404(id)
     
-    # Garante que só o profissional dono do perfil pode alterar o status
     if solicitacao.profissional_id == current_user.id:
         if acao == 'aceitar':
             solicitacao.status = 'aceito'
@@ -426,6 +437,48 @@ def atualizar_solicitacao(id, acao):
             solicitacao.status = 'recusado'
             flash("Você RECUSOU o pedido.", "info")
         db.session.commit()
+        
+    return redirect(url_for('meu_perfil'))
+
+# NOVA ROTA (FASE 4): Processar a avaliação do cliente
+@app.route('/avaliar/<int:solicitacao_id>', methods=['POST'])
+@login_required
+def avaliar_servico(solicitacao_id):
+    if current_user.tipo_conta != 'cliente':
+        return redirect(url_for('index'))
+        
+    solicitacao = SolicitacaoServico.query.get_or_404(solicitacao_id)
+    
+    # Verifica se o pedido é do cliente, se foi aceite e se ainda não foi avaliado
+    if solicitacao.cliente_id == current_user.id and solicitacao.status == 'aceito' and not solicitacao.avaliado:
+        nota = int(request.form.get('nota'))
+        comentario = request.form.get('comentario')
+        
+        # Cria a avaliação
+        nova_avaliacao = Avaliacao(
+            cliente_id=current_user.id,
+            profissional_id=solicitacao.profissional_id,
+            nota=nota,
+            comentario=comentario
+        )
+        
+        # Marca a solicitação como avaliada
+        solicitacao.avaliado = True
+        db.session.add(nova_avaliacao)
+        db.session.commit()
+        
+        # RECALCULAR A MÉDIA DO PROFISSIONAL
+        profissional = Profissional.query.get(solicitacao.profissional_id)
+        todas_avaliacoes = Avaliacao.query.filter_by(profissional_id=profissional.id).all()
+        
+        if todas_avaliacoes:
+            media = sum(av.nota for av in todas_avaliacoes) / len(todas_avaliacoes)
+            profissional.avaliacao = round(media, 1) # Arredonda para 1 casa decimal (ex: 4.5)
+            db.session.commit()
+            
+        flash("Avaliação enviada com sucesso! Obrigado pelo seu feedback.", "success")
+    else:
+        flash("Ação inválida. Apenas pode avaliar serviços que foram concluídos.", "danger")
         
     return redirect(url_for('meu_perfil'))
 

@@ -57,8 +57,27 @@
             color: white !important;
         }
 
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
         .btn-login-nav {
             transition: all 0.3s ease !important;
+        }
+
+        .btn-login-nav::after {
+            display: none !important;
         }
 
         .btn-login-nav:hover {
@@ -103,7 +122,6 @@
             opacity: 0.8;
         }
 
-        /* --- Upload de Foto --- */
         .foto-upload-container {
             display: flex;
             flex-direction: column;
@@ -147,7 +165,6 @@
             text-decoration: underline;
         }
 
-        /* --- Estilo dos Inputs --- */
         .form-label-custom {
             color: var(--cor-primaria);
             font-weight: 600;
@@ -167,6 +184,10 @@
             outline: none;
             transition: all 0.3s;
             background-color: transparent;
+        }
+
+        .form-control-custom::placeholder {
+            color: var(--cor-placeholder);
         }
 
         .form-control-custom:focus {
@@ -262,10 +283,39 @@
             display: block;
         }
 
-        /* --- Cores Dinâmicas dos Pedidos --- */
-        .border-left-pendente { border-left: 4px solid #f1c40f !important; }
-        .border-left-aceito { border-left: 4px solid #2ecc71 !important; }
-        .border-left-recusado { border-left: 4px solid #e74c3c !important; }
+        /* --- Estilo de Estrelas para a Janela de Avaliação --- */
+        .star-rating {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .star-rating input {
+            display: none;
+        }
+        
+        .star-rating label {
+            font-size: 2.5rem;
+            color: #e4e5e9;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #ffd700;
+        }
+        
+        .star-rating label:hover {
+            transform: scale(1.15);
+        }
+
+        /* --- Classes de Borda Dinâmica (Correção para o VS Code) --- */
+        .status-borda-pendente { border-left: 4px solid #f1c40f !important; }
+        .status-borda-aceito { border-left: 4px solid #2ecc71 !important; }
+        .status-borda-recusado { border-left: 4px solid #e74c3c !important; }
 
         @media (max-width: 991px) {
             .navbar-collapse {
@@ -306,7 +356,6 @@
                 box-shadow: 0 8px 20px rgba(0,0,0,0.15);
                 border-radius: 30px !important;
                 display: block;
-                text-align: center;
             }
         }
 
@@ -355,8 +404,10 @@
                 <p class="subtitulo-card">Mantenha os seus dados atualizados para uma melhor experiência.</p>
             </div>
 
-            <form id="formPerfil" action="{{ url_for('meu_perfil') }}" method="POST" enctype="multipart/form-data">
+            <!-- Formulário de Edição (Ação corrigida) -->
+            <form action="{{ url_for('meu_perfil') }}" method="POST" enctype="multipart/form-data">
 
+                <!-- Upload de Foto -->
                 <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
                     <div class="foto-circle" id="fotoPreviewContainer">
                         {% if current_user.foto and current_user.foto != 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' and current_user.foto != '/static/img/default-avatar.png' %}
@@ -369,6 +420,7 @@
                     <input type="file" id="inputFoto" name="foto" style="display: none;" accept="image/*" onchange="previewFoto(event)">
                 </div>
 
+                <!-- Mensagens de Feedback (Sucesso/Erro) -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -406,20 +458,13 @@
                 <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;">Alterar Palavra-passe</h5>
 
                 <div class="row row-espaco">
-                    <div class="col-12 mb-3">
-                        <label class="form-label-custom">Palavra-passe Atual:</label>
-                        <div class="password-container">
-                            <input type="password" class="form-control-custom" name="senha_atual" id="senha_atual" placeholder="Digite sua senha atual para autorizar a mudança">
-                            <i class="bi bi-eye toggle-password" onclick="togglePassword('senha_atual', this)"></i>
-                        </div>
-                        <span class="aviso-senha">* Obrigatório caso deseje cadastrar uma nova palavra-passe.</span>
-                    </div>
                     <div class="col-md-6 mb-3 mb-md-0">
                         <label class="form-label-custom">Nova Palavra-passe:</label>
                         <div class="password-container">
                             <input type="password" class="form-control-custom" name="nova_senha" id="nova_senha" placeholder="Nova palavra-passe">
                             <i class="bi bi-eye toggle-password" onclick="togglePassword('nova_senha', this)"></i>
                         </div>
+                        <span class="aviso-senha">* Deixe em branco se não quiser alterar.</span>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">Confirmar Nova Palavra-passe:</label>
@@ -433,6 +478,7 @@
                 <button type="submit" class="btn-submit mb-4">Salvar Alterações</button>
             </form>
 
+            <!-- SEÇÃO DE SOLICITAÇÕES ENVIADAS -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -443,7 +489,8 @@
                 {% if solicitacoes %}
                     {% for pedido in solicitacoes %}
                     <div class="col">
-                        <div class="card border-0 shadow-sm border-left-{{ pedido.status }}" style="border-radius: 10px;">
+                        <!-- Classes CSS substituindo a lógica inline no style -->
+                        <div class="card border-0 shadow-sm {% if pedido.status == 'pendente' %}status-borda-pendente{% elif pedido.status == 'aceito' %}status-borda-aceito{% else %}status-borda-recusado{% endif %}" style="border-radius: 10px;">
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h6 class="fw-bold mb-0" style="color: var(--cor-texto-escuro);">Para: {{ pedido.profissional_solicitado.nome }} <span class="text-muted fw-normal" style="font-size: 0.85rem;">({{ pedido.profissional_solicitado.profissao }})</span></h6>
@@ -453,9 +500,66 @@
                                 <p style="font-size: 0.95rem; color: var(--cor-texto-escuro); margin-bottom: 0;">{{ pedido.descricao }}</p>
 
                                 {% if pedido.status == 'aceito' %}
-                                <div class="mt-3 p-2 bg-light rounded" style="font-size: 0.9rem;">
-                                    <i class="bi bi-info-circle text-success me-1"></i> Contato do Profissional: <strong>{{ pedido.profissional_solicitado.telefone or pedido.profissional_solicitado.email }}</strong>
+                                <div class="mt-3 p-3 bg-light border rounded d-flex flex-column gap-2" style="font-size: 0.95rem;">
+                                    <span class="text-dark"><i class="bi bi-telephone-fill text-success me-2"></i> Contato: <strong>{{ pedido.profissional_solicitado.telefone or pedido.profissional_solicitado.email }}</strong></span>
+                                    
+                                    <!-- NOVO BOTÃO DE AVALIAÇÃO -->
+                                    <div class="mt-2">
+                                        {% if not pedido.avaliado %}
+                                            <button class="btn btn-sm btn-warning text-dark fw-bold px-3 py-2 rounded-pill shadow-sm" style="transition: all 0.3s;" data-bs-toggle="modal" data-bs-target="#modalAvaliar{{ pedido.id }}">
+                                                <i class="bi bi-star-fill text-dark me-1"></i> Avaliar Serviço
+                                            </button>
+                                        {% else %}
+                                            <span class="badge bg-white text-success border border-success px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Serviço Avaliado
+                                            </span>
+                                        {% endif %}
+                                    </div>
                                 </div>
+
+                                <!-- MODAL DE AVALIAÇÃO (Específico para este pedido) -->
+                                {% if not pedido.avaliado %}
+                                <div class="modal fade" id="modalAvaliar{{ pedido.id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header border-0 pb-0">
+                                                <h5 class="modal-title fw-bold" style="color: var(--cor-primaria);">Avaliar {{ pedido.profissional_solicitado.nome.split()[0] }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form action="{{ url_for('avaliar_servico', solicitacao_id=pedido.id) }}" method="POST">
+                                                <div class="modal-body pb-4 text-center">
+                                                    <p class="text-muted mb-4" style="font-size: 0.95rem;">Como foi a sua experiência com este serviço?</p>
+                                                    
+                                                    <!-- Sistema de Estrelas Interativo -->
+                                                    <div class="star-rating mb-4">
+                                                        <input type="radio" id="star5_{{ pedido.id }}" name="nota" value="5" required />
+                                                        <label for="star5_{{ pedido.id }}" class="bi bi-star-fill" title="5 Estrelas"></label>
+                                                        
+                                                        <input type="radio" id="star4_{{ pedido.id }}" name="nota" value="4" />
+                                                        <label for="star4_{{ pedido.id }}" class="bi bi-star-fill" title="4 Estrelas"></label>
+                                                        
+                                                        <input type="radio" id="star3_{{ pedido.id }}" name="nota" value="3" />
+                                                        <label for="star3_{{ pedido.id }}" class="bi bi-star-fill" title="3 Estrelas"></label>
+                                                        
+                                                        <input type="radio" id="star2_{{ pedido.id }}" name="nota" value="2" />
+                                                        <label for="star2_{{ pedido.id }}" class="bi bi-star-fill" title="2 Estrelas"></label>
+                                                        
+                                                        <input type="radio" id="star1_{{ pedido.id }}" name="nota" value="1" />
+                                                        <label for="star1_{{ pedido.id }}" class="bi bi-star-fill" title="1 Estrela"></label>
+                                                    </div>
+                                                    
+                                                    <textarea class="form-control" name="comentario" rows="3" placeholder="Deixe um comentário sobre o serviço prestado (opcional)..." style="border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);"></textarea>
+                                                </div>
+                                                <div class="modal-footer border-0 pt-0 justify-content-center">
+                                                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-submit m-0" style="padding: 10px 30px;">Enviar Avaliação</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
                                 {% endif %}
                             </div>
                         </div>
@@ -509,33 +613,6 @@
                 v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
                 v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
                 cpfInput.value = v;
-            }
-        });
-
-        document.getElementById('formPerfil').addEventListener('submit', function(event) {
-            const senhaAtual = document.getElementById('senha_atual').value;
-            const novaSenha = document.getElementById('nova_senha').value;
-            const confirmaSenha = document.getElementById('confirma_senha').value;
-
-            if (novaSenha !== "" || confirmaSenha !== "") {
-                if (senhaAtual === "") {
-                    event.preventDefault();
-                    alert("Para alterar a sua palavra-passe, é obrigatório digitar a Palavra-passe Atual!");
-                    document.getElementById('senha_atual').focus();
-                    return;
-                }
-                if (novaSenha !== confirmaSenha) {
-                    event.preventDefault();
-                    alert("A nova palavra-passe e a confirmação não coincidem!");
-                    document.getElementById('confirma_senha').focus();
-                    return;
-                }
-                if (novaSenha.length < 6) {
-                    event.preventDefault();
-                    alert("A nova palavra-passe deve ter pelo menos 6 caracteres.");
-                    document.getElementById('nova_senha').focus();
-                    return;
-                }
             }
         });
     </script>
