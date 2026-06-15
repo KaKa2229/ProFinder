@@ -27,6 +27,7 @@
             flex-direction: column;
         }
 
+        /* --- Navbar --- */
         .navbar-profinder {
             background-color: var(--cor-primaria);
             padding: 0;
@@ -66,6 +67,7 @@
             color: var(--cor-primaria) !important;
         }
 
+        /* --- Container Principal --- */
         .main-container {
             flex: 1;
             padding: 40px 20px;
@@ -74,12 +76,13 @@
             align-items: flex-start;
         }
 
+        /* --- Card do Perfil --- */
         .card-perfil {
             background-color: white;
             border-radius: 12px;
             padding: 40px 50px;
             width: 100%;
-            max-width: 850px;
+            max-width: 900px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.05);
             border: 1px solid rgba(41, 142, 148, 0.1);
         }
@@ -147,6 +150,7 @@
             text-decoration: underline;
         }
 
+        /* --- Estilo dos Inputs --- */
         .form-label-custom {
             color: var(--cor-primaria);
             font-weight: 600;
@@ -173,13 +177,20 @@
             box-shadow: 0 0 0 0.2rem rgba(41, 142, 148, 0.25);
         }
 
+        /* Input Bloqueado (CPF) */
         .form-control-disabled {
             background-color: #e9ecef;
             color: #6c757d;
             border-color: #ced4da;
             cursor: not-allowed;
         }
+        
+        .form-control-disabled:focus {
+            box-shadow: none;
+            border-color: #ced4da;
+        }
 
+        /* --- Ícone da Senha --- */
         .password-container {
             position: relative;
             width: 100%;
@@ -207,6 +218,7 @@
             margin-bottom: 22px;
         }
 
+        /* --- Alertas --- */
         .alerta-mensagem {
             font-size: 0.95rem;
             font-weight: 500;
@@ -228,6 +240,7 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* --- Botão --- */
         .btn-submit {
             background-color: var(--cor-primaria);
             color: white;
@@ -256,7 +269,12 @@
             display: block;
         }
 
-        /* --- Portfólio --- */
+        /* --- Classes de Borda Dinâmica (Correção para o VS Code) --- */
+        .status-borda-pendente { border-left: 4px solid #f1c40f !important; }
+        .status-borda-aceito { border-left: 4px solid #2ecc71 !important; }
+        .status-borda-recusado { border-left: 4px solid #e74c3c !important; }
+
+        /* --- Placeholder do Portfólio --- */
         .portfolio-placeholder {
             border: 2px dashed #cbd5e1;
             border-radius: 8px;
@@ -271,17 +289,17 @@
             margin-top: 5px;
             transition: all 0.3s ease;
         }
-        .portfolio-placeholder p {
-            margin: 0;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #64748b;
-        }
 
-        /* --- Cores Dinâmicas dos Pedidos --- */
-        .border-left-pendente { border-left: 4px solid #f1c40f !important; }
-        .border-left-aceito { border-left: 4px solid #2ecc71 !important; }
-        .border-left-recusado { border-left: 4px solid #e74c3c !important; }
+        .portfolio-placeholder:hover {
+            background-color: #eef6f6;
+            border-color: var(--cor-primaria);
+            cursor: pointer;
+        }
+        
+        .portfolio-placeholder i {
+            font-size: 2.8rem;
+            color: #94a3b8;
+        }
 
         @media (max-width: 991px) {
             .navbar-collapse {
@@ -403,21 +421,14 @@
                         <input type="text" class="form-control-custom form-control-disabled" id="cpf-visualizacao" value="{{ current_user.cpf }}" readonly>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label-custom">Telefone / WhatsApp:</label>
-                        <input type="text" class="form-control-custom" name="telefone" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" value="{{ current_user.telefone or '' }}" required autocomplete="tel">
-                    </div>
-                </div>
-
-                <div class="row row-espaco">
-                    <div class="col-12">
                         <label class="form-label-custom">E-mail:</label>
                         <input type="email" class="form-control-custom" name="email" value="{{ current_user.email }}" required>
                     </div>
                 </div>
 
                 <div class="row row-espaco">
-                    <div class="col-md-6 mb-3 mb-md-0">
-                        <label class="form-label-custom">Qual a sua profissão / serviço?</label>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <label class="form-label-custom mb-1">Profissão:</label>
                         <select class="form-select-custom" name="profissao" required>
                             <option value="Carpinteiro" {% if current_user.profissao == 'Carpinteiro' %}selected{% endif %}>Carpinteiro</option>
                             <option value="Diarista" {% if current_user.profissao == 'Diarista' %}selected{% endif %}>Diarista</option>
@@ -431,18 +442,27 @@
                             <option value="Técnico de Informática" {% if current_user.profissao == 'Técnico de Informática' %}selected{% endif %}>Técnico de Informática</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label-custom">Região de Atuação:</label>
-                        <select class="form-select-custom" name="regiao" required>
-                            <option value="centro_itajai" {% if current_user.bairro == 'centro_itajai' %}selected{% endif %}>Centro</option>
-                            <option value="fazenda" {% if current_user.bairro == 'fazenda' %}selected{% endif %}>Fazenda</option>
-                            <option value="cabecudas" {% if current_user.bairro == 'cabecudas' %}selected{% endif %}>Cabeçudas</option>
-                            <option value="cordeiros" {% if current_user.bairro == 'cordeiros' %}selected{% endif %}>Cordeiros</option>
-                            <option value="vila_operaria" {% if current_user.bairro == 'vila_operaria' %}selected{% endif %}>Vila Operária</option>
-                            <option value="ressacada" {% if current_user.bairro == 'ressacada' %}selected{% endif %}>Ressacada</option>
-                            <option value="dom_bosco" {% if current_user.bairro == 'dom_bosco' %}selected{% endif %}>Dom Bosco</option>
-                            <option value="todas" {% if current_user.bairro == 'todas' %}selected{% endif %}>Todo o Vale do Itajaí</option>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <label class="form-label-custom mb-1">Cidade:</label>
+                        <select class="form-select-custom" name="cidade" id="cidadeSelect" onchange="atualizarRegioes()" required>
+                            <option value="Itajaí" {% if current_user.cidade == 'Itajaí' %}selected{% endif %}>Itajaí</option>
+                            <option value="Balneário Camboriú" {% if current_user.cidade == 'Balneário Camboriú' %}selected{% endif %}>Balneário Camboriú</option>
+                            <option value="Navegantes" {% if current_user.cidade == 'Navegantes' %}selected{% endif %}>Navegantes</option>
+                            <option value="Itapema" {% if current_user.cidade == 'Itapema' %}selected{% endif %}>Itapema</option>
                         </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label-custom mb-1">Região Principal:</label>
+                        <select class="form-select-custom" name="regiao" id="regiaoSelect" required>
+                            <!-- Povoado por JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row row-espaco">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="form-label-custom">Telefone / WhatsApp:</label>
+                        <input type="text" class="form-control-custom" name="telefone" placeholder="(00) 00000-0000" oninput="mascaraTelefone(this)" maxlength="15" value="{{ current_user.telefone or '' }}" required autocomplete="tel">
                     </div>
                 </div>
 
@@ -484,6 +504,7 @@
                 <button type="submit" class="btn-submit mb-4">Salvar Alterações</button>
             </form>
 
+            <!-- SEÇÃO DE PORTFÓLIO -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -523,6 +544,7 @@
                 {% endif %}
             </div>
 
+            <!-- SEÇÃO: CAIXA DE PEDIDOS -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -533,7 +555,7 @@
                 {% if solicitacoes %}
                     {% for pedido in solicitacoes %}
                     <div class="col">
-                        <div class="card border-0 shadow-sm border-left-{{ pedido.status }}" style="border-radius: 10px;">
+                        <div class="card border-0 shadow-sm {% if pedido.status == 'pendente' %}status-borda-pendente{% elif pedido.status == 'aceito' %}status-borda-aceito{% else %}status-borda-recusado{% endif %}" style="border-radius: 10px;">
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h6 class="fw-bold mb-0" style="color: var(--cor-texto-escuro);">{{ pedido.cliente.nome }}</h6>
@@ -605,6 +627,40 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        const regioesPorCidade = {
+            "Itajaí": ["Centro", "Fazenda", "Cabeçudas", "Cordeiros", "São Vicente", "Vila Operária", "Ressacada", "Dom Bosco"],
+            "Balneário Camboriú": ["Centro", "Nações", "Pioneiros", "Barra Sul", "Vila Real", "Municípios", "Ariribá"],
+            "Navegantes": ["Centro", "Gravatá", "Meia Praia", "São Domingos", "Machados", "São Paulo"],
+            "Itapema": ["Meia Praia", "Centro", "Morretes", "Ilhota", "Andorinha"]
+        };
+
+        function atualizarRegioes(regiaoPreSelecionada = null) {
+            const cidadeSelect = document.getElementById('cidadeSelect');
+            const regiaoSelect = document.getElementById('regiaoSelect');
+            const cidade = cidadeSelect.value;
+
+            regiaoSelect.innerHTML = '<option value="" disabled selected>Selecione a região</option>';
+
+            if (cidade && regioesPorCidade[cidade]) {
+                const optTodas = document.createElement('option');
+                optTodas.value = "todas";
+                optTodas.textContent = "Atendo toda a cidade";
+                if (regiaoPreSelecionada === "todas") optTodas.selected = true;
+                regiaoSelect.appendChild(optTodas);
+
+                regioesPorCidade[cidade].forEach(regiao => {
+                    const valorId = regiao.toLowerCase().replace(/ /g, "_").normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+                    const opt = document.createElement('option');
+                    opt.value = valorId;
+                    opt.textContent = regiao;
+                    
+                    if (regiaoPreSelecionada === valorId) opt.selected = true;
+                    
+                    regiaoSelect.appendChild(opt);
+                });
+            }
+        }
+
         function previewFoto(event) {
             const input = event.target;
             const container = document.getElementById('fotoPreviewContainer');
@@ -617,6 +673,14 @@
                 }
                 reader.readAsDataURL(input.files[0]);
             }
+        }
+
+        function mascaraTelefone(campo) {
+            let v = campo.value.replace(/\D/g, ''); 
+            if (v.length > 11) v = v.substring(0, 11);
+            if (v.length > 2) v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+            if (v.length > 9) v = v.substring(0, 10) + '-' + v.substring(10);
+            campo.value = v;
         }
 
         function togglePassword(inputId, icon) {
@@ -633,23 +697,21 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
+            if (document.getElementById("cidadeSelect")) {
+                atualizarRegioes("{{ current_user.regiao }}");
+            }
+
             const cpfInput = document.getElementById('cpf-visualizacao');
-            let v = cpfInput.value.replace(/\D/g, ''); 
-            if (v.length === 11) {
-                v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
-                v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
-                v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
-                cpfInput.value = v;
+            if (cpfInput) {
+                let v = cpfInput.value.replace(/\D/g, ''); 
+                if (v.length === 11) {
+                    v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
+                    v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
+                    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
+                    cpfInput.value = v;
+                }
             }
         });
-
-        function mascaraTelefone(campo) {
-            let v = campo.value.replace(/\D/g, ''); 
-            if (v.length > 11) { v = v.substring(0, 11); }
-            if (v.length > 2) { v = '(' + v.substring(0, 2) + ') ' + v.substring(2); }
-            if (v.length > 9) { v = v.substring(0, 10) + '-' + v.substring(10); }
-            campo.value = v;
-        }
 
         document.getElementById('formPerfil').addEventListener('submit', function(event) {
             const senhaAtual = document.getElementById('senha_atual').value;

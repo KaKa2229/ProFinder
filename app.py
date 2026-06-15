@@ -52,15 +52,18 @@ class Profissional(db.Model, UserMixin):
     senha = db.Column(db.String(128), nullable=False)
     telefone = db.Column(db.String(20), nullable=True) 
     profissao = db.Column(db.String(50), nullable=False)
-    bairro = db.Column(db.String(50), nullable=False)
+    
+    # NOVAS COLUNAS: Substituição do Bairro por Cidade e Região
+    cidade = db.Column(db.String(100), nullable=False)
+    regiao = db.Column(db.String(100), nullable=False)
+    
     descricao = db.Column(db.Text, nullable=True) 
     avaliacao = db.Column(db.Float, default=5.0) 
     foto = db.Column(db.String(255), default='https://cdn-icons-png.flaticon.com/512/3135/3135715.png')
     tipo_conta = db.Column(db.String(20), default='profissional')
     
-    # Relação com os trabalhos (Portfólio)
+    # Relações
     trabalhos = db.relationship('Portfolio', backref='profissional', lazy=True, cascade='all, delete-orphan')
-    # Relação: Solicitações recebidas (Fase 3)
     solicitacoes_recebidas = db.relationship('SolicitacaoServico', backref='profissional_solicitado', lazy=True, cascade='all, delete-orphan')
 
     def get_id(self):
@@ -73,44 +76,37 @@ class Portfolio(db.Model):
     data_conclusao = db.Column(db.String(50), nullable=True)
     imagem_url = db.Column(db.String(255), nullable=False)
 
-# --- FASE 3: MODELO DE SOLICITAÇÃO DE SERVIÇO ---
 class SolicitacaoServico(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cliente_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'), nullable=False)
     descricao = db.Column(db.Text, nullable=False)
     data_solicitacao = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(20), default='pendente') # Pode ser: 'pendente', 'aceito', 'recusado'
-    avaliado = db.Column(db.Boolean, default=False) # FASE 4: Controlo para saber se já foi avaliado
+    status = db.Column(db.String(20), default='pendente')
+    avaliado = db.Column(db.Boolean, default=False)
     
-    # Facilita o acesso aos dados do cliente a partir de uma solicitação
     cliente = db.relationship('Usuario', backref='minhas_solicitacoes', lazy=True)
 
-# --- FASE 4: MODELO DE AVALIAÇÃO ---
 class Avaliacao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cliente_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'), nullable=False)
-    nota = db.Column(db.Integer, nullable=False) # Vai de 1 a 5
+    nota = db.Column(db.Integer, nullable=False) 
     comentario = db.Column(db.Text, nullable=True)
     data_avaliacao = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Relações para facilitar as buscas
     cliente = db.relationship('Usuario', backref='avaliacoes_dadas', lazy=True)
     profissional = db.relationship('Profissional', backref='avaliacoes_recebidas', lazy=True)
-
 
 @login_manager.user_loader
 def load_user(user_id):
     try:
-        # Divide o prefixo do número real (Ex: "usuario_1" -> tipo="usuario", real_id=1)
         tipo, real_id = user_id.split('_')
         if tipo == 'usuario':
             return Usuario.query.get(int(real_id))
         elif tipo == 'profissional':
             return Profissional.query.get(int(real_id))
     except ValueError:
-        # Fallback de segurança para sessões antigas que só tinham o número
         user = Usuario.query.get(int(user_id))
         if user:
             return user
@@ -151,10 +147,8 @@ def busca_profissionais(categoria):
 def perfil(id):
     profissional_selecionado = Profissional.query.get_or_404(id)
     trabalhos_portfolio = Portfolio.query.filter_by(profissional_id=id).all()
-    # Adicionado envio de avaliações (FASE 4)
     avaliacoes = Avaliacao.query.filter_by(profissional_id=id).order_by(Avaliacao.data_avaliacao.desc()).all()
     return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio, avaliacoes=avaliacoes)
-
 
 # ROTAS DE AUTENTICAÇÃO E REGISTO
 
@@ -205,31 +199,36 @@ def cadastro_profissional():
         senha = request.form.get('senha')
         confirma_senha = request.form.get('confirma_senha')
         profissao = request.form.get('profissao')
+        
+        # NOVOS CAMPOS: Cidade e Região
+        cidade = request.form.get('cidade')
         regiao = request.form.get('regiao')
+        
         descricao = request.form.get('descricao')
 
         cpf = cpf_raw.replace('.', '').replace('-', '') if cpf_raw else None
 
         if len(cpf) != 11:
             flash("O CPF deve conter exatamente 11 dígitos!", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao)
 
         if senha != confirma_senha:
             flash("As palavras-passe não coincidem. Tente novamente!", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao)
 
         email_existe = Usuario.query.filter_by(email=email).first() or Profissional.query.filter_by(email=email).first()
         cpf_existe = Usuario.query.filter_by(cpf=cpf).first() or Profissional.query.filter_by(cpf=cpf).first()
 
         if email_existe or cpf_existe:
             flash("Este E-mail ou CPF já estão registados no sistema.", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao)
 
         senha_criptografada = bcrypt.generate_password_hash(senha).decode('utf-8')
 
+        # Grava os novos dados de localidade
         novo_profissional = Profissional(
             nome=nome, cpf=cpf, email=email, senha=senha_criptografada, 
-            telefone=telefone, profissao=profissao, bairro=regiao, descricao=descricao
+            telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao
         )
         
         db.session.add(novo_profissional)
@@ -276,7 +275,6 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
 # ROTA: MEU PERFIL (Dinâmica para Cliente ou Profissional)
 
 @app.route('/meu-perfil', methods=['GET', 'POST'])
@@ -300,9 +298,11 @@ def meu_perfil():
         db_user.nome = request.form.get('nome')
         db_user.email = request.form.get('email')
 
+        # ATUALIZAÇÃO DA LOCALIDADE
         if db_user.tipo_conta == 'profissional':
             db_user.profissao = request.form.get('profissao')
-            db_user.bairro = request.form.get('regiao')
+            db_user.cidade = request.form.get('cidade')
+            db_user.regiao = request.form.get('regiao')
             db_user.descricao = request.form.get('descricao')
             db_user.telefone = request.form.get('telefone')
 
@@ -344,7 +344,7 @@ def meu_perfil():
         return render_template('meu_perfil_cliente.html', solicitacoes=minhas_solicitacoes)
 
 # ==========================================
-# ROTAS DO PORTFÓLIO E FASE 3 E 4
+# ROTAS DO PORTFÓLIO E WORKFLOWS
 # ==========================================
 
 @app.route('/adicionar-portfolio', methods=['POST'])
@@ -440,7 +440,6 @@ def atualizar_solicitacao(id, acao):
         
     return redirect(url_for('meu_perfil'))
 
-# NOVA ROTA (FASE 4): Processar a avaliação do cliente
 @app.route('/avaliar/<int:solicitacao_id>', methods=['POST'])
 @login_required
 def avaliar_servico(solicitacao_id):
@@ -449,12 +448,10 @@ def avaliar_servico(solicitacao_id):
         
     solicitacao = SolicitacaoServico.query.get_or_404(solicitacao_id)
     
-    # Verifica se o pedido é do cliente, se foi aceite e se ainda não foi avaliado
     if solicitacao.cliente_id == current_user.id and solicitacao.status == 'aceito' and not solicitacao.avaliado:
         nota = int(request.form.get('nota'))
         comentario = request.form.get('comentario')
         
-        # Cria a avaliação
         nova_avaliacao = Avaliacao(
             cliente_id=current_user.id,
             profissional_id=solicitacao.profissional_id,
@@ -462,18 +459,16 @@ def avaliar_servico(solicitacao_id):
             comentario=comentario
         )
         
-        # Marca a solicitação como avaliada
         solicitacao.avaliado = True
         db.session.add(nova_avaliacao)
         db.session.commit()
         
-        # RECALCULAR A MÉDIA DO PROFISSIONAL
         profissional = Profissional.query.get(solicitacao.profissional_id)
         todas_avaliacoes = Avaliacao.query.filter_by(profissional_id=profissional.id).all()
         
         if todas_avaliacoes:
             media = sum(av.nota for av in todas_avaliacoes) / len(todas_avaliacoes)
-            profissional.avaliacao = round(media, 1) # Arredonda para 1 casa decimal (ex: 4.5)
+            profissional.avaliacao = round(media, 1)
             db.session.commit()
             
         flash("Avaliação enviada com sucesso! Obrigado pelo seu feedback.", "success")
