@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProFinder - Meu Perfil</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cor-primaria: #298e94;
+            --cor-primaria-hover: #217279;
+            --cor-texto-escuro: #2c3e50;
+            --cor-fundo: #f8fcfc;
+            --cor-placeholder: #a0aab5;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-fundo);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Navbar --- */
+        .navbar-profinder {
+            background-color: var(--cor-primaria);
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            height: 100px;
+            margin-left: -40px;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar-brand:hover img {
+            opacity: 0.85; 
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 15px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .btn-login-nav {
+            transition: all 0.3s ease !important;
+        }
+
+        .btn-login-nav::after {
+            display: none !important;
+        }
+
+        .btn-login-nav:hover {
+            background-color: white !important;
+            color: var(--cor-primaria) !important;
+        }
+
+        /* --- Container Principal --- */
+        .main-container {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* --- Card do Perfil --- */
+        .card-perfil {
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px 50px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border: 1px solid rgba(41, 142, 148, 0.1);
+        }
+
+        .cabecalho-perfil {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .titulo-card {
+            color: var(--cor-primaria);
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitulo-card {
+            color: var(--cor-texto-escuro);
+            font-size: 0.95rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        /* --- Upload de Foto --- */
+        .foto-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .foto-circle {
+            width: 120px;
+            height: 120px;
+            border: 2px dashed var(--cor-primaria);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--cor-primaria);
+            font-size: 35px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            overflow: hidden;
+            background-color: #f8fcfc;
+        }
+
+        .foto-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .foto-upload-container:hover .foto-circle {
+            background-color: rgba(41, 142, 148, 0.08);
+            transform: scale(1.05);
+        }
+
+        .foto-label {
+            color: var(--cor-primaria);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        /* --- Estilo dos Inputs --- */
+        .form-label-custom {
+            color: var(--cor-primaria);
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            display: block;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--cor-primaria);
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            color: var(--cor-texto-escuro);
+            outline: none;
+            transition: all 0.3s;
+            background-color: transparent;
+        }
+
+        .form-control-custom::placeholder {
+            color: var(--cor-placeholder);
+        }
+
+        .form-control-custom:focus {
+            border-color: var(--cor-primaria-hover);
+            box-shadow: 0 0 0 0.2rem rgba(41, 142, 148, 0.25);
+        }
+
+        /* Input Bloqueado (CPF) */
+        .form-control-disabled {
+            background-color: #e9ecef;
+            color: #6c757d;
+            border-color: #ced4da;
+            cursor: not-allowed;
+        }
+        
+        .form-control-disabled:focus {
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+
+        /* --- Ícone da Senha --- */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container .form-control-custom {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 14px;
+            cursor: pointer;
+            color: var(--cor-primaria);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--cor-primaria-hover);
+        }
+
+        .row-espaco {
+            margin-bottom: 22px;
+        }
+
+        /* --- Alertas --- */
+        .alerta-mensagem {
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .alerta-sucesso {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alerta-erro {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* --- Botão --- */
+        .btn-submit {
+            background-color: var(--cor-primaria);
+            color: white;
+            font-weight: 600;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 30px;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto 0;
+            display: block;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--cor-primaria-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 142, 148, 0.3);
+        }
+
+        .aviso-senha {
+            font-size: 0.8rem;
+            color: var(--cor-placeholder);
+            margin-top: 5px;
+            display: block;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                position: absolute;
+                top: 100%;
+                left: 15px;
+                right: 15px;
+                width: calc(100% - 30px);
+                background-color: rgba(33, 114, 121, 0.95);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 16px;
+                padding: 15px 20px 25px 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 1050;
+            }
+            .navbar-nav { gap: 5px; }
+            .nav-item { width: 100%; text-align: left; }
+            .nav-link {
+                margin-left: 0;
+                font-size: 1.05rem;
+                padding: 12px 15px !important;
+                border-radius: 8px;
+            }
+            .nav-link:hover, .nav-link:active {
+                background-color: rgba(255, 255, 255, 0.1);
+                padding-left: 20px !important;
+            }
+            .nav-link::after { display: none; }
+            .btn-login-nav {
+                background-color: white !important;
+                color: var(--cor-primaria) !important;
+                border: none !important;
+                padding: 15px !important;
+                margin-top: 15px;
+                font-weight: 700;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                border-radius: 30px !important;
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
+            .card-perfil { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder">
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/></svg>
+            </button>
+            
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('busca_servicos') }}">Buscar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a></li>
+                    
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
+                            <span class="nav-link active" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="card-perfil">
+            
+            <div class="cabecalho-perfil">
+                <h1 class="titulo-card">Meu Perfil</h1>
+                <p class="subtitulo-card">Mantenha os seus dados atualizados para uma melhor experiência.</p>
+            </div>
+
+            <!-- Formulário de Edição -->
+            <form id="formPerfil" action="{{ url_for('meu_perfil') }}" method="POST" enctype="multipart/form-data">
+
+                <!-- Upload de Foto -->
+                <div class="foto-upload-container" onclick="document.getElementById('inputFoto').click();">
+                    <div class="foto-circle" id="fotoPreviewContainer">
+                        <!-- Se o usuário já tiver foto no futuro, o Jinja carrega aqui, senão, mostra a câmera -->
+                        <i class="bi bi-camera" id="iconeCamera"></i>
+                    </div>
+                    <span class="foto-label">Alterar Foto de Perfil</span>
+                    <input type="file" id="inputFoto" name="foto" style="display: none;" accept="image/*" onchange="previewFoto(event)">
+                </div>
+
+                <!-- Mensagens de Feedback (Sucesso/Erro) -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alerta-mensagem {% if category == 'success' %}alerta-sucesso{% else %}alerta-erro{% endif %}">
+                                {% if category == 'success' %}
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                {% else %}
+                                    <i class="bi bi-exclamation-circle-fill me-1"></i>
+                                {% endif %}
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="row row-espaco">
+                    <div class="col-12">
+                        <label class="form-label-custom">Nome Completo:</label>
+                        <input type="text" class="form-control-custom" name="nome" value="{{ current_user.nome }}" required>
+                    </div>
+                </div>
+
+                <div class="row row-espaco">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="form-label-custom">CPF (Apenas visualização):</label>
+                        <input type="text" class="form-control-custom form-control-disabled" id="cpf-visualizacao" value="{{ current_user.cpf }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-custom">E-mail:</label>
+                        <input type="email" class="form-control-custom" name="email" value="{{ current_user.email }}" required>
+                    </div>
+                </div>
+
+                <hr class="mt-4 mb-4" style="border-color: rgba(0,0,0,0.1);">
+                <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;">Alterar Palavra-passe</h5>
+
+                <div class="row row-espaco">
+                    <div class="col-12 mb-3">
+                        <label class="form-label-custom">Palavra-passe Atual:</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control-custom" name="senha_atual" id="senha_atual" placeholder="Digite sua senha atual para autorizar a mudança">
+                            <i class="bi bi-eye toggle-password" onclick="togglePassword('senha_atual', this)"></i>
+                        </div>
+                        <span class="aviso-senha">* Obrigatório caso deseje cadastrar uma nova palavra-passe.</span>
+                    </div>
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="form-label-custom">Nova Palavra-passe:</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control-custom" name="nova_senha" id="nova_senha" placeholder="Nova palavra-passe">
+                            <i class="bi bi-eye toggle-password" onclick="togglePassword('nova_senha', this)"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-custom">Confirmar Nova Palavra-passe:</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control-custom" name="confirma_senha" id="confirma_senha" placeholder="Repita a nova senha">
+                            <i class="bi bi-eye toggle-password" onclick="togglePassword('confirma_senha', this)"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Salvar Alterações</button>
+                
+            </form>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Preview da Imagem
+        function previewFoto(event) {
+            const input = event.target;
+            const container = document.getElementById('fotoPreviewContainer');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    container.innerHTML = `<img src="${e.target.result}" alt="Preview da Foto">`;
+                    container.style.border = "none";
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Lógica de exibir/ocultar a palavra-passe
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+
+        // Formatar o CPF automaticamente no carregamento da página
+        document.addEventListener("DOMContentLoaded", function() {
+            const cpfInput = document.getElementById('cpf-visualizacao');
+            let v = cpfInput.value.replace(/\D/g, ''); 
+            if (v.length === 11) {
+                v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
+                v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
+                v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
+                cpfInput.value = v;
+            }
+        });
+
+        // Verificação Front-End antes de enviar o formulário
+        document.getElementById('formPerfil').addEventListener('submit', function(event) {
+            const senhaAtual = document.getElementById('senha_atual').value;
+            const novaSenha = document.getElementById('nova_senha').value;
+            const confirmaSenha = document.getElementById('confirma_senha').value;
+
+            // Se o utilizador tentou digitar uma nova senha
+            if (novaSenha !== "" || confirmaSenha !== "") {
+                if (senhaAtual === "") {
+                    event.preventDefault(); // Impede o envio do formulário
+                    alert("Para alterar a sua palavra-passe, é obrigatório digitar a Palavra-passe Atual!");
+                    document.getElementById('senha_atual').focus();
+                    return;
+                }
+                if (novaSenha !== confirmaSenha) {
+                    event.preventDefault();
+                    alert("A nova palavra-passe e a confirmação não coincidem!");
+                    document.getElementById('confirma_senha').focus();
+                    return;
+                }
+                if (novaSenha.length < 6) {
+                    event.preventDefault();
+                    alert("A nova palavra-passe deve ter pelo menos 6 caracteres.");
+                    document.getElementById('nova_senha').focus();
+                    return;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
