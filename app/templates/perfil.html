@@ -428,7 +428,14 @@
                     <div class="info-basica">
                         <span>{{ profissional.profissao }}</span>
                         <i class="bi bi-dot text-muted"></i>
-                        <span><i class="bi bi-geo-alt-fill text-danger"></i> {{ profissional.bairro.replace('_', ' ').title() }}</span>
+                        <!-- Correção aplicada aqui: usando cidade e regiao em vez de bairro -->
+                        <span><i class="bi bi-geo-alt-fill text-danger"></i> 
+                            {% if profissional.regiao == 'todas' %}
+                                {{ profissional.cidade }} (Toda a região)
+                            {% else %}
+                                {{ profissional.cidade }} - {{ profissional.regiao.replace('_', ' ').title() }}
+                            {% endif %}
+                        </span>
                         
                         {% if profissional.telefone %}
                             <i class="bi bi-dot text-muted"></i>
@@ -441,10 +448,8 @@
                         {{ profissional.descricao | default("Profissional qualificado e altamente recomendado pela comunidade ProFinder. Especialista na sua área de atuação, sempre com foco em entregar o melhor resultado para os clientes.", true) }}
                     </p>
 
-                    <!-- AVALIAÇÕES ATUALIZADAS: AGORA CONTA O NÚMERO REAL DO BANCO DE DADOS -->
                     <div class="bloco-avaliacoes">
                         <div class="estrelas">
-                            <!-- Loop de estrelas para a média geral do profissional -->
                             {% for i in range(5) %}
                                 {% if i < profissional.avaliacao|int %}
                                     <i class="bi bi-star-fill"></i>
@@ -492,7 +497,6 @@
 
             </div>
 
-            <!-- SEÇÃO DE PORTFÓLIO -->
             {% if portfolio %}
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             <h3 class="titulo-descricao mb-4"><i class="bi bi-images me-2"></i> Portfólio de Trabalhos</h3>
@@ -512,7 +516,6 @@
             </div>
             {% endif %}
             
-            <!-- NOVA SEÇÃO: AVALIAÇÕES DOS CLIENTES (FASE 4) -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);" id="secaoAvaliacoes">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h3 class="titulo-descricao mb-0"><i class="bi bi-chat-quote-fill me-2"></i> Avaliações de Clientes</h3>
@@ -529,7 +532,6 @@
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
                                     <div class="d-flex align-items-center gap-3">
-                                        <!-- Avatar do Cliente -->
                                         <img src="{{ av.cliente.foto }}" alt="Avatar Cliente" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                                         <div>
                                             <h6 class="fw-bold mb-0" style="color: var(--cor-texto-escuro);">{{ av.cliente.nome }}</h6>
@@ -537,7 +539,6 @@
                                         </div>
                                     </div>
                                     <div class="estrelas mb-0" style="font-size: 1.1rem; letter-spacing: 1px;">
-                                        <!-- Mostra as estrelas daquela nota específica -->
                                         {% for i in range(5) %}
                                             <i class="bi bi-star-fill {{ 'estrela-vazia' if i >= av.nota else '' }}"></i>
                                         {% endfor %}
@@ -567,7 +568,6 @@
 
     </main>
 
-    <!-- MODAL DE SOLICITAÇÃO (Fase 3) -->
     <div class="modal fade" id="modalSolicitacao" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -589,7 +589,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE AVISO DE LOGIN -->
     <div class="modal fade" id="modalAvisoLogin" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -608,7 +607,6 @@
         </div>
     </div>
 
-    <!-- Modal de Aviso Sem Telefone -->
     <div class="modal fade" id="modalSemTelefone" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -626,7 +624,6 @@
         </div>
     </div>
 
-    <!-- Modal para Ampliar Imagem -->
     <div class="modal fade" id="modalAmpliarImagem" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content bg-transparent border-0">
