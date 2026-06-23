@@ -443,6 +443,14 @@
                         {% endif %}
                     </div>
 
+                    {% if profissional.endereco_fixo %}
+                    <div class="endereco-fixo mb-4">
+                        <span style="color: var(--cor-texto-escuro); font-size: 0.95rem; background-color: #f0f8f8; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid rgba(41, 142, 148, 0.2);">
+                            <i class="bi bi-shop" style="color: var(--cor-primaria);"></i> <strong>Endereço de Atendimento:</strong> {{ profissional.endereco_fixo }}
+                        </span>
+                    </div>
+                    {% endif %}
+
                     <h3 class="titulo-descricao">Descrição</h3>
                     <p class="texto-descricao">
                         {{ profissional.descricao | default("Profissional qualificado e altamente recomendado pela comunidade ProFinder. Especialista na sua área de atuação, sempre com foco em entregar o melhor resultado para os clientes.", true) }}

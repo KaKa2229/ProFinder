@@ -31,7 +31,10 @@ login_manager.login_view = 'login'
 login_manager.login_message = "Por favor, inicie sessão para aceder a esta página."
 login_manager.login_message_category = "info"
 
-# --- MODELOS DA BASE DE DADOS ---
+# ==========================================
+# MODELOS DA BASE DE DADOS
+# ==========================================
+
 class Usuario(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
@@ -53,9 +56,12 @@ class Profissional(db.Model, UserMixin):
     telefone = db.Column(db.String(20), nullable=True) 
     profissao = db.Column(db.String(50), nullable=False)
     
-    # NOVAS COLUNAS: Substituição do Bairro por Cidade e Região
+    # Colunas de Localização
     cidade = db.Column(db.String(100), nullable=False)
     regiao = db.Column(db.String(100), nullable=False)
+    
+    # NOVA COLUNA ADICIONADA: Endereço Fixo
+    endereco_fixo = db.Column(db.String(255), nullable=True)
     
     descricao = db.Column(db.Text, nullable=True) 
     avaliacao = db.Column(db.Float, default=5.0) 
@@ -116,7 +122,9 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
 
+# ==========================================
 # ROTAS DE NAVEGAÇÃO BÁSICAS
+# ==========================================
 
 @app.route('/')
 def index():
@@ -150,7 +158,9 @@ def perfil(id):
     avaliacoes = Avaliacao.query.filter_by(profissional_id=id).order_by(Avaliacao.data_avaliacao.desc()).all()
     return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio, avaliacoes=avaliacoes)
 
+# ==========================================
 # ROTAS DE AUTENTICAÇÃO E REGISTO
+# ==========================================
 
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro_cliente():
@@ -200,9 +210,9 @@ def cadastro_profissional():
         confirma_senha = request.form.get('confirma_senha')
         profissao = request.form.get('profissao')
         
-        # NOVOS CAMPOS: Cidade e Região
         cidade = request.form.get('cidade')
         regiao = request.form.get('regiao')
+        endereco_fixo = request.form.get('endereco_fixo')
         
         descricao = request.form.get('descricao')
 
@@ -210,25 +220,26 @@ def cadastro_profissional():
 
         if len(cpf) != 11:
             flash("O CPF deve conter exatamente 11 dígitos!", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, endereco_fixo=endereco_fixo, descricao=descricao)
 
         if senha != confirma_senha:
             flash("As palavras-passe não coincidem. Tente novamente!", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, endereco_fixo=endereco_fixo, descricao=descricao)
 
         email_existe = Usuario.query.filter_by(email=email).first() or Profissional.query.filter_by(email=email).first()
         cpf_existe = Usuario.query.filter_by(cpf=cpf).first() or Profissional.query.filter_by(cpf=cpf).first()
 
         if email_existe or cpf_existe:
             flash("Este E-mail ou CPF já estão registados no sistema.", "danger")
-            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao)
+            return render_template('cadastroProfissional.html', nome=nome, cpf=cpf_raw, email=email, telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, endereco_fixo=endereco_fixo, descricao=descricao)
 
         senha_criptografada = bcrypt.generate_password_hash(senha).decode('utf-8')
 
-        # Grava os novos dados de localidade
+        # Grava os dados incluindo o Endereço Fixo
         novo_profissional = Profissional(
             nome=nome, cpf=cpf, email=email, senha=senha_criptografada, 
-            telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, descricao=descricao
+            telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, 
+            endereco_fixo=endereco_fixo, descricao=descricao
         )
         
         db.session.add(novo_profissional)
@@ -275,7 +286,9 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-# ROTA: MEU PERFIL (Dinâmica para Cliente ou Profissional)
+# ==========================================
+# ROTA: MEU PERFIL (Cliente/Profissional)
+# ==========================================
 
 @app.route('/meu-perfil', methods=['GET', 'POST'])
 @login_required
@@ -298,11 +311,12 @@ def meu_perfil():
         db_user.nome = request.form.get('nome')
         db_user.email = request.form.get('email')
 
-        # ATUALIZAÇÃO DA LOCALIDADE
+        # ATUALIZAÇÃO DA LOCALIDADE E ENDEREÇO FIXO PARA PROFISSIONAIS
         if db_user.tipo_conta == 'profissional':
             db_user.profissao = request.form.get('profissao')
             db_user.cidade = request.form.get('cidade')
             db_user.regiao = request.form.get('regiao')
+            db_user.endereco_fixo = request.form.get('endereco_fixo')
             db_user.descricao = request.form.get('descricao')
             db_user.telefone = request.form.get('telefone')
 

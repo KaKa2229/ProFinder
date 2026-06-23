@@ -406,13 +406,14 @@
                     </div>
                 </div>
 
-                <!-- NOVA ÁREA DE ATUAÇÃO E LOCALIZAÇÃO EM CASCATA -->
+                <!-- LINHA COM 3 COLUNAS: Profissão, Cidade e Região -->
                 <div class="row row-espaco">
-                    <div class="col-12 mb-3">
-                        <label class="form-label-custom mb-1">Qual a sua profissão / serviço?</label>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <label class="form-label-custom mb-1">Profissão / Serviço:</label>
                         <select class="form-select-custom" name="profissao" required>
-                            <option value="" disabled {% if not profissao %}selected{% endif %}>Selecione a sua profissão</option>
+                            <option value="" disabled {% if not profissao %}selected{% endif %}>Selecione a profissão</option>
                             <option value="Carpinteiro" {% if profissao == 'Carpinteiro' %}selected{% endif %}>Carpinteiro</option>
+                            <option value="Chaveiro" {% if profissao == 'Chaveiro' %}selected{% endif %}>Chaveiro</option>
                             <option value="Diarista" {% if profissao == 'Diarista' %}selected{% endif %}>Diarista</option>
                             <option value="Eletricista" {% if profissao == 'Eletricista' %}selected{% endif %}>Eletricista</option>
                             <option value="Encanador" {% if profissao == 'Encanador' %}selected{% endif %}>Encanador</option>
@@ -422,28 +423,33 @@
                             <option value="Pedreiro" {% if profissao == 'Pedreiro' %}selected{% endif %}>Pedreiro</option>
                             <option value="Pintor" {% if profissao == 'Pintor' %}selected{% endif %}>Pintor</option>
                             <option value="Técnico de Informática" {% if profissao == 'Técnico de Informática' %}selected{% endif %}>Técnico de Informática</option>
-                            <option value="Chaveiro" {% if profissao == 'Chaveiro' %}selected{% endif %}>Chaveiro</option>
                             <option value="Vidraceiro" {% if profissao == 'Vidraceiro' %}selected{% endif %}>Vidraceiro</option>
                         </select>
                     </div>
-                </div>
-
-                <div class="row row-espaco">
-                    <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="col-md-4 mb-3 mb-md-0">
                         <label class="form-label-custom mb-1">Cidade de Atuação:</label>
                         <select class="form-select-custom" name="cidade" id="cidadeSelect" onchange="atualizarRegioes()" required>
-                            <option value="" disabled {% if not cidade %}selected{% endif %}>Selecione sua cidade</option>
+                            <option value="" disabled {% if not cidade %}selected{% endif %}>Selecione a cidade</option>
                             <option value="Itajaí" {% if cidade == 'Itajaí' %}selected{% endif %}>Itajaí</option>
                             <option value="Balneário Camboriú" {% if cidade == 'Balneário Camboriú' %}selected{% endif %}>Balneário Camboriú</option>
                             <option value="Navegantes" {% if cidade == 'Navegantes' %}selected{% endif %}>Navegantes</option>
                             <option value="Itapema" {% if cidade == 'Itapema' %}selected{% endif %}>Itapema</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label-custom mb-1">Região de Atuação (Bairro Principal):</label>
+                    <div class="col-md-4">
+                        <label class="form-label-custom mb-1">Região Principal:</label>
                         <select class="form-select-custom" name="regiao" id="regiaoSelect" required>
-                            <option value="" disabled selected>Selecione a cidade primeiro</option>
+                            <option value="" disabled selected>Selecione a cidade</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- NOVO CAMPO: Endereço Fixo Opcional -->
+                <div class="row row-espaco">
+                    <div class="col-12">
+                        <label class="form-label-custom mb-0">Endereço de Atendimento Fixo (Opcional):</label>
+                        <small class="form-text text-muted d-block mb-2" style="font-size: 0.8rem;">Preencha apenas se os clientes precisarem ir até ao seu local (ex: Chaveiros, Mecânicos). Deixe em branco se atende ao domicílio.</small>
+                        <input type="text" class="form-control-custom" name="endereco_fixo" placeholder="Ex: Rua das Flores, 123 - Sala 2, Centro" value="{{ endereco_fixo or '' }}">
                     </div>
                 </div>
 
@@ -480,7 +486,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // --- NOVA LÓGICA DE CASCATA PARA CIDADES E REGIÕES ---
+        // Lógica de Cidades e Regiões em Cascata
         const regioesPorCidade = {
             "Itajaí": ["Centro", "Fazenda", "Cabeçudas", "Cordeiros", "São Vicente", "Vila Operária", "Ressacada", "Dom Bosco"],
             "Balneário Camboriú": ["Centro", "Nações", "Pioneiros", "Barra Sul", "Vila Real", "Municípios", "Ariribá"],
@@ -493,20 +499,16 @@
             const regiaoSelect = document.getElementById('regiaoSelect');
             const cidade = cidadeSelect.value;
 
-            // Resetar regiões
             regiaoSelect.innerHTML = '<option value="" disabled selected>Selecione a região</option>';
 
             if (cidade && regioesPorCidade[cidade]) {
-                // Opção que cobre a cidade toda
                 const optTodas = document.createElement('option');
                 optTodas.value = "todas";
                 optTodas.textContent = "Atendo toda a cidade";
                 if (regiaoPreSelecionada === "todas") optTodas.selected = true;
                 regiaoSelect.appendChild(optTodas);
 
-                // Preencher com as regiões mapeadas
                 regioesPorCidade[cidade].forEach(regiao => {
-                    // Criar um identificador (ID) limpo sem acentos e espaços (ex: "sao_vicente")
                     const valorId = regiao.toLowerCase().replace(/ /g, "_").normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
                     const opt = document.createElement('option');
                     opt.value = valorId;
@@ -519,7 +521,6 @@
             }
         }
 
-        // Executar a função no carregamento para preencher o formulário caso haja falha e a página recarregue
         document.addEventListener("DOMContentLoaded", function() {
             const cidadeSelect = document.getElementById("cidadeSelect");
             if (cidadeSelect.value) {
@@ -527,8 +528,7 @@
             }
         });
 
-
-        // Funções anteriores mantidas
+        // Lógica de Preview de Imagem
         function previewFoto(event) {
             const input = event.target;
             const container = document.getElementById('fotoPreviewContainer');
@@ -545,20 +545,36 @@
             }
         }
 
+        // Formatação CPF
         function mascaraCPF(campo) {
             let v = campo.value.replace(/\D/g, ''); 
-            if (v.length > 11) v = v.substring(0, 11);
+            
+            if (v.length > 11) {
+                v = v.substring(0, 11);
+            }
+            
             v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
             v = v.replace(/(\d{3})(\d)/, '$1.$2'); 
             v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2'); 
+            
             campo.value = v;
         }
 
+        // Formatação de Telefone / WhatsApp
         function mascaraTelefone(campo) {
             let v = campo.value.replace(/\D/g, ''); 
-            if (v.length > 11) v = v.substring(0, 11);
-            if (v.length > 2) v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
-            if (v.length > 9) v = v.substring(0, 10) + '-' + v.substring(10);
+            
+            if (v.length > 11) {
+                v = v.substring(0, 11);
+            }
+            
+            if (v.length > 2) {
+                v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+            }
+            if (v.length > 9) { 
+                v = v.substring(0, 10) + '-' + v.substring(10);
+            }
+            
             campo.value = v;
         }
 
