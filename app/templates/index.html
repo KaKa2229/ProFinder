@@ -20,7 +20,7 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            overflow-x: hidden; /* CORREÇÃO: Permite rolagem vertical caso o ecrã seja pequeno */
         }
 
         .navbar-profinder {
@@ -156,6 +156,7 @@
         .hero-content {
             position: relative;
             z-index: 2;
+            margin-top: -12vh; /* CORREÇÃO: Puxa o conteúdo um pouco para cima para a lista caber */
         }
 
         .hero-title {
@@ -359,8 +360,7 @@
         const servicosDisponiveis = [
             'Eletricista', 'Pintor', 'Pedreiro', 
             'Encanador', 'Montador de Móveis', 'Diarista',
-            'Jardineiro', 'Carpinteiro', 'Mecânico', 'Técnico de Informática',
-            'Chaveiro', 'Vidraceiro'
+            'Jardineiro', 'Carpinteiro', 'Mecânico', 'Técnico de Informática'
         ];
 
         function filtrarServicos() {
