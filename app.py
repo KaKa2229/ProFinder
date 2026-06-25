@@ -6,15 +6,22 @@ import os
 import time
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
-# Config flask
-app.config['SECRET_KEY'] = 'uma_chave_secreta_muito_louca_e_segura_profinder'
 
 # Config bd  
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'profinder.db')
+uri = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'profinder.db'))
+
+# Pequeno ajuste necessário porque a Render envia o link como "postgres://", mas o SQLAlchemy moderno exige "postgresql://"
+if uri and uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configuração de pastas de Upload

@@ -1,3 +1,6 @@
+.env
 venv/
 __pycache__/
-.env
+profinder.db
+app/static/img/perfil/
+app/static/img/portfolio/
