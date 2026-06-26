@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -115,8 +114,15 @@
                     
                     {% if current_user.is_authenticated %}
                         <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
-                            <span class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                            <a href="{{ url_for('meu_perfil') }}" class="nav-link" style="text-transform: none; font-size: 0.95rem;" title="Acessar Meu Perfil">
+                                Olá, <strong>{{ current_user.nome.split()[0] }}</strong>
+                            </a>
                         </li>
+                        
+                        <li class="nav-item d-lg-none mt-2">
+                            <a class="nav-link" href="{{ url_for('meu_perfil') }}">Meu Perfil</a>
+                        </li>
+
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
                             <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
                         </li>
@@ -132,7 +138,6 @@
 
     <main class="container main-container">
         
-        <!-- Guia do Jinja2 que faz a conversão dos plurais em pt-br -->
         {% set plurais = {
             'Pedreiro': 'Pedreiros',
             'Pintor': 'Pintores',
@@ -158,7 +163,6 @@
             </a>
         </div>
 
-        <!-- FILTROS ATUALIZADOS: CIDADE E REGIÃO EM CASCATA -->
         <div class="filtros-container">
             <label class="filtro-label">
                 <i class="bi bi-geo-alt" style="font-size: 1.2rem;"></i> Localização:
@@ -174,15 +178,13 @@
 
             <select class="form-select-custom" id="filtroRegiao" onchange="filtrarProfissionais()">
                 <option value="todas" selected>Todas as Regiões</option>
-                <!-- Será preenchido pelo JavaScript ao escolher a cidade -->
-            </select>
+                </select>
         </div>
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             
             {% if profissionais %}
                 {% for pro in profissionais %}
-                <!-- Os dados de cidade e região vêm agora da base de dados e são guardados na div para o filtro JS ler -->
                 <div class="col card-item-pro" data-cidade="{{ pro.cidade }}" data-regiao="{{ pro.regiao }}">
                     <div class="card-profissional">
                         <div class="foto-container">
@@ -193,7 +195,6 @@
                             
                             <p class="localizacao-profissional">
                                 <i class="bi bi-geo-fill"></i> 
-                                <!-- Se atender todas as regiões, exibe apenas a cidade -->
                                 {% if pro.regiao == 'todas' %}
                                     {{ pro.cidade }} (Toda a região)
                                 {% else %}

@@ -239,6 +239,14 @@
         }
 
         /* --- Botões de Ação --- */
+        .botoes-acao {
+            display: flex;
+            flex-wrap: wrap;       /* Permite que os botões desçam de linha se o ecrã for pequeno */
+            align-items: center;   
+            gap: 12px;             /* Espaço exato e fixo entre todos os botões */
+            margin-top: 1.5rem;
+        }
+
         .btn-mensagem {
             background-color: var(--cor-primaria);
             color: white;
@@ -253,9 +261,10 @@
             transition: all 0.3s;
             border: none;
             box-shadow: 0 5px 15px rgba(41, 142, 148, 0.3);
+            margin: 0 !important; /* Remove qualquer margem para o gap funcionar */
         }
 
-        .btn-mensagem:hover {
+        .btn-mensagem:hover:not(:disabled) {
             background-color: var(--cor-primaria-hover);
             color: white;
             transform: translateY(-2px);
@@ -274,6 +283,7 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
+            margin: 0 !important; /* Remove qualquer margem para o gap funcionar */
         }
 
         .btn-avaliacoes:hover {
@@ -324,9 +334,7 @@
                 width: 100%;
                 text-align: center;
             }
-            .card-perfil {
-                padding: 30px 20px;
-            }
+            .card-perfil { padding: 30px 20px; }
         }
 
         @media (max-width: 768px) {
@@ -348,9 +356,8 @@
                 justify-content: center;
             }
             .botoes-acao {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
+                flex-direction: column; /* Empilhamos os botões em telas pequenas */
+                align-items: stretch;
             }
             .btn-mensagem, .btn-avaliacoes {
                 width: 100%;
@@ -372,7 +379,7 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('busca_servicos') }}">Buscar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('busca_servicos') }}">Buscar</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a></li>
                     
                     {% if current_user.is_authenticated %}
@@ -428,7 +435,6 @@
                     <div class="info-basica">
                         <span>{{ profissional.profissao }}</span>
                         <i class="bi bi-dot text-muted"></i>
-                        <!-- Correção aplicada aqui: usando cidade e regiao em vez de bairro -->
                         <span><i class="bi bi-geo-alt-fill text-danger"></i> 
                             {% if profissional.regiao == 'todas' %}
                                 {{ profissional.cidade }} (Toda a região)
@@ -456,6 +462,7 @@
                         {{ profissional.descricao | default("Profissional qualificado e altamente recomendado pela comunidade ProFinder. Especialista na sua área de atuação, sempre com foco em entregar o melhor resultado para os clientes.", true) }}
                     </p>
 
+                    <!-- Avaliações -->
                     <div class="bloco-avaliacoes">
                         <div class="estrelas">
                             {% for i in range(5) %}
@@ -471,28 +478,28 @@
                         </span>
                     </div>
 
-                    <div class="botoes-acao mt-4 mb-3">
+                    <div class="botoes-acao mb-3">
                         
                         {% if current_user.is_authenticated and current_user.tipo_conta == 'cliente' %}
-                            <button type="button" class="btn-mensagem me-md-3 mb-3 mb-md-0" data-bs-toggle="modal" data-bs-target="#modalSolicitacao">
+                            <button type="button" class="btn-mensagem" data-bs-toggle="modal" data-bs-target="#modalSolicitacao">
                                 <i class="bi bi-tools me-1"></i> Solicitar Serviço
                             </button>
                         {% elif not current_user.is_authenticated %}
-                            <button type="button" class="btn-mensagem me-md-3 mb-3 mb-md-0" data-bs-toggle="modal" data-bs-target="#modalAvisoLogin">
+                            <button type="button" class="btn-mensagem" data-bs-toggle="modal" data-bs-target="#modalAvisoLogin">
                                 <i class="bi bi-tools me-1"></i> Solicitar Serviço
                             </button>
                         {% else %}
-                            <button type="button" class="btn-mensagem me-md-3 mb-3 mb-md-0" onclick="alert('Apenas clientes podem solicitar serviços. Por favor, inicie sessão com uma conta de cliente.')" style="opacity: 0.7;">
+                            <button type="button" class="btn-mensagem" onclick="alert('Apenas clientes podem solicitar serviços. Por favor, inicie sessão com uma conta de cliente.')" style="opacity: 0.7;">
                                 <i class="bi bi-tools me-1"></i> Solicitar Serviço
                             </button>
                         {% endif %}
 
                         {% if profissional.telefone %}
-                            <a href="https://wa.me/55{{ profissional.telefone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') }}" target="_blank" class="btn-avaliacoes me-md-3 mb-3 mb-md-0" style="color: #25D366; border-color: #25D366;">
+                            <a href="https://wa.me/55{{ profissional.telefone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') }}" target="_blank" class="btn-mensagem" style="background-color: #25D366; border: none; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);">
                                 <i class="bi bi-whatsapp"></i> WhatsApp
                             </a>
                         {% else %}
-                            <button type="button" class="btn-mensagem me-md-3 mb-3 mb-md-0" data-bs-toggle="modal" data-bs-target="#modalSemTelefone" style="background-color: #95a5a6; border: none; box-shadow: none;">
+                            <button type="button" class="btn-mensagem" data-bs-toggle="modal" data-bs-target="#modalSemTelefone" style="background-color: #95a5a6; border: none; box-shadow: none;">
                                 <i class="bi bi-telephone-x"></i> Sem Telefone
                             </button>
                         {% endif %}
@@ -505,6 +512,7 @@
 
             </div>
 
+            <!-- SEÇÃO DE PORTFÓLIO -->
             {% if portfolio %}
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             <h3 class="titulo-descricao mb-4"><i class="bi bi-images me-2"></i> Portfólio de Trabalhos</h3>
@@ -524,6 +532,7 @@
             </div>
             {% endif %}
             
+            <!-- NOVA SEÇÃO: AVALIAÇÕES DOS CLIENTES (FASE 4) -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);" id="secaoAvaliacoes">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h3 class="titulo-descricao mb-0"><i class="bi bi-chat-quote-fill me-2"></i> Avaliações de Clientes</h3>
@@ -576,6 +585,7 @@
 
     </main>
 
+    <!-- MODAL DE SOLICITAÇÃO (Fase 3) -->
     <div class="modal fade" id="modalSolicitacao" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -597,6 +607,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE AVISO DE LOGIN -->
     <div class="modal fade" id="modalAvisoLogin" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -615,6 +626,7 @@
         </div>
     </div>
 
+    <!-- Modal de Aviso Sem Telefone -->
     <div class="modal fade" id="modalSemTelefone" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -632,6 +644,7 @@
         </div>
     </div>
 
+    <!-- Modal para Ampliar Imagem -->
     <div class="modal fade" id="modalAmpliarImagem" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content bg-transparent border-0">
