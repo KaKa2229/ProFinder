@@ -26,7 +26,6 @@
             flex-direction: column;
         }
 
-        /* --- Barra de Navegação --- */
         .navbar-profinder {
             background-color: var(--cor-primaria);
             padding: 0;
@@ -78,7 +77,6 @@
             color: var(--cor-primaria) !important;
         }
 
-        /* --- Estrutura Principal --- */
         .main-container {
             flex: 1;
             padding: 40px 20px;
@@ -119,7 +117,6 @@
             transform: translateX(-5px);
         }
 
-        /* --- Cartão do Perfil --- */
         .card-perfil {
             background: white;
             border-radius: 16px;
@@ -183,7 +180,6 @@
             border-left: 4px solid var(--cor-primaria);
         }
 
-        /* --- Portfólio de Trabalhos --- */
         .card-trabalho {
             border-radius: 12px;
             overflow: hidden;
@@ -238,12 +234,11 @@
             font-size: 1.1rem;
         }
 
-        /* --- Botões de Ação --- */
         .botoes-acao {
             display: flex;
-            flex-wrap: wrap;       /* Permite que os botões desçam de linha se o ecrã for pequeno */
+            flex-wrap: wrap;       
             align-items: center;   
-            gap: 12px;             /* Espaço exato e fixo entre todos os botões */
+            gap: 12px;             
             margin-top: 1.5rem;
         }
 
@@ -283,7 +278,7 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
-            margin: 0 !important; /* Remove qualquer margem para o gap funcionar */
+            margin: 0 !important; 
         }
 
         .btn-avaliacoes:hover {
@@ -291,7 +286,6 @@
             color: var(--cor-texto-escuro);
         }
 
-        /* --- Responsividade --- */
         @media (max-width: 991px) {
             .navbar-collapse {
                 position: absolute;
@@ -356,7 +350,7 @@
                 justify-content: center;
             }
             .botoes-acao {
-                flex-direction: column; /* Empilhamos os botões em telas pequenas */
+                flex-direction: column; 
                 align-items: stretch;
             }
             .btn-mensagem, .btn-avaliacoes {
@@ -532,7 +526,7 @@
             </div>
             {% endif %}
             
-            <!-- NOVA SEÇÃO: AVALIAÇÕES DOS CLIENTES (FASE 4) -->
+            <!-- SEÇÃO DE AVALIAÇÕES DOS CLIENTES  -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);" id="secaoAvaliacoes">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h3 class="titulo-descricao mb-0"><i class="bi bi-chat-quote-fill me-2"></i> Avaliações de Clientes</h3>
@@ -585,7 +579,7 @@
 
     </main>
 
-    <!-- MODAL DE SOLICITAÇÃO (Fase 3) -->
+    <!-- MODAL DE SOLICITAÇÃO  -->
     <div class="modal fade" id="modalSolicitacao" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

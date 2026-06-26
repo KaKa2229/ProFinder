@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Encontre Profissionais Confiáveis</title>
     
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
@@ -20,7 +19,7 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* CORREÇÃO: Permite rolagem vertical caso o ecrã seja pequeno */
+            overflow-x: hidden; 
         }
 
         .navbar-profinder {
@@ -156,7 +155,7 @@
         .hero-content {
             position: relative;
             z-index: 2;
-            margin-top: -12vh; /* CORREÇÃO: Puxa o conteúdo um pouco para cima para a lista caber */
+            margin-top: -12vh; 
         }
 
         .hero-title {
@@ -317,7 +316,6 @@
                         <span class="text-destaque">confiáveis</span> perto de você!
                     </h1>
                     
-                    <!-- NOVO: Texto Explicativo Moderno -->
                     <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.15rem; font-weight: 300; margin-top: -15px; margin-bottom: 30px; max-width: 600px; line-height: 1.6;">
                         O ProFinder liga você a prestadores de serviços avaliados pela comunidade. De pequenos reparos a grandes obras, a solução certa a um clique de distância.
                     </p>
@@ -412,7 +410,7 @@
             }
         });
 
-        // MÁGICA: Aqui o Python (Jinja2) diz ao JavaScript se a pessoa está logada de verdade!
+        // Aqui o Python (Jinja2) diz ao JavaScript se a pessoa está logada de verdade
         // Envolvendo o código Jinja em aspas para evitar erros de sintaxe no JavaScript ao pré-visualizar
         const usuarioEstaLogado = "{{ 'true' if current_user.is_authenticated else 'false' }}" === "true"; 
 

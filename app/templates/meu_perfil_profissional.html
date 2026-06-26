@@ -82,7 +82,6 @@
             color: var(--cor-primaria) !important;
         }
 
-        /* --- Container Principal --- */
         .main-container {
             flex: 1;
             padding: 40px 20px;
@@ -91,7 +90,6 @@
             align-items: flex-start;
         }
 
-        /* --- Card do Perfil --- */
         .card-perfil {
             background-color: white;
             border-radius: 12px;
@@ -121,7 +119,6 @@
             opacity: 0.8;
         }
 
-        /* --- Upload de Foto --- */
         .foto-upload-container {
             display: flex;
             flex-direction: column;
@@ -165,7 +162,6 @@
             text-decoration: underline;
         }
 
-        /* --- Estilo dos Inputs --- */
         .form-label-custom {
             color: var(--cor-primaria);
             font-weight: 600;
@@ -231,7 +227,6 @@
             margin-bottom: 22px;
         }
 
-        /* --- Alertas --- */
         .alerta-mensagem {
             font-size: 0.95rem;
             font-weight: 500;
@@ -282,7 +277,6 @@
             display: block;
         }
 
-        /* --- Bordas de Status (Solicitações) --- */
         .status-borda-pendente { border-left: 4px solid #f1c40f !important; }
         .status-borda-aceito { border-left: 4px solid #2ecc71 !important; }
         .status-borda-recusado { border-left: 4px solid #e74c3c !important; }
@@ -501,7 +495,6 @@
                     </div>
                 </div>
 
-                <!-- O formulário de edição de perfil termina AQUI -->
                 <button type="submit" class="btn-submit mb-5">Salvar Alterações do Perfil</button>
             </form>
 
@@ -539,9 +532,7 @@
                 {% endif %}
             </div>
 
-            <!-- ============================================== -->
             <!-- NOVA SECÇÃO: SOLICITAÇÕES DE CLIENTES          -->
-            <!-- ============================================== -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.2rem; margin: 0;"><i class="bi bi-bell-fill me-2"></i> Solicitações Recebidas</h5>
@@ -625,7 +616,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Dicionário de regiões idêntico ao do cadastro
+        // Guia de regiões idêntico ao do cadastro
         const regioesPorCidade = {
             "Itajaí": ["Centro", "Fazenda", "Cabeçudas", "Cordeiros", "São Vicente", "Vila Operária", "Ressacada", "Dom Bosco"],
             "Balneário Camboriú": ["Centro", "Nações", "Pioneiros", "Barra Sul", "Vila Real", "Municípios", "Ariribá"],

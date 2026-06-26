@@ -17,7 +17,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 basedir = os.path.abspath(os.path.dirname(__file__))
 uri = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'profinder.db'))
 
-# Pequeno ajuste necessário porque a Render envia o link como "postgres://", mas o SQLAlchemy moderno exige "postgresql://"
+# Pequeno ajuste necessário porque o Render envia o link como "postgres://", mas o SQLAlchemy moderno exige "postgresql://"
 if uri and uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
 
@@ -38,9 +38,7 @@ login_manager.login_view = 'login'
 login_manager.login_message = "Por favor, inicie sessão para aceder a esta página."
 login_manager.login_message_category = "info"
 
-# ==========================================
 # MODELOS DA BASE DE DADOS
-# ==========================================
 
 class Usuario(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -67,7 +65,7 @@ class Profissional(db.Model, UserMixin):
     cidade = db.Column(db.String(100), nullable=False)
     regiao = db.Column(db.String(100), nullable=False)
     
-    # NOVA COLUNA ADICIONADA: Endereço Fixo
+    # Endereço Fixo
     endereco_fixo = db.Column(db.String(255), nullable=True)
     
     descricao = db.Column(db.Text, nullable=True) 
@@ -129,9 +127,7 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
 
-# ==========================================
 # ROTAS DE NAVEGAÇÃO BÁSICAS
-# ==========================================
 
 @app.route('/')
 def index():
@@ -165,9 +161,7 @@ def perfil(id):
     avaliacoes = Avaliacao.query.filter_by(profissional_id=id).order_by(Avaliacao.data_avaliacao.desc()).all()
     return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio, avaliacoes=avaliacoes)
 
-# ==========================================
 # ROTAS DE AUTENTICAÇÃO E REGISTO
-# ==========================================
 
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro_cliente():
@@ -242,7 +236,7 @@ def cadastro_profissional():
 
         senha_criptografada = bcrypt.generate_password_hash(senha).decode('utf-8')
 
-        # Grava os dados incluindo o Endereço Fixo
+        # Grava os dados do profissional no banco de dados
         novo_profissional = Profissional(
             nome=nome, cpf=cpf, email=email, senha=senha_criptografada, 
             telefone=telefone, profissao=profissao, cidade=cidade, regiao=regiao, 
@@ -293,9 +287,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-# ==========================================
 # ROTA: MEU PERFIL (Cliente/Profissional)
-# ==========================================
 
 @app.route('/meu-perfil', methods=['GET', 'POST'])
 @login_required
@@ -318,7 +310,7 @@ def meu_perfil():
         db_user.nome = request.form.get('nome')
         db_user.email = request.form.get('email')
 
-        # ATUALIZAÇÃO DA LOCALIDADE E ENDEREÇO FIXO PARA PROFISSIONAIS
+        # ATUALIZAÇÃO DA LOCALIDADE PARA PROFISSIONAIS
         if db_user.tipo_conta == 'profissional':
             db_user.profissao = request.form.get('profissao')
             db_user.cidade = request.form.get('cidade')
@@ -364,9 +356,7 @@ def meu_perfil():
         minhas_solicitacoes = SolicitacaoServico.query.filter_by(cliente_id=current_user.id).order_by(SolicitacaoServico.data_solicitacao.desc()).all()
         return render_template('meu_perfil_cliente.html', solicitacoes=minhas_solicitacoes)
 
-# ==========================================
 # ROTAS DO PORTFÓLIO E WORKFLOWS
-# ==========================================
 
 @app.route('/adicionar-portfolio', methods=['POST'])
 @login_required

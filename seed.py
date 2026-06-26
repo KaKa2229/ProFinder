@@ -6,7 +6,7 @@ with app.app_context():
     print("Limpando pedreiros antigos...")
     db.session.query(Profissional).filter_by(profissao='Pedreiro').delete()
     
-    # A MÁGICA ACONTECE AQUI: Usamos o Bcrypt do seu app.py para garantir os 60 caracteres!
+    # Bcrypt do app.py para garantir os 60 caracteres
     senha_criptografada = bcrypt.generate_password_hash('senha123').decode('utf-8')
     
     pedreiros_realistas = [

@@ -121,7 +121,6 @@
             box-shadow: 0 0 0 0.2rem rgba(41, 139, 147, 0.25);
         }
 
-        /* --- Tooltip CSS Puro (Ícone de Informação do CPF) --- */
         .cpf-container {
             position: relative;
             width: 100%;
@@ -130,7 +129,7 @@
 
         .cpf-container .form-control-custom {
             padding-right: 45px;
-            margin-bottom: 0; /* Remove a margem extra do input dentro do container */
+            margin-bottom: 0; 
         }
 
         .info-icon {
@@ -156,7 +155,7 @@
             padding: 8px 12px;
             position: absolute;
             z-index: 10;
-            bottom: 125%; /* Posição flutuante acima do ícone */
+            bottom: 125%; 
             right: -5px;
             font-size: 0.75rem;
             width: 220px;
@@ -169,7 +168,7 @@
             letter-spacing: 0.3px;
         }
 
-        /* Seta apontando para baixo no tooltip */
+
         .info-tooltip::after {
             content: "";
             position: absolute;
@@ -180,14 +179,12 @@
             border-color: var(--cor-texto-escuro) transparent transparent transparent;
         }
 
-        /* Ativa o tooltip ao passar o rato no ícone */
         .info-icon:hover + .info-tooltip {
             visibility: visible;
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* --- Estilos para o ícone da palavra-passe --- */
         .password-container {
             position: relative;
             width: 100%;
@@ -280,7 +277,7 @@
                 gap: 10px;
             }
             .info-tooltip {
-                right: -20px; /* Ajuste fino para não colar na borda do telemóvel */
+                right: -20px; 
             }
             .info-tooltip::after {
                 right: 35px;
@@ -311,7 +308,7 @@
 
             <form action="{{ url_for('cadastro_cliente') }}" method="POST">
                 
-                <!-- Novo Bloco CPF com Tooltip Animado -->
+                <!-- CPF declarado -->
                 <div class="cpf-container">
                     <input type="text" class="form-control-custom" name="cpf" placeholder="Digite o seu CPF" oninput="mascaraCPF(this)" minlength="14" maxlength="14" required autocomplete="off" value="{{ cpf or '' }}">
                     <i class="bi bi-question-circle info-icon"></i>

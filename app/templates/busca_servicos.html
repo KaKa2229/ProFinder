@@ -324,7 +324,7 @@
             </div>
         </div>
 
-        <!-- Guia do Jinja2 que faz a conversão dos plurais em pt-br -->
+        <!-- Jinja2 para fazer a conversão dos plurais em pt-br -->
         {% set plurais = {
             'Pedreiro': 'Pedreiros',
             'Pintor': 'Pintores',
@@ -340,7 +340,7 @@
             'Vidraceiro': 'Vidraceiros'
         } %}
 
-        <!-- Lista dinâmica com as 12 Categorias usando Imagens do Unsplash -->
+        <!-- Lista dinâmica com as 12 Categorias usando imagens da internet -->
         {% set categorias = [
             {'nome': 'Pedreiro', 'img': 'https://reformafacil.app/static/images/categories/pedreiro.jpg'},
             {'nome': 'Pintor', 'img': 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'},
@@ -356,7 +356,7 @@
             {'nome': 'Vidraceiro', 'img': 'https://www.vidroimpresso.com.br/imagens/noticias/setor-vidreiro/images/dois%20vidraceiros%20instalando%20uma%20janela.jpg'}
         ] %}
 
-        <!-- GRID DE CATEGORIAS DINÂMICO -->
+        <!-- GRID DE CATEGORIAS -->
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="gridCategorias">
             
             {% for cat in categorias %}

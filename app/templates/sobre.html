@@ -26,7 +26,6 @@
             height: 100vh; 
         }
 
-        /* --- Navbar Personalizada --- */
         .navbar-profinder {
             background-color: var(--cor-primaria);
             padding: 0; 
@@ -331,10 +330,9 @@
                         <a class="nav-link active" href="{{ url_for('sobre') }}">Sobre Nós</a>
                     </li>
                     
-                    <!-- FLASK-LOGIN (IF/ELSE DINÂMICO) -->
+                    <!-- FLASK-LOGIN  -->
                     {% if current_user.is_authenticated %}
                         <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
-                            <!-- Link para o Meu Perfil inserido aqui -->
                             <a href="{{ url_for('meu_perfil') }}" class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></a>
                         </li>
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
