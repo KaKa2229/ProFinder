@@ -1,8 +1,11 @@
 ProFinder - Conectando profissionais mais próximos à você
 
-O ProFinder é uma plataforma web desenvolvida para facilitar a conexão entre clientes e prestadores de serviços confiáveis (Pedreiros, Encanadores, Eletricistas, Diaristas, etc.). O sistema permite buscar por categorias, filtrar por região e visualizar perfis detalhados com avaliações da comunidade.
+O ProFinder é uma plataforma web desenvolvida para facilitar a conexão entre clientes e prestadores de serviços confiáveis (Pedreiros, Encanadores, Eletricistas, Diaristas, etc.). O sistema permite buscar por categorias, filtrar por região, visualizar perfis detalhados com avaliações da comunidade e, agora, concluir o ciclo completo de contratação dentro da própria plataforma.
 
-Funcionalidades acordadas com o Professor para entrega da M1 
+Projeto publicado: https://profinder-h8zd.onrender.com
+
+
+Funcionalidades acordadas com o Professor para entrega da Média 1
 
 ● Página Home / Sobre Nós: Exibir telas estáticas da Home e da página com
 informações sobre nós (FAQ). ✅
@@ -28,9 +31,59 @@ através de "cards" contendo foto e nome de serviço. ✅ (Banco de Dados Provis
 ● Listagem de Profissionais: Exibir uma vitrine de profissionais cadastrados na
 plataforma através de "cards" contendo foto, nome, especialidade e nota média. ✅
 
-● Criação do Perfil do Profissional (lado do Profissional): Registro “completo” (Sem
+● Criação do Perfil do Profissional (lado do Profissional): Registro "completo" (Sem
 o portfólio) do Usuário Profissional / Prestador de Serviços. ✅
 
-● Criação da página de FAQ + página Ajuda: Página de “Perguntas Frequentes”,
-acessada à partir da página “Sobre Nós” e Página de ajuda acessada à partir de Login /
-Cadastros . ✅
+● Criação da página de FAQ + página Ajuda: Página de "Perguntas Frequentes",
+acessada à partir da página "Sobre Nós" e Página de ajuda acessada à partir de Login /
+Cadastros. ✅
+
+
+Atualizações da Média 2 — feedbacks de usuários e workflow completo
+
+Após a entrega da M1, o projeto passou por uma rodada de avaliações com usuários (3 clientes e 2 profissionais), que apontaram lacunas no fluxo de uso real da plataforma. As mudanças abaixo foram implementadas em resposta a esse feedback.
+
+Fase 1 — Correções e fundação ✅
+
+● Correção do bug de upload de foto de perfil, que não estava sendo salva corretamente. ✅
+
+● Exibição do telefone/WhatsApp do profissional na página de perfil pública, antes salvo no cadastro mas não exibido. ✅
+
+● Texto explicativo adicionado à página Home, deixando o propósito da plataforma claro no primeiro contato. ✅
+
+● Texto de contexto adicionado ao campo de CPF no cadastro, explicando sua finalidade e reduzindo a desconfiança relatada por usuários. ✅
+
+Fase 2 — Portfólio do profissional ✅
+
+● Criação da interface de upload de fotos de trabalhos realizados, permitindo que o profissional monte seu portfólio. ✅
+
+● Exibição do portfólio na página pública do profissional, antes presente no banco de dados mas não renderizado na interface. ✅
+
+Fase 3 — Solicitação de serviço (workflow principal) ✅
+
+● Criação do modelo de "Solicitação de Serviço" no banco de dados, com status (pendente / aceito / recusado). ✅
+
+● Botão "Solicitar Serviço" na página do profissional, substituindo o aviso de funcionalidade futura por um formulário funcional de pedido. ✅
+
+● Painel de solicitações recebidas no perfil do profissional, com opção de aceitar ou recusar pedidos. ✅
+
+● Painel de solicitações enviadas no perfil do cliente, com acompanhamento do status de cada pedido. ✅
+
+Fase 4 — Avaliações ✅
+
+● Avaliação do profissional pelo cliente após a conclusão de um serviço aceito, com nota de 1 a 5 e comentário opcional. ✅
+
+● Exibição dos comentários de avaliação na página pública do profissional, complementando a nota média já existente. ✅
+
+Fase 5 — Publicação e avaliação externa
+
+● Deploy do projeto na nuvem via Render. ✅
+
+● Atualização do README com o registro das funcionalidades entregues em cada fase. ✅
+
+● Coleta de avaliação técnica com profissional da área. Pendente — a ser realizada agora que o projeto está publicado e com o workflow completo.
+
+
+Sobre as avaliações de usuário
+
+As avaliações que motivaram as mudanças desta etapa foram coletadas antes da publicação do projeto, quando ainda não era possível realizar uma contratação real dentro da plataforma. Por esse motivo, elas focaram no entendimento do conceito geral e em expectativas para as funcionalidades futuras, em vez de uma avaliação técnica de uso. A avaliação técnica com um profissional da área será conduzida agora que o projeto está publicado e funcional.
