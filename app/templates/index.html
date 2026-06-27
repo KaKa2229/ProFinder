@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Encontre Profissionais Confiáveis</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --cor-primaria: #298e94;
@@ -19,7 +20,7 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; 
+            overflow-x: hidden;
         }
 
         .navbar-profinder {
@@ -46,7 +47,8 @@
             transition: color 0.3s ease;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             color: white !important;
         }
 
@@ -61,7 +63,8 @@
             transition: width 0.3s ease;
         }
 
-        .nav-link:hover::after, .nav-link.active::after {
+        .nav-link:hover::after,
+        .nav-link.active::after {
             width: 100%;
         }
 
@@ -81,22 +84,29 @@
         @media (max-width: 991px) {
             .navbar-collapse {
                 position: absolute;
-                top: 100%; 
+                top: 100%;
                 left: 15px;
                 right: 15px;
                 width: calc(100% - 30px);
-                background-color: rgba(33, 114, 121, 0.95); 
-                backdrop-filter: blur(12px); 
+                background-color: rgba(33, 114, 121, 0.95);
+                backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.15); 
+                border: 1px solid rgba(255, 255, 255, 0.15);
                 border-radius: 16px;
                 padding: 15px 20px 25px 20px;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
                 z-index: 1050;
             }
-            
-            .navbar-nav { gap: 5px; }
-            .nav-item { width: 100%; text-align: left; }
+
+            .navbar-nav {
+                gap: 5px;
+            }
+
+            .nav-item {
+                width: 100%;
+                text-align: left;
+            }
+
             .nav-link {
                 margin-left: 0;
                 font-size: 1.05rem;
@@ -104,12 +114,21 @@
                 border-radius: 8px;
                 transition: all 0.3s ease;
             }
-            .nav-item:not(:last-child) { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-            .nav-link:hover, .nav-link:active {
-                background-color: rgba(255, 255, 255, 0.1);
-                padding-left: 20px !important; 
+
+            .nav-item:not(:last-child) {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             }
-            .nav-link::after { display: none; }
+
+            .nav-link:hover,
+            .nav-link:active {
+                background-color: rgba(255, 255, 255, 0.1);
+                padding-left: 20px !important;
+            }
+
+            .nav-link::after {
+                display: none;
+            }
+
             .btn-login-nav {
                 background-color: white !important;
                 color: var(--cor-primaria) !important;
@@ -117,17 +136,19 @@
                 padding: 15px !important;
                 margin-top: 15px;
                 font-weight: 700;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
                 border-radius: 30px !important;
                 display: block;
                 width: 100%;
                 text-align: center;
                 transition: transform 0.2s ease, background-color 0.2s ease !important;
             }
-            .btn-login-nav:hover, .btn-login-nav:active {
+
+            .btn-login-nav:hover,
+            .btn-login-nav:active {
                 background-color: #f0f4f4 !important;
                 transform: scale(0.98);
-                padding-left: 15px !important; 
+                padding-left: 15px !important;
             }
         }
 
@@ -135,7 +156,7 @@
             background-image: url('https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
-            height: calc(100vh - 100px); 
+            height: calc(100vh - 100px);
             min-height: 500px;
             display: flex;
             align-items: center;
@@ -148,14 +169,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 100%);
             z-index: 1;
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            margin-top: -12vh; 
+            margin-top: -12vh;
         }
 
         .hero-title {
@@ -163,7 +184,7 @@
             font-weight: 700;
             font-size: 3.5rem;
             line-height: 1.2;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin-bottom: 30px;
         }
 
@@ -175,8 +196,8 @@
             background: white;
             border-radius: 8px;
             padding: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
 
         .search-input {
@@ -204,32 +225,32 @@
 
         .custom-dropdown {
             position: absolute;
-            top: 100%; 
+            top: 100%;
             left: 0;
             right: 0;
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             margin-top: 5px;
-            max-height: 180px; 
-            overflow-y: auto; 
+            max-height: 180px;
+            overflow-y: auto;
             z-index: 1000;
-            display: none; 
+            display: none;
             padding: 0;
             list-style: none;
         }
 
         .custom-dropdown li {
-            padding: 10px 20px; 
+            padding: 10px 20px;
             cursor: pointer;
             border-bottom: 1px solid #f0f0f0;
             color: #333;
-            font-size: 0.95rem; 
+            font-size: 0.95rem;
             transition: background-color 0.2s;
         }
 
         .custom-dropdown li:hover {
-            background-color: #f4fcfc; 
+            background-color: #f4fcfc;
             color: var(--cor-primaria);
             font-weight: 600;
         }
@@ -239,9 +260,19 @@
         }
 
         @media (max-width: 768px) {
-            body { overflow: auto; }
-            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
-            .hero-title { font-size: 2.2rem; }
+            body {
+                overflow: auto;
+            }
+
+            .navbar-brand img {
+                margin-left: 0 !important;
+                height: 70px !important;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
             .search-box {
                 flex-direction: column;
                 background: transparent;
@@ -249,57 +280,82 @@
                 padding: 0;
                 gap: 10px;
             }
+
             .search-input {
                 border-radius: 8px !important;
-                width: 100% !important; 
-                font-size: 0.95rem; 
+                width: 100% !important;
+                font-size: 0.95rem;
                 padding: 12px 15px;
             }
-            .search-input::placeholder { font-size: 0.9rem; }
+
+            .search-input::placeholder {
+                font-size: 0.9rem;
+            }
+
             .btn-search {
                 border-radius: 8px !important;
                 width: 100%;
                 padding: 15px;
             }
-            .custom-dropdown { top: 50px; max-height: 150px; }
+
+            .custom-dropdown {
+                top: 50px;
+                max-height: 150px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder" style="height: 100px; margin-left: -40px;">
+                <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder"
+                    style="height: 100px; margin-left: -40px;">
             </a>
-            
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/></svg>
+
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" />
+                </svg>
             </button>
-            
+
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('busca_servicos') }}">Buscar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a>
-                    </li>
-                    
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('busca_servicos') }}">Buscar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a></li>
+
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
-                            <a href="{{ url_for('meu_perfil') }}" class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
-                        </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
+                        <a href="{{ url_for('meu_perfil') }}" class="nav-link"
+                            style="text-transform: none; font-size: 0.95rem;" title="Acessar Meu Perfil">
+                            Olá, <strong>{{ current_user.nome.split()[0] }}</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item d-lg-none mt-2">
+                        <a class="nav-link" href="{{ url_for('meu_perfil') }}">Meu Perfil</a>
+                    </li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="nav-link btn-login-nav border border-white rounded-pill px-4"
+                            href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
+                    </li>
                     {% else %}
-                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
-                        </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="nav-link" href="{{ url_for('cadastro_profissional') }}">
+                            Seja Nosso Profissional
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="nav-link btn-login-nav border border-white rounded-pill px-4"
+                            href="{{ url_for('login') }}">
+                            Login / Cadastro
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
@@ -315,14 +371,18 @@
                         Encontre profissionais<br>
                         <span class="text-destaque">confiáveis</span> perto de você!
                     </h1>
-                    
-                    <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.15rem; font-weight: 300; margin-top: -15px; margin-bottom: 30px; max-width: 600px; line-height: 1.6;">
-                        O ProFinder liga você a prestadores de serviços avaliados pela comunidade. De pequenos reparos a grandes obras, a solução certa a um clique de distância.
+
+                    <p
+                        style="color: rgba(255, 255, 255, 0.85); font-size: 1.15rem; font-weight: 300; margin-top: -15px; margin-bottom: 30px; max-width: 600px; line-height: 1.6;">
+                        O ProFinder liga você a prestadores de serviços avaliados pela comunidade. De pequenos reparos a
+                        grandes obras, a solução certa a um clique de distância.
                     </p>
-                    
+
                     <div class="input-group search-box">
-                        <input type="text" class="form-control search-input" id="inputPesquisa" placeholder="Ex: Eletricista, Pintor, Encanador..." autocomplete="off" onkeyup="filtrarServicos()" onfocus="filtrarServicos()">
-                        
+                        <input type="text" class="form-control search-input" id="inputPesquisa"
+                            placeholder="Ex: Eletricista, Pintor, Encanador..." autocomplete="off"
+                            onkeyup="filtrarServicos()" onfocus="filtrarServicos()">
+
                         <ul id="listaServicosCustom" class="custom-dropdown">
                             <!-- Os itens serão injetados aqui via JavaScript -->
                         </ul>
@@ -339,24 +399,26 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="modalTitulo" style="color: var(--cor-primaria);">Ação Requerida</h5>
+                    <h5 class="modal-title fw-bold" id="modalTitulo" style="color: var(--cor-primaria);">Ação Requerida
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pb-4" id="modalMensagem">
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <a href="{{ url_for('login') }}" class="btn btn-search" id="btnAcaoModal" style="padding: 6px 20px;">Continuar</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-search" id="btnAcaoModal"
+                        style="padding: 6px 20px;">Continuar</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         const servicosDisponiveis = [
-            'Eletricista', 'Pintor', 'Pedreiro', 
+            'Eletricista', 'Pintor', 'Pedreiro',
             'Encanador', 'Montador de Móveis', 'Diarista',
             'Jardineiro', 'Carpinteiro', 'Mecânico', 'Técnico de Informática'
         ];
@@ -365,26 +427,26 @@
             const input = document.getElementById('inputPesquisa');
             const filtro = input.value.toLowerCase();
             const dropdown = document.getElementById('listaServicosCustom');
-            
+
             dropdown.innerHTML = '';
-            
-            const filtrados = servicosDisponiveis.filter(servico => 
+
+            const filtrados = servicosDisponiveis.filter(servico =>
                 servico.toLowerCase().includes(filtro)
             );
 
             if (filtrados.length > 0) {
                 dropdown.style.display = 'block';
-                
+
                 filtrados.forEach(servico => {
                     const li = document.createElement('li');
                     li.innerText = servico;
-                    
+
                     // Ao clicar no item, apenas preenche o input. O utilizador terá de clicar em Procurar.
-                    li.onclick = function() {
-                        input.value = servico; 
-                        dropdown.style.display = 'none'; 
+                    li.onclick = function () {
+                        input.value = servico;
+                        dropdown.style.display = 'none';
                     };
-                    
+
                     dropdown.appendChild(li);
                 });
             } else {
@@ -393,10 +455,10 @@
         }
 
         // Esconde o dropdown se clicar fora
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const searchBox = document.querySelector('.search-box');
             const dropdown = document.getElementById('listaServicosCustom');
-            
+
             if (!searchBox.contains(event.target)) {
                 dropdown.style.display = 'none';
             }
@@ -412,14 +474,14 @@
 
         // Aqui o Python (Jinja2) diz ao JavaScript se a pessoa está logada de verdade
         // Envolvendo o código Jinja em aspas para evitar erros de sintaxe no JavaScript ao pré-visualizar
-        const usuarioEstaLogado = "{{ 'true' if current_user.is_authenticated else 'false' }}" === "true"; 
+        const usuarioEstaLogado = "{{ 'true' if current_user.is_authenticated else 'false' }}" === "true";
 
         // Busca Direta
         function realizarBusca(termoDireto = null) {
             const inputEl = document.getElementById('inputPesquisa');
             // Pega o termo que foi clicado ou o que está digitado na caixa
             const servicoBuscado = termoDireto || inputEl.value.trim();
-            
+
             const dropdown = document.getElementById('listaServicosCustom');
             dropdown.style.display = 'none';
 
@@ -431,7 +493,7 @@
                     // Se digitou algo, procura no array para formatar as maiúsculas "pedreiro" -> "Pedreiro")
                     let categoriaExata = servicoBuscado;
                     const servicoFormatado = servicosDisponiveis.find(s => s.toLowerCase() === servicoBuscado.toLowerCase());
-                    
+
                     if (servicoFormatado) {
                         categoriaExata = servicoFormatado;
                     }
@@ -439,7 +501,7 @@
                     // Flask para gerar a URL base e substituir no JavaScript
                     let urlDestino = "{{ url_for('busca_profissionais', categoria='CAT_PLACEHOLDER') }}";
                     urlDestino = urlDestino.replace('CAT_PLACEHOLDER', encodeURIComponent(categoriaExata));
-                    
+
                     // Vai direto para a lista de profissionais daquela profissão
                     window.location.href = urlDestino;
                 }
@@ -449,15 +511,16 @@
                 const modalMensagem = document.getElementById('modalMensagem');
                 const btnAcao = document.getElementById('btnAcaoModal');
                 const meuModal = new bootstrap.Modal(document.getElementById('modalAviso'));
-                
+
                 modalTitulo.innerText = "Acesso Necessário";
                 modalMensagem.innerHTML = `Pesquisou por <strong>"${servicoBuscado}"</strong>.<br><br>Para visualizar as avaliações e contactar os profissionais, precisa de fazer login ou criar a sua conta gratuitamente.`;
                 btnAcao.innerText = "Fazer Login/Cadastro";
                 btnAcao.style.display = 'block';
-                
+
                 meuModal.show();
             }
         }
     </script>
 </body>
+
 </html>

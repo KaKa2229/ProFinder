@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Perfil do Profissional</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --cor-primaria: #298e94;
@@ -47,7 +49,8 @@
             transition: color 0.3s ease;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             color: white !important;
         }
 
@@ -62,16 +65,19 @@
             transition: width 0.3s ease;
         }
 
-        .nav-link:hover::after, .nav-link.active::after {
+        .nav-link:hover::after,
+        .nav-link.active::after {
             width: 100%;
         }
 
         .btn-login-nav {
             transition: all 0.3s ease !important;
         }
+
         .btn-login-nav::after {
             display: none !important;
         }
+
         .btn-login-nav:hover {
             background-color: white !important;
             color: var(--cor-primaria) !important;
@@ -80,7 +86,7 @@
         .main-container {
             flex: 1;
             padding: 40px 20px;
-            max-width: 1200px; 
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
         }
@@ -120,7 +126,7 @@
         .card-perfil {
             background: white;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(41, 142, 148, 0.1);
             overflow: hidden;
             padding: 50px;
@@ -159,7 +165,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
         }
 
         .titulo-descricao {
@@ -183,7 +189,7 @@
         .card-trabalho {
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -193,7 +199,7 @@
         }
 
         .img-portfolio {
-            cursor: zoom-in; 
+            cursor: zoom-in;
             transition: opacity 0.3s ease;
         }
 
@@ -206,9 +212,9 @@
             max-height: 80vh;
             object-fit: contain;
         }
-        
+
         .modal-backdrop.show {
-            opacity: 0.85; 
+            opacity: 0.85;
         }
 
         .bloco-avaliacoes {
@@ -236,9 +242,9 @@
 
         .botoes-acao {
             display: flex;
-            flex-wrap: wrap;       
-            align-items: center;   
-            gap: 12px;             
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
             margin-top: 1.5rem;
         }
 
@@ -256,7 +262,8 @@
             transition: all 0.3s;
             border: none;
             box-shadow: 0 5px 15px rgba(41, 142, 148, 0.3);
-            margin: 0 !important; /* Remove qualquer margem para o gap funcionar */
+            margin: 0 !important;
+            /* Remove qualquer margem para o gap funcionar */
         }
 
         .btn-mensagem:hover:not(:disabled) {
@@ -278,7 +285,7 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
-            margin: 0 !important; 
+            margin: 0 !important;
         }
 
         .btn-avaliacoes:hover {
@@ -299,22 +306,36 @@
                 border: 1px solid rgba(255, 255, 255, 0.15);
                 border-radius: 16px;
                 padding: 15px 20px 25px 20px;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
                 z-index: 1050;
             }
-            .navbar-nav { gap: 5px; }
-            .nav-item { width: 100%; text-align: left; }
+
+            .navbar-nav {
+                gap: 5px;
+            }
+
+            .nav-item {
+                width: 100%;
+                text-align: left;
+            }
+
             .nav-link {
                 margin-left: 0;
                 font-size: 1.05rem;
                 padding: 12px 15px !important;
                 border-radius: 8px;
             }
-            .nav-link:hover, .nav-link:active {
+
+            .nav-link:hover,
+            .nav-link:active {
                 background-color: rgba(255, 255, 255, 0.1);
                 padding-left: 20px !important;
             }
-            .nav-link::after { display: none; }
+
+            .nav-link::after {
+                display: none;
+            }
+
             .btn-login-nav {
                 background-color: white !important;
                 color: var(--cor-primaria) !important;
@@ -322,44 +343,58 @@
                 padding: 15px !important;
                 margin-top: 15px;
                 font-weight: 700;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
                 border-radius: 30px !important;
                 display: block;
                 width: 100%;
                 text-align: center;
             }
-            .card-perfil { padding: 30px 20px; }
+
+            .card-perfil {
+                padding: 30px 20px;
+            }
         }
 
         @media (max-width: 768px) {
-            .navbar-brand img { margin-left: 0 !important; height: 70px !important; }
+            .navbar-brand img {
+                margin-left: 0 !important;
+                height: 70px !important;
+            }
+
             .foto-perfil-container {
                 width: 160px;
                 height: 160px;
                 margin-bottom: 20px;
             }
+
             .nome-profissional {
                 font-size: 1.8rem;
                 text-align: center;
             }
+
             .info-basica {
                 justify-content: center;
                 text-align: center;
             }
+
             .bloco-avaliacoes {
                 justify-content: center;
             }
+
             .botoes-acao {
-                flex-direction: column; 
+                flex-direction: column;
                 align-items: stretch;
             }
-            .btn-mensagem, .btn-avaliacoes {
+
+            .btn-mensagem,
+            .btn-avaliacoes {
                 width: 100%;
                 justify-content: center;
             }
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-profinder sticky-top">
@@ -367,26 +402,45 @@
             <a class="navbar-brand" href="{{ url_for('index') }}" title="Sair / Voltar ao Início">
                 <img src="{{ url_for('static', filename='img/logo-nome.png') }}" alt="Logo ProFinder">
             </a>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/></svg>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" />
+                </svg>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('busca_servicos') }}">Buscar</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre Nós</a></li>
-                    
+
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
-                            <a href="{{ url_for('meu_perfil') }}" class="nav-link" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
-                        </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
+                        <a href="{{ url_for('meu_perfil') }}" class="nav-link"
+                            style="text-transform: none; font-size: 0.95rem;" title="Acessar Meu Perfil">
+                            Olá, <strong>{{ current_user.nome.split()[0] }}</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item d-lg-none mt-2">
+                        <a class="nav-link" href="{{ url_for('meu_perfil') }}">Meu Perfil</a>
+                    </li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="nav-link btn-login-nav border border-white rounded-pill px-4"
+                            href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
+                    </li>
                     {% else %}
-                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                            <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('login') }}">Login / Cadastro</a>
-                        </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="nav-link" href="{{ url_for('cadastro_profissional') }}">
+                            Seja NossoProfissional
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="nav-link btn-login-nav border border-white rounded-pill px-4"
+                            href="{{ url_for('login') }}">
+                            Login / Cadastro
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
@@ -394,7 +448,7 @@
     </nav>
 
     <main class="container main-container">
-        
+
         <div class="cabecalho-perfil">
             <h2 class="titulo-secao"><i class="bi bi-person-badge me-2"></i> Perfil do Profissional</h2>
             <a href="javascript:history.back()" class="btn-voltar">
@@ -403,69 +457,75 @@
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show mb-4" role="alert" style="border-radius: 10px; font-weight: 500;">
-                        <i class="bi {{ 'bi-check-circle-fill' if category == 'success' else 'bi-exclamation-circle-fill' }} me-2"></i>
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show mb-4"
+            role="alert" style="border-radius: 10px; font-weight: 500;">
+            <i
+                class="bi {{ 'bi-check-circle-fill' if category == 'success' else 'bi-exclamation-circle-fill' }} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
 
         <div class="card-perfil">
             <div class="row">
-                
+
                 <div class="col-md-4 text-center mb-4 mb-md-0">
                     <div class="foto-perfil-container">
                         <img src="{{ profissional.foto }}" alt="Foto de {{ profissional.nome }}">
                     </div>
                 </div>
-                
+
                 <div class="col-md-8">
                     <h1 class="nome-profissional">{{ profissional.nome }}</h1>
-                    
+
                     <div class="info-basica">
                         <span>{{ profissional.profissao }}</span>
                         <i class="bi bi-dot text-muted"></i>
-                        <span><i class="bi bi-geo-alt-fill text-danger"></i> 
+                        <span><i class="bi bi-geo-alt-fill text-danger"></i>
                             {% if profissional.regiao == 'todas' %}
-                                {{ profissional.cidade }} (Toda a região)
+                            {{ profissional.cidade }} (Toda a região)
                             {% else %}
-                                {{ profissional.cidade }} - {{ profissional.regiao.replace('_', ' ').title() }}
+                            {{ profissional.cidade }} - {{ profissional.regiao.replace('_', ' ').title() }}
                             {% endif %}
                         </span>
-                        
+
                         {% if profissional.telefone %}
-                            <i class="bi bi-dot text-muted"></i>
-                            <span><i class="bi bi-telephone-fill" style="color: var(--cor-primaria);"></i> {{ profissional.telefone }}</span>
+                        <i class="bi bi-dot text-muted"></i>
+                        <span><i class="bi bi-telephone-fill" style="color: var(--cor-primaria);"></i> {{
+                            profissional.telefone }}</span>
                         {% endif %}
                     </div>
 
                     {% if profissional.endereco_fixo %}
                     <div class="endereco-fixo mb-4">
-                        <span style="color: var(--cor-texto-escuro); font-size: 0.95rem; background-color: #f0f8f8; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid rgba(41, 142, 148, 0.2);">
-                            <i class="bi bi-shop" style="color: var(--cor-primaria);"></i> <strong>Endereço de Atendimento:</strong> {{ profissional.endereco_fixo }}
+                        <span
+                            style="color: var(--cor-texto-escuro); font-size: 0.95rem; background-color: #f0f8f8; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid rgba(41, 142, 148, 0.2);">
+                            <i class="bi bi-shop" style="color: var(--cor-primaria);"></i> <strong>Endereço de
+                                Atendimento:</strong> {{ profissional.endereco_fixo }}
                         </span>
                     </div>
                     {% endif %}
 
                     <h3 class="titulo-descricao">Descrição</h3>
                     <p class="texto-descricao">
-                        {{ profissional.descricao | default("Profissional qualificado e altamente recomendado pela comunidade ProFinder. Especialista na sua área de atuação, sempre com foco em entregar o melhor resultado para os clientes.", true) }}
+                        {{ profissional.descricao | default("Profissional qualificado e altamente recomendado pela
+                        comunidade ProFinder. Especialista na sua área de atuação, sempre com foco em entregar o melhor
+                        resultado para os clientes.", true) }}
                     </p>
 
                     <!-- Avaliações -->
                     <div class="bloco-avaliacoes">
                         <div class="estrelas">
                             {% for i in range(5) %}
-                                {% if i < profissional.avaliacao|int %}
-                                    <i class="bi bi-star-fill"></i>
+                            {% if i < profissional.avaliacao|int %} <i class="bi bi-star-fill"></i>
                                 {% else %}
-                                    <i class="bi bi-star-fill estrela-vazia"></i>
+                                <i class="bi bi-star-fill estrela-vazia"></i>
                                 {% endif %}
-                            {% endfor %}
+                                {% endfor %}
                         </div>
                         <span class="numero-avaliacoes">
                             {{ avaliacoes|length }} avaliações
@@ -473,29 +533,37 @@
                     </div>
 
                     <div class="botoes-acao mb-3">
-                        
+
                         {% if current_user.is_authenticated and current_user.tipo_conta == 'cliente' %}
-                            <button type="button" class="btn-mensagem" data-bs-toggle="modal" data-bs-target="#modalSolicitacao">
-                                <i class="bi bi-tools me-1"></i> Solicitar Serviço
-                            </button>
+                        <button type="button" class="btn-mensagem" data-bs-toggle="modal"
+                            data-bs-target="#modalSolicitacao">
+                            <i class="bi bi-tools me-1"></i> Solicitar Serviço
+                        </button>
                         {% elif not current_user.is_authenticated %}
-                            <button type="button" class="btn-mensagem" data-bs-toggle="modal" data-bs-target="#modalAvisoLogin">
-                                <i class="bi bi-tools me-1"></i> Solicitar Serviço
-                            </button>
+                        <button type="button" class="btn-mensagem" data-bs-toggle="modal"
+                            data-bs-target="#modalAvisoLogin">
+                            <i class="bi bi-tools me-1"></i> Solicitar Serviço
+                        </button>
                         {% else %}
-                            <button type="button" class="btn-mensagem" onclick="alert('Apenas clientes podem solicitar serviços. Por favor, inicie sessão com uma conta de cliente.')" style="opacity: 0.7;">
-                                <i class="bi bi-tools me-1"></i> Solicitar Serviço
-                            </button>
+                        <button type="button" class="btn-mensagem"
+                            onclick="alert('Apenas clientes podem solicitar serviços. Por favor, inicie sessão com uma conta de cliente.')"
+                            style="opacity: 0.7;">
+                            <i class="bi bi-tools me-1"></i> Solicitar Serviço
+                        </button>
                         {% endif %}
 
                         {% if profissional.telefone %}
-                            <a href="https://wa.me/55{{ profissional.telefone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') }}" target="_blank" class="btn-mensagem" style="background-color: #25D366; border: none; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);">
-                                <i class="bi bi-whatsapp"></i> WhatsApp
-                            </a>
+                        <a href="https://wa.me/55{{ profissional.telefone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') }}"
+                            target="_blank" class="btn-mensagem"
+                            style="background-color: #25D366; border: none; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);">
+                            <i class="bi bi-whatsapp"></i> WhatsApp
+                        </a>
                         {% else %}
-                            <button type="button" class="btn-mensagem" data-bs-toggle="modal" data-bs-target="#modalSemTelefone" style="background-color: #95a5a6; border: none; box-shadow: none;">
-                                <i class="bi bi-telephone-x"></i> Sem Telefone
-                            </button>
+                        <button type="button" class="btn-mensagem" data-bs-toggle="modal"
+                            data-bs-target="#modalSemTelefone"
+                            style="background-color: #95a5a6; border: none; box-shadow: none;">
+                            <i class="bi bi-telephone-x"></i> Sem Telefone
+                        </button>
                         {% endif %}
 
                         <a href="#secaoAvaliacoes" class="btn-avaliacoes">
@@ -510,22 +578,27 @@
             {% if portfolio %}
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
             <h3 class="titulo-descricao mb-4"><i class="bi bi-images me-2"></i> Portfólio de Trabalhos</h3>
-            
+
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
                 {% for trabalho in portfolio %}
                 <div class="col">
                     <div class="card h-100 card-trabalho shadow-sm">
-                        <img src="{{ trabalho.imagem_url }}" class="card-img-top img-portfolio" alt="{{ trabalho.titulo }}" style="height: 260px; object-fit: cover;" onclick="ampliarImagem('{{ trabalho.imagem_url }}', '{{ trabalho.titulo }}')">
+                        <img src="{{ trabalho.imagem_url }}" class="card-img-top img-portfolio"
+                            alt="{{ trabalho.titulo }}" style="height: 260px; object-fit: cover;"
+                            onclick="ampliarImagem('{{ trabalho.imagem_url }}', '{{ trabalho.titulo }}')">
                         <div class="card-body p-3 text-center bg-light">
-                            <h6 class="card-title mb-1" style="color: var(--cor-primaria); font-weight: 700; font-size: 1.1rem;">{{ trabalho.titulo }}</h6>
-                            <small class="text-muted" style="font-size: 0.95rem;"><i class="bi bi-calendar3"></i> {{ trabalho.data_conclusao }}</small>
+                            <h6 class="card-title mb-1"
+                                style="color: var(--cor-primaria); font-weight: 700; font-size: 1.1rem;">{{
+                                trabalho.titulo }}</h6>
+                            <small class="text-muted" style="font-size: 0.95rem;"><i class="bi bi-calendar3"></i> {{
+                                trabalho.data_conclusao }}</small>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
-            
+
             <!-- SEÇÃO DE AVALIAÇÕES DOS CLIENTES  -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);" id="secaoAvaliacoes">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
@@ -536,43 +609,51 @@
             </div>
 
             {% if avaliacoes %}
-                <div class="row row-cols-1 g-4 mb-2">
-                    {% for av in avaliacoes %}
-                    <div class="col">
-                        <div class="card border-0 shadow-sm" style="border-radius: 12px; background-color: #f8fcfc; border-left: 4px solid var(--cor-primaria) !important;">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <img src="{{ av.cliente.foto }}" alt="Avatar Cliente" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                        <div>
-                                            <h6 class="fw-bold mb-0" style="color: var(--cor-texto-escuro);">{{ av.cliente.nome }}</h6>
-                                            <small class="text-muted"><i class="bi bi-calendar3"></i> {{ av.data_avaliacao.strftime('%d/%m/%Y') }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="estrelas mb-0" style="font-size: 1.1rem; letter-spacing: 1px;">
-                                        {% for i in range(5) %}
-                                            <i class="bi bi-star-fill {{ 'estrela-vazia' if i >= av.nota else '' }}"></i>
-                                        {% endfor %}
+            <div class="row row-cols-1 g-4 mb-2">
+                {% for av in avaliacoes %}
+                <div class="col">
+                    <div class="card border-0 shadow-sm"
+                        style="border-radius: 12px; background-color: #f8fcfc; border-left: 4px solid var(--cor-primaria) !important;">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="{{ av.cliente.foto }}" alt="Avatar Cliente" class="rounded-circle"
+                                        style="width: 48px; height: 48px; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    <div>
+                                        <h6 class="fw-bold mb-0" style="color: var(--cor-texto-escuro);">{{
+                                            av.cliente.nome }}</h6>
+                                        <small class="text-muted"><i class="bi bi-calendar3"></i> {{
+                                            av.data_avaliacao.strftime('%d/%m/%Y') }}</small>
                                     </div>
                                 </div>
-                                {% if av.comentario %}
-                                    <div class="p-3 bg-white rounded" style="border: 1px solid rgba(0,0,0,0.05);">
-                                        <p class="mb-0 text-dark" style="font-size: 0.95rem; line-height: 1.6; font-style: italic;">"{{ av.comentario }}"</p>
-                                    </div>
-                                {% else %}
-                                    <p class="text-muted small mb-0 font-italic">O cliente não deixou nenhum comentário escrito.</p>
-                                {% endif %}
+                                <div class="estrelas mb-0" style="font-size: 1.1rem; letter-spacing: 1px;">
+                                    {% for i in range(5) %}
+                                    <i class="bi bi-star-fill {{ 'estrela-vazia' if i >= av.nota else '' }}"></i>
+                                    {% endfor %}
+                                </div>
                             </div>
+                            {% if av.comentario %}
+                            <div class="p-3 bg-white rounded" style="border: 1px solid rgba(0,0,0,0.05);">
+                                <p class="mb-0 text-dark"
+                                    style="font-size: 0.95rem; line-height: 1.6; font-style: italic;">"{{ av.comentario
+                                    }}"</p>
+                            </div>
+                            {% else %}
+                            <p class="text-muted small mb-0 font-italic">O cliente não deixou nenhum comentário escrito.
+                            </p>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <div class="text-center p-5 bg-light rounded-3" style="border: 2px dashed #cbd5e1;">
-                    <i class="bi bi-star text-muted" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3 text-muted">Ainda não existem avaliações</h5>
-                    <p class="text-muted mb-0">Este profissional é novo por aqui ou ainda não recebeu nenhum comentário dos clientes.</p>
-                </div>
+            <div class="text-center p-5 bg-light rounded-3" style="border: 2px dashed #cbd5e1;">
+                <i class="bi bi-star text-muted" style="font-size: 3rem;"></i>
+                <h5 class="mt-3 text-muted">Ainda não existem avaliações</h5>
+                <p class="text-muted mb-0">Este profissional é novo por aqui ou ainda não recebeu nenhum comentário dos
+                    clientes.</p>
+            </div>
             {% endif %}
 
         </div>
@@ -584,17 +665,24 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" style="color: var(--cor-primaria); font-size: 1.3rem;">Solicitar Serviço a {{ profissional.nome.split()[0] }}</h5>
+                    <h5 class="modal-title fw-bold" style="color: var(--cor-primaria); font-size: 1.3rem;">Solicitar
+                        Serviço a {{ profissional.nome.split()[0] }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ url_for('solicitar_servico', id=profissional.id) }}" method="POST">
                     <div class="modal-body pb-4">
-                        <p class="text-muted mb-3" style="font-size: 0.95rem;">Descreva com o máximo de detalhes o serviço que você precisa. O profissional receberá a sua solicitação e entrará em contacto.</p>
-                        <textarea class="form-control" name="descricao" rows="5" placeholder="Ex: Preciso de pintar as paredes de dois quartos..." required style="border-radius: 8px; border: 1px solid rgba(41, 142, 148, 0.4); box-shadow: none;"></textarea>
+                        <p class="text-muted mb-3" style="font-size: 0.95rem;">Descreva com o máximo de detalhes o
+                            serviço que você precisa. O profissional receberá a sua solicitação e entrará em contacto.
+                        </p>
+                        <textarea class="form-control" name="descricao" rows="5"
+                            placeholder="Ex: Preciso de pintar as paredes de dois quartos..." required
+                            style="border-radius: 8px; border: 1px solid rgba(41, 142, 148, 0.4); box-shadow: none;"></textarea>
                     </div>
                     <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-mensagem" style="margin: 0; padding: 8px 25px;">Enviar Solicitação <i class="bi bi-send ms-1"></i></button>
+                        <button type="button" class="btn btn-secondary rounded-pill"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-mensagem" style="margin: 0; padding: 8px 25px;">Enviar
+                            Solicitação <i class="bi bi-send ms-1"></i></button>
                     </div>
                 </form>
             </div>
@@ -610,11 +698,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pb-4">
-                    Para enviar uma solicitação de serviço aos nossos profissionais, você precisa de fazer login ou registar-se gratuitamente como cliente na plataforma.
+                    Para enviar uma solicitação de serviço aos nossos profissionais, você precisa de fazer login ou
+                    registar-se gratuitamente como cliente na plataforma.
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
-                    <a href="{{ url_for('login') }}" class="btn btn-mensagem m-0" style="padding: 8px 25px;">Ir para o Login</a>
+                    <button type="button" class="btn btn-secondary rounded-pill"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <a href="{{ url_for('login') }}" class="btn btn-mensagem m-0" style="padding: 8px 25px;">Ir para o
+                        Login</a>
                 </div>
             </div>
         </div>
@@ -629,7 +720,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pb-4">
-                    Este profissional ainda não adicionou um número de contato ao seu perfil. Tente contatá-lo solicitando um serviço para que ele veja a sua mensagem.
+                    Este profissional ainda não adicionou um número de contato ao seu perfil. Tente contatá-lo
+                    solicitando um serviço para que ele veja a sua mensagem.
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Fechar</button>
@@ -643,11 +735,14 @@
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content bg-transparent border-0">
                 <div class="modal-header border-0 pb-0 justify-content-end">
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity: 1; text-shadow: 0px 0px 10px rgba(0,0,0,0.5);"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+                        style="opacity: 1; text-shadow: 0px 0px 10px rgba(0,0,0,0.5);"></button>
                 </div>
                 <div class="modal-body text-center p-0">
-                    <img src="" id="imagemAmpliada" class="modal-img-expanded rounded shadow-lg" alt="Trabalho Ampliado">
-                    <h4 id="tituloImagemAmpliada" class="text-white mt-3 fw-bold" style="text-shadow: 1px 1px 5px rgba(0,0,0,0.8);"></h4>
+                    <img src="" id="imagemAmpliada" class="modal-img-expanded rounded shadow-lg"
+                        alt="Trabalho Ampliado">
+                    <h4 id="tituloImagemAmpliada" class="text-white mt-3 fw-bold"
+                        style="text-shadow: 1px 1px 5px rgba(0,0,0,0.8);"></h4>
                 </div>
             </div>
         </div>
@@ -659,10 +754,11 @@
         function ampliarImagem(src, titulo) {
             document.getElementById('imagemAmpliada').src = src;
             document.getElementById('tituloImagemAmpliada').innerText = titulo;
-            
+
             var myModal = new bootstrap.Modal(document.getElementById('modalAmpliarImagem'));
             myModal.show();
         }
     </script>
 </body>
+
 </html>
