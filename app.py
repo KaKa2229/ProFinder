@@ -3,10 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
-import time
-from werkzeug.utils import secure_filename
 from datetime import datetime
 from dotenv import load_dotenv
+import cloudinary
+import cloudinary.uploader
 
 load_dotenv()
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
@@ -24,11 +24,17 @@ if uri and uri.startswith("postgres://"):
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configuração de pastas de Upload
-UPLOAD_PERFIL = os.path.join(app.static_folder, 'img', 'perfil')
-UPLOAD_PORTFOLIO = os.path.join(app.static_folder, 'img', 'portfolio')
-os.makedirs(UPLOAD_PERFIL, exist_ok=True)
-os.makedirs(UPLOAD_PORTFOLIO, exist_ok=True)
+# Config Cloudinary
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+)
+
+def upload_to_cloudinary(file, folder="profinder"):
+    """Faz upload de um arquivo para o Cloudinary e retorna a URL segura."""
+    result = cloudinary.uploader.upload(file, folder=folder)
+    return result["secure_url"]
 
 # Extensões
 db = SQLAlchemy(app)
@@ -249,12 +255,7 @@ def cadastro_profissional():
         if 'foto' in request.files:
             foto_file = request.files['foto']
             if foto_file and foto_file.filename != '':
-                timestamp = int(time.time())
-                nome_seguro = secure_filename(f"user_{novo_profissional.id}_{timestamp}_{foto_file.filename}")
-                caminho_salvar = os.path.join(UPLOAD_PERFIL, nome_seguro)
-                
-                foto_file.save(caminho_salvar)
-                novo_profissional.foto = f"/static/img/perfil/{nome_seguro}"
+                novo_profissional.foto = upload_to_cloudinary(foto_file, folder="profinder/perfil")
                 db.session.commit()
 
         login_user(novo_profissional)
@@ -301,11 +302,7 @@ def meu_perfil():
         if 'foto' in request.files:
             foto_file = request.files['foto']
             if foto_file and foto_file.filename != '':
-                timestamp = int(time.time())
-                nome_seguro = secure_filename(f"user_{db_user.id}_{timestamp}_{foto_file.filename}")
-                caminho_salvar = os.path.join(UPLOAD_PERFIL, nome_seguro)
-                foto_file.save(caminho_salvar)
-                db_user.foto = f"/static/img/perfil/{nome_seguro}"
+                db_user.foto = upload_to_cloudinary(foto_file, folder="profinder/perfil")
 
         db_user.nome = request.form.get('nome')
         db_user.email = request.form.get('email')
@@ -370,12 +367,7 @@ def adicionar_portfolio():
     if 'foto_trabalho' in request.files:
         foto_file = request.files['foto_trabalho']
         if foto_file and foto_file.filename != '':
-            timestamp = int(time.time())
-            nome_seguro = secure_filename(f"work_{current_user.id}_{timestamp}_{foto_file.filename}")
-            caminho_salvar = os.path.join(UPLOAD_PORTFOLIO, nome_seguro)
-            
-            foto_file.save(caminho_salvar)
-            foto_url = f"/static/img/portfolio/{nome_seguro}"
+            foto_url = upload_to_cloudinary(foto_file, folder="profinder/portfolio")
             
             novo_trabalho = Portfolio(
                 profissional_id=current_user.id,
