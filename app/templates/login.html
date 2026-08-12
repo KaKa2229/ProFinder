@@ -20,8 +20,8 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--cor-primaria);
-            height: 100vh; 
-            overflow: hidden; 
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             margin: 0;
@@ -65,7 +65,7 @@
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px;
         }
 
@@ -76,7 +76,6 @@
             width: 100%;
             max-width: 500px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            transform: translateY(-30px); 
         }
 
         .logo-area {
