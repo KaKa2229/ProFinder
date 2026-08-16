@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -78,6 +78,7 @@ class Profissional(db.Model, UserMixin):
     avaliacao = db.Column(db.Float, default=5.0) 
     foto = db.Column(db.String(255), default='https://cdn-icons-png.flaticon.com/512/3135/3135715.png')
     tipo_conta = db.Column(db.String(20), default='profissional')
+    verificado = db.Column(db.Boolean, default=False)
     
     # Relações
     trabalhos = db.relationship('Portfolio', backref='profissional', lazy=True, cascade='all, delete-orphan')
@@ -101,6 +102,9 @@ class SolicitacaoServico(db.Model):
     data_solicitacao = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(20), default='pendente')
     avaliado = db.Column(db.Boolean, default=False)
+    cep = db.Column(db.String(9), nullable=True)
+    endereco = db.Column(db.String(255), nullable=True)
+    prazo_desejado = db.Column(db.String(50), nullable=True)
     
     cliente = db.relationship('Usuario', backref='minhas_solicitacoes', lazy=True)
 
@@ -114,6 +118,15 @@ class Avaliacao(db.Model):
 
     cliente = db.relationship('Usuario', backref='avaliacoes_dadas', lazy=True)
     profissional = db.relationship('Profissional', backref='avaliacoes_recebidas', lazy=True)
+
+class Favorito(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'), nullable=False)
+    data_favoritado = db.Column(db.DateTime, default=datetime.utcnow)
+
+    cliente = db.relationship('Usuario', backref='favoritos', lazy=True)
+    profissional = db.relationship('Profissional', backref='favoritado_por', lazy=True)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -132,8 +145,38 @@ def load_user(user_id):
 
 with app.app_context():
     db.create_all()
+    # Migration: adicionar colunas novas em tabelas existentes (seguro para rodar múltiplas vezes)
+    from sqlalchemy import inspect, text
+    inspector = inspect(db.engine)
+    
+    # Colunas novas no Profissional
+    colunas_profissional = [col['name'] for col in inspector.get_columns('profissional')]
+    if 'verificado' not in colunas_profissional:
+        db.session.execute(text('ALTER TABLE profissional ADD COLUMN verificado BOOLEAN DEFAULT 0'))
+        db.session.commit()
+    
+    # Colunas novas no SolicitacaoServico
+    colunas_solicitacao = [col['name'] for col in inspector.get_columns('solicitacao_servico')]
+    if 'cep' not in colunas_solicitacao:
+        db.session.execute(text('ALTER TABLE solicitacao_servico ADD COLUMN cep VARCHAR(9)'))
+        db.session.execute(text('ALTER TABLE solicitacao_servico ADD COLUMN endereco VARCHAR(255)'))
+        db.session.execute(text("ALTER TABLE solicitacao_servico ADD COLUMN prazo_desejado VARCHAR(50)"))
+        db.session.commit()
 
-# ROTAS DE NAVEGAÇÃO BÁSICAS
+# ROTAS DE NAVEGAÇÃO BÁSICAS E PWA
+from flask import send_from_directory
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory(app.static_folder, 'manifest.json', mimetype='application/json')
+
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory(app.static_folder, 'service-worker.js', mimetype='application/javascript')
+
+@app.route('/offline')
+def offline():
+    return render_template('offline.html')
 
 @app.route('/')
 def index():
@@ -158,14 +201,20 @@ def busca_servicos():
 @app.route('/busca-profissionais/<categoria>')
 def busca_profissionais(categoria):
     profissionais_encontrados = Profissional.query.filter_by(profissao=categoria).all()
-    return render_template('busca_profissionais.html', profissionais=profissionais_encontrados, categoria=categoria)
+    ids_favoritos = []
+    if current_user.is_authenticated and current_user.tipo_conta == 'cliente':
+        ids_favoritos = [f.profissional_id for f in Favorito.query.filter_by(cliente_id=current_user.id).all()]
+    return render_template('busca_profissionais.html', profissionais=profissionais_encontrados, categoria=categoria, ids_favoritos=ids_favoritos)
 
 @app.route('/perfil/<int:id>')
 def perfil(id):
     profissional_selecionado = Profissional.query.get_or_404(id)
     trabalhos_portfolio = Portfolio.query.filter_by(profissional_id=id).all()
     avaliacoes = Avaliacao.query.filter_by(profissional_id=id).order_by(Avaliacao.data_avaliacao.desc()).all()
-    return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio, avaliacoes=avaliacoes)
+    is_favorito = False
+    if current_user.is_authenticated and current_user.tipo_conta == 'cliente':
+        is_favorito = Favorito.query.filter_by(cliente_id=current_user.id, profissional_id=id).first() is not None
+    return render_template('perfil.html', profissional=profissional_selecionado, portfolio=trabalhos_portfolio, avaliacoes=avaliacoes, is_favorito=is_favorito)
 
 # ROTAS DE AUTENTICAÇÃO E REGISTO
 
@@ -351,7 +400,10 @@ def meu_perfil():
         return render_template('meu_perfil_profissional.html', trabalhos=trabalhos_portfolio, solicitacoes=solicitacoes_recebidas)
     else:
         minhas_solicitacoes = SolicitacaoServico.query.filter_by(cliente_id=current_user.id).order_by(SolicitacaoServico.data_solicitacao.desc()).all()
-        return render_template('meu_perfil_cliente.html', solicitacoes=minhas_solicitacoes)
+        meus_favoritos = Favorito.query.filter_by(cliente_id=current_user.id).all()
+        profissionais_favoritos = [Profissional.query.get(f.profissional_id) for f in meus_favoritos]
+        profissionais_favoritos = [p for p in profissionais_favoritos if p is not None]
+        return render_template('meu_perfil_cliente.html', solicitacoes=minhas_solicitacoes, favoritos=profissionais_favoritos)
 
 # ROTAS DO PORTFÓLIO E WORKFLOWS
 
@@ -408,6 +460,9 @@ def solicitar_servico(id):
         return redirect(url_for('perfil', id=id))
         
     descricao_servico = request.form.get('descricao')
+    cep = request.form.get('cep')
+    endereco = request.form.get('endereco')
+    prazo_desejado = request.form.get('prazo_desejado')
     if not descricao_servico:
         flash("A descrição do serviço é obrigatória.", "danger")
         return redirect(url_for('perfil', id=id))
@@ -415,7 +470,10 @@ def solicitar_servico(id):
     nova_solicitacao = SolicitacaoServico(
         cliente_id=current_user.id,
         profissional_id=id,
-        descricao=descricao_servico
+        descricao=descricao_servico,
+        cep=cep,
+        endereco=endereco,
+        prazo_desejado=prazo_desejado
     )
     
     db.session.add(nova_solicitacao)
@@ -480,5 +538,69 @@ def avaliar_servico(solicitacao_id):
         
     return redirect(url_for('meu_perfil'))
 
+# ROTA: FAVORITAR/DESFAVORITAR PROFISSIONAL
+
+@app.route('/favoritar/<int:id>', methods=['POST'])
+@login_required
+def favoritar(id):
+    if current_user.tipo_conta != 'cliente':
+        return jsonify({'error': 'Apenas clientes podem favoritar'}), 403
+    
+    existente = Favorito.query.filter_by(cliente_id=current_user.id, profissional_id=id).first()
+    if existente:
+        db.session.delete(existente)
+        db.session.commit()
+        return jsonify({'status': 'removido'})
+    else:
+        novo = Favorito(cliente_id=current_user.id, profissional_id=id)
+        db.session.add(novo)
+        db.session.commit()
+        return jsonify({'status': 'adicionado'})
+
+# ROTA: EXCLUIR CONTA
+
+@app.route('/excluir-conta', methods=['POST'])
+@login_required
+def excluir_conta():
+    senha = request.form.get('senha_confirmacao')
+    
+    if not senha:
+        flash("É necessário confirmar a sua senha para excluir a conta.", "danger")
+        return redirect(url_for('meu_perfil'))
+    
+    if not bcrypt.check_password_hash(current_user.senha, senha):
+        flash("Senha incorreta. A conta não foi excluída.", "danger")
+        return redirect(url_for('meu_perfil'))
+    
+    user_to_delete = current_user
+    tipo = user_to_delete.tipo_conta
+    user_id = user_to_delete.id
+    
+    logout_user()
+    
+    if tipo == 'profissional':
+        # Deletar favoritos associados
+        Favorito.query.filter_by(profissional_id=user_id).delete()
+        # Deletar avaliações recebidas
+        Avaliacao.query.filter_by(profissional_id=user_id).delete()
+        # Portfolio e Solicitações são deletados via cascade
+        prof = Profissional.query.get(user_id)
+        if prof:
+            db.session.delete(prof)
+    else:
+        # Deletar favoritos do cliente
+        Favorito.query.filter_by(cliente_id=user_id).delete()
+        # Deletar avaliações dadas
+        Avaliacao.query.filter_by(cliente_id=user_id).delete()
+        # Deletar solicitações feitas
+        SolicitacaoServico.query.filter_by(cliente_id=user_id).delete()
+        user = Usuario.query.get(user_id)
+        if user:
+            db.session.delete(user)
+    
+    db.session.commit()
+    flash("A sua conta foi excluída permanentemente. Sentiremos a sua falta!", "info")
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

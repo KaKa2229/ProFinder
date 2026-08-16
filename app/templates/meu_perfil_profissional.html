@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Meu Perfil Profissional</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#298e94">
+
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -16,6 +19,11 @@
             --cor-texto-escuro: #2c3e50;
             --cor-fundo: #f8fcfc;
             --cor-placeholder: #a0aab5;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -176,7 +184,7 @@
             border: 1px solid var(--cor-primaria);
             border-radius: 6px;
             font-family: 'Poppins', sans-serif;
-            font-size: 0.95rem;
+            font-size: 16px;
             color: var(--cor-texto-escuro);
             outline: none;
             transition: all 0.3s;
@@ -282,6 +290,10 @@
         .status-borda-recusado { border-left: 4px solid #e74c3c !important; }
 
         @media (max-width: 991px) {
+            .navbar-brand img {
+                margin-left: 0 !important;
+                height: 70px !important;
+            }
             .navbar-collapse {
                 position: absolute;
                 top: 100%;
@@ -316,6 +328,29 @@
                 border-radius: 30px !important;
                 display: block;
                 text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-perfil {
+                padding: 25px 16px;
+            }
+            .secao-header-mobile {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 12px;
+            }
+            .solicitacao-header-mobile {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 8px;
+            }
+            .solicitacao-acoes-mobile {
+                flex-direction: column !important;
+                width: 100%;
+            }
+            .solicitacao-acoes-mobile button {
+                width: 100%;
             }
         }
     </style>
@@ -500,7 +535,7 @@
 
             
             <hr class="mt-4 mb-4" style="border-color: rgba(0,0,0,0.1);">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 secao-header-mobile">
                 <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.2rem; margin: 0;"><i class="bi bi-images me-2"></i> Meu Portfólio</h5>
                 <button type="button" class="btn btn-sm btn-outline-primary fw-bold px-3 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalAddPortfolio" style="border-color: var(--cor-primaria); color: var(--cor-primaria);">
                     <i class="bi bi-plus-circle me-1"></i> Adicionar Trabalho
@@ -534,7 +569,7 @@
 
             <!-- NOVA SECÇÃO: SOLICITAÇÕES DE CLIENTES          -->
             <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 secao-header-mobile">
                 <h5 style="color: var(--cor-primaria); font-weight: 600; font-size: 1.2rem; margin: 0;"><i class="bi bi-bell-fill me-2"></i> Solicitações Recebidas</h5>
             </div>
 
@@ -544,15 +579,26 @@
                     <div class="col">
                         <div class="card border-0 shadow-sm {% if pedido.status == 'pendente' %}status-borda-pendente{% elif pedido.status == 'aceito' %}status-borda-aceito{% else %}status-borda-recusado{% endif %}" style="border-radius: 10px; background-color: #fcfdfe;">
                             <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex justify-content-between align-items-start mb-2 solicitacao-header-mobile">
                                     <h6 class="fw-bold mb-0" style="color: var(--cor-texto-escuro);">De: {{ pedido.cliente.nome }}</h6>
                                     <span class="badge {% if pedido.status == 'pendente' %}bg-warning text-dark{% elif pedido.status == 'aceito' %}bg-success{% else %}bg-danger{% endif %} text-uppercase" style="font-size: 0.75rem;">{{ pedido.status }}</span>
                                 </div>
                                 <p class="text-muted small mb-3"><i class="bi bi-calendar3"></i> {{ pedido.data_solicitacao.strftime('%d/%m/%Y às %H:%M') }}</p>
                                 <p style="font-size: 0.95rem; color: var(--cor-texto-escuro); margin-bottom: 0;">{{ pedido.descricao }}</p>
 
+                                {% if pedido.endereco or pedido.cep or pedido.prazo_desejado %}
+                                <div class="mt-2 p-2 bg-light rounded" style="font-size: 0.85rem;">
+                                    {% if pedido.endereco %}
+                                    <span class="d-block text-muted"><i class="bi bi-geo-alt me-1"></i> {{ pedido.endereco }}{% if pedido.cep %} (CEP: {{ pedido.cep }}){% endif %}</span>
+                                    {% endif %}
+                                    {% if pedido.prazo_desejado %}
+                                    <span class="d-block text-muted"><i class="bi bi-clock me-1"></i> Prazo: {{ pedido.prazo_desejado }}</span>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+
                                 {% if pedido.status == 'pendente' %}
-                                <div class="d-flex gap-2 mt-3 pt-2">
+                                <div class="d-flex gap-2 mt-3 pt-2 solicitacao-acoes-mobile">
                                     <form action="{{ url_for('atualizar_solicitacao', id=pedido.id, acao='aceitar') }}" method="POST" class="m-0">
                                         <button type="submit" class="btn btn-sm btn-success px-3 fw-bold rounded-pill"><i class="bi bi-check-lg me-1"></i> Aceitar Pedido</button>
                                     </form>
@@ -578,6 +624,14 @@
                 {% endif %}
             </div>
 
+        <!-- BOTÃO EXCLUIR CONTA -->
+        <hr class="mt-5 mb-4" style="border-color: rgba(0,0,0,0.1);">
+        <div class="text-center mb-4">
+            <button type="button" class="btn btn-outline-danger rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalExcluirConta" style="font-size: 0.9rem; font-weight: 600;">
+                <i class="bi bi-trash3 me-1"></i> Excluir Minha Conta
+            </button>
+            <p class="text-muted mt-2" style="font-size: 0.8rem;">Esta ação é irreversível e apagará todos os seus dados.</p>
+        </div>
         </div>
     </main>
 
@@ -729,5 +783,38 @@
             }
         });
     </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('ServiceWorker registrado com sucesso: ', reg.scope))
+                    .catch(err => console.log('Falha ao registrar o ServiceWorker: ', err));
+            });
+        }
+    </script>
+    <!-- MODAL: EXCLUIR CONTA -->
+    <div class="modal fade" id="modalExcluirConta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Excluir Conta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ url_for('excluir_conta') }}" method="POST">
+                    <div class="modal-body">
+                        <p class="text-muted">Esta ação é <strong>permanente e irreversível</strong>. Todos os seus dados, portfólio, avaliações e solicitações serão apagados.</p>
+                        <label class="form-label fw-semibold">Digite a sua senha para confirmar:</label>
+                        <input type="password" class="form-control" name="senha_confirmacao" required placeholder="Sua senha atual" style="border-radius: 8px; font-size: 16px;">
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4"><i class="bi bi-trash3 me-1"></i> Excluir Permanentemente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Perfil do Profissional</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#298e94">
+
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -18,6 +21,11 @@
             --cor-texto-escuro: #2c3e50;
             --cor-texto-mutado: #6c757d;
             --cor-fundo: #f8fcfc;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -294,6 +302,10 @@
         }
 
         @media (max-width: 991px) {
+            .navbar-brand img {
+                margin-left: 0 !important;
+                height: 70px !important;
+            }
             .navbar-collapse {
                 position: absolute;
                 top: 100%;
@@ -356,15 +368,15 @@
         }
 
         @media (max-width: 768px) {
-            .navbar-brand img {
-                margin-left: 0 !important;
-                height: 70px !important;
-            }
 
             .foto-perfil-container {
                 width: 160px;
                 height: 160px;
-                margin-bottom: 20px;
+                margin: 0 auto 20px auto;
+            }
+
+            .card-perfil {
+                padding: 20px 16px;
             }
 
             .nome-profissional {
@@ -373,8 +385,14 @@
             }
 
             .info-basica {
-                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
                 text-align: center;
+            }
+
+            .info-basica .bi-dot {
+                display: none;
             }
 
             .bloco-avaliacoes {
@@ -480,7 +498,14 @@
                 </div>
 
                 <div class="col-md-8">
-                    <h1 class="nome-profissional">{{ profissional.nome }}</h1>
+                    <h1 class="nome-profissional">
+                        {{ profissional.nome }}
+                        {% if profissional.verificado %}
+                        <span style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #298e94, #25D366); color: white; font-size: 0.65rem; padding: 4px 10px; border-radius: 20px; margin-left: 8px; vertical-align: middle; font-weight: 600; letter-spacing: 0.5px;">
+                            <i class="bi bi-patch-check-fill me-1" style="font-size: 0.8rem;"></i> Verificado
+                        </span>
+                        {% endif %}
+                    </h1>
 
                     <div class="info-basica">
                         <span>{{ profissional.profissao }}</span>
@@ -503,7 +528,7 @@
                     {% if profissional.endereco_fixo %}
                     <div class="endereco-fixo mb-4">
                         <span
-                            style="color: var(--cor-texto-escuro); font-size: 0.95rem; background-color: #f0f8f8; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid rgba(41, 142, 148, 0.2);">
+                            style="color: var(--cor-texto-escuro); font-size: 0.95rem; background-color: #f0f8f8; padding: 8px 15px; border-radius: 6px; display: inline-block; border: 1px solid rgba(41, 142, 148, 0.2); word-break: break-word;">
                             <i class="bi bi-shop" style="color: var(--cor-primaria);"></i> <strong>Endereço de
                                 Atendimento:</strong> {{ profissional.endereco_fixo }}
                         </span>
@@ -553,7 +578,7 @@
                         {% endif %}
 
                         {% if profissional.telefone %}
-                        <a href="https://wa.me/55{{ profissional.telefone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') }}"
+                        <a href="https://wa.me/55{{ profissional.telefone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') }}?text={{ 'Olá! Encontrei o seu perfil no ProFinder como ' ~ profissional.profissao ~ ' e gostaria de solicitar um orçamento. Podemos conversar?' | urlencode }}"
                             target="_blank" class="btn-mensagem"
                             style="background-color: #25D366; border: none; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);">
                             <i class="bi bi-whatsapp"></i> WhatsApp
@@ -569,6 +594,14 @@
                         <a href="#secaoAvaliacoes" class="btn-avaliacoes">
                             Ver Avaliações <i class="bi bi-chevron-down"></i>
                         </a>
+
+                        {% if current_user.is_authenticated and current_user.tipo_conta == 'cliente' %}
+                        <button type="button" class="btn-mensagem btn-favoritar" id="btnFavoritar"
+                            onclick="toggleFavorito({{ profissional.id }})"
+                            style="background-color: {{ '#e74c3c' if is_favorito else '#bdc3c7' }}; border: none; min-width: auto; padding: 10px 18px;">
+                            <i class="bi {{ 'bi-heart-fill' if is_favorito else 'bi-heart' }}" id="iconeFavorito"></i>
+                        </button>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -674,9 +707,40 @@
                         <p class="text-muted mb-3" style="font-size: 0.95rem;">Descreva com o máximo de detalhes o
                             serviço que você precisa. O profissional receberá a sua solicitação e entrará em contacto.
                         </p>
-                        <textarea class="form-control" name="descricao" rows="5"
-                            placeholder="Ex: Preciso de pintar as paredes de dois quartos..." required
-                            style="border-radius: 8px; border: 1px solid rgba(41, 142, 148, 0.4); box-shadow: none;"></textarea>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" style="color: var(--cor-texto-escuro); font-size: 0.9rem;">Descrição do Serviço *</label>
+                            <textarea class="form-control" name="descricao" rows="4"
+                                placeholder="Ex: Preciso de pintar as paredes de dois quartos..." required
+                                style="border-radius: 8px; border: 1px solid rgba(41, 142, 148, 0.4); box-shadow: none; font-size: 16px;"></textarea>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-4">
+                                <label class="form-label fw-semibold" style="color: var(--cor-texto-escuro); font-size: 0.9rem;">CEP</label>
+                                <input type="text" class="form-control" name="cep" placeholder="88302-000" maxlength="9"
+                                    style="border-radius: 8px; border: 1px solid rgba(41, 142, 148, 0.4); box-shadow: none; font-size: 16px;">
+                            </div>
+                            <div class="col-8">
+                                <label class="form-label fw-semibold" style="color: var(--cor-texto-escuro); font-size: 0.9rem;">Endereço</label>
+                                <input type="text" class="form-control" name="endereco" placeholder="Rua, número, bairro..."
+                                    style="border-radius: 8px; border: 1px solid rgba(41, 142, 148, 0.4); box-shadow: none; font-size: 16px;">
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold" style="color: var(--cor-texto-escuro); font-size: 0.9rem;">Prazo Desejado</label>
+                            <select class="form-select" name="prazo_desejado"
+                                style="border-radius: 8px; border: 1px solid rgba(41, 142, 148, 0.4); box-shadow: none; font-size: 16px;">
+                                <option value="" selected>Selecione um prazo (opcional)</option>
+                                <option value="O mais rápido possível">O mais rápido possível</option>
+                                <option value="Esta semana">Esta semana</option>
+                                <option value="Próxima semana">Próxima semana</option>
+                                <option value="Este mês">Este mês</option>
+                                <option value="Sem pressa">Sem pressa</option>
+                            </select>
+                        </div>
+
                     </div>
                     <div class="modal-footer border-0 pt-0">
                         <button type="button" class="btn btn-secondary rounded-pill"
@@ -757,6 +821,32 @@
 
             var myModal = new bootstrap.Modal(document.getElementById('modalAmpliarImagem'));
             myModal.show();
+        }
+
+        function toggleFavorito(profissionalId) {
+            fetch('/favoritar/' + profissionalId, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    const btn = document.getElementById('btnFavoritar');
+                    const icon = document.getElementById('iconeFavorito');
+                    if (data.status === 'adicionado') {
+                        btn.style.backgroundColor = '#e74c3c';
+                        icon.className = 'bi bi-heart-fill';
+                    } else {
+                        btn.style.backgroundColor = '#bdc3c7';
+                        icon.className = 'bi bi-heart';
+                    }
+                });
+        }
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('ServiceWorker registrado com sucesso: ', reg.scope))
+                    .catch(err => console.log('Falha ao registrar o ServiceWorker: ', err));
+            });
         }
     </script>
 </body>

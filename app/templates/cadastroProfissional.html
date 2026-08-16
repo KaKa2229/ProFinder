@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProFinder - Cadastro Profissional</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#298e94">
+
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -15,6 +18,11 @@
             --cor-primaria-hover: #217279;
             --cor-texto-escuro: #2c3e50;
             --cor-placeholder: #a0aab5;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -155,7 +163,7 @@
             border: 1px solid var(--cor-primaria);
             border-radius: 0px;
             font-family: 'Poppins', sans-serif;
-            font-size: 0.95rem;
+            font-size: 16px;
             color: var(--cor-texto-escuro);
             outline: none;
             transition: all 0.3s;
@@ -311,7 +319,7 @@
                 padding: 15px 20px;
             }
             .logo-header img {
-                height: 80px;
+                height: 70px;
             }
             .card-cadastro {
                 padding: 35px 25px;
@@ -436,7 +444,7 @@
                             <option value="Itapema" {% if cidade == 'Itapema' %}selected{% endif %}>Itapema</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-3 mb-md-0">
                         <label class="form-label-custom mb-1">Região Principal:</label>
                         <select class="form-select-custom" name="regiao" id="regiaoSelect" required>
                             <option value="" disabled selected>Selecione a cidade</option>
@@ -589,6 +597,16 @@
                 icon.classList.remove('bi-eye-slash');
                 icon.classList.add('bi-eye');
             }
+        }
+    </script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('ServiceWorker registrado com sucesso: ', reg.scope))
+                    .catch(err => console.log('Falha ao registrar o ServiceWorker: ', err));
+            });
         }
     </script>
 </body>
