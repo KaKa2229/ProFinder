@@ -152,7 +152,7 @@ with app.app_context():
     # Colunas novas no Profissional
     colunas_profissional = [col['name'] for col in inspector.get_columns('profissional')]
     if 'verificado' not in colunas_profissional:
-        db.session.execute(text('ALTER TABLE profissional ADD COLUMN verificado BOOLEAN DEFAULT 0'))
+        db.session.execute(text('ALTER TABLE profissional ADD COLUMN verificado BOOLEAN DEFAULT FALSE'))
         db.session.commit()
     
     # Colunas novas no SolicitacaoServico
