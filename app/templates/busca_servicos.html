@@ -7,6 +7,8 @@
     <title>ProFinder - Busca de Serviços</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#298e94">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/icons/icon-192x192.png">
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,9 +19,19 @@
     <style>
         :root {
             --cor-primaria: #298e94;
-            --cor-primaria-hover: #22767c;
-            --cor-texto-escuro: #2c3e50;
-            --cor-fundo: #f8fcfc;
+            --cor-primaria-hover: #1f7278;
+            --cor-primaria-light: #e8f4f5;
+            --cor-primaria-subtle: #f0f9f9;
+            --cor-texto-escuro: #1e2d3d;
+            --cor-texto-medio: #5a6b7d;
+            --cor-fundo: #f4f8f9;
+            --cor-borda: rgba(41, 142, 148, 0.1);
+            --sombra-card: 0 2px 8px rgba(41, 142, 148, 0.06), 0 1px 3px rgba(0,0,0,0.04);
+            --sombra-card-hover: 0 16px 32px rgba(41, 142, 148, 0.14), 0 4px 12px rgba(0,0,0,0.06);
+            --sombra-search: 0 4px 16px rgba(41, 142, 148, 0.08), 0 1px 4px rgba(0,0,0,0.03);
+            --radius-card: 14px;
+            --radius-pill: 50px;
+            --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         html {
@@ -35,6 +47,7 @@
             flex-direction: column;
         }
 
+        /* ===== NAVBAR ===== */
         .navbar-profinder {
             background-color: var(--cor-primaria);
             padding: 0;
@@ -95,81 +108,179 @@
             color: var(--cor-primaria) !important;
         }
 
+        /* ===== HEADER AREA ===== */
         .main-container {
             flex: 1;
-            padding: 40px 20px;
+            padding: 48px 20px 56px;
+        }
+
+        .header-section {
+            position: relative;
+            padding: 10px 0 20px;
+            margin-bottom: 10px;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -40px;
+            width: 120px;
+            height: 120px;
+            border: 3px solid rgba(41, 142, 148, 0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-section::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(41, 142, 148, 0.06);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         .titulo-resultados {
+            color: var(--cor-texto-escuro);
+            font-weight: 800;
+            margin-bottom: 2px;
+            font-size: 2.1rem;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .titulo-resultados span {
             color: var(--cor-primaria);
-            font-weight: 700;
-            margin-bottom: 5px;
         }
 
         .subtitulo-resultados {
-            color: #6c757d;
+            color: var(--cor-texto-medio);
             font-size: 1.05rem;
-            margin-bottom: 30px;
+            margin-bottom: 0;
+            font-weight: 400;
+            line-height: 1.6;
         }
 
+        .categorias-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--cor-primaria-light);
+            color: var(--cor-primaria);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-top: 12px;
+        }
+
+        .categorias-count i {
+            font-size: 0.9rem;
+        }
+
+        /* ===== SEARCH ===== */
         .search-container {
-            max-width: 600px;
-            margin: 0 auto 40px auto;
+            max-width: 640px;
+            margin: 30px auto 50px auto;
         }
 
         .search-box {
             background: white;
-            border-radius: 8px;
-            padding: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(41, 142, 148, 0.2);
+            border-radius: var(--radius-pill);
+            padding: 6px 6px 6px 22px;
+            box-shadow: var(--sombra-search);
+            border: 2px solid transparent;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 4px rgba(41, 142, 148, 0.1), var(--sombra-search);
+        }
+
+        .search-icon {
+            color: #b0bec5;
+            font-size: 1.2rem;
+            margin-right: 4px;
+            transition: color var(--transition-base), transform var(--transition-base);
+        }
+
+        .search-box:focus-within .search-icon {
+            color: var(--cor-primaria);
+            transform: scale(1.1);
         }
 
         .search-input {
             border: none;
             box-shadow: none !important;
-            font-size: 1.05rem;
-            padding: 10px 20px;
+            font-size: 0.95rem;
+            padding: 11px 12px;
             background-color: transparent;
+            flex: 1;
+            color: var(--cor-texto-escuro);
+        }
+
+        .search-input::placeholder {
+            color: #adb5bd;
+            font-weight: 400;
         }
 
         .btn-search {
             background-color: var(--cor-primaria);
             color: white;
             font-weight: 600;
-            padding: 8px 25px;
-            border-radius: 6px;
+            padding: 11px 30px;
+            border-radius: var(--radius-pill);
             border: none;
-            transition: background-color 0.3s ease;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-size: 0.92rem;
+            letter-spacing: 0.2px;
         }
 
         .btn-search:hover {
             background-color: var(--cor-primaria-hover);
             color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(41, 142, 148, 0.3);
         }
 
+        .btn-search:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: none;
+        }
+
+        /* ===== CARDS GRID ===== */
         .card-categoria {
             background: white;
-            border-radius: 12px;
-            border: 1px solid rgba(41, 142, 148, 0.2);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--cor-borda);
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             height: 100%;
             display: flex;
             flex-direction: column;
             text-decoration: none;
             cursor: pointer;
+            box-shadow: var(--sombra-card);
+            position: relative;
         }
 
         .card-categoria:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(41, 142, 148, 0.15);
+            transform: translateY(-6px);
+            box-shadow: var(--sombra-card-hover);
             border-color: var(--cor-primaria);
         }
 
         .foto-container {
             width: 100%;
-            height: 180px;
+            height: 200px;
             overflow: hidden;
             background-color: #e9ecef;
             position: relative;
@@ -179,32 +290,192 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
         }
 
         .card-categoria:hover .foto-container img {
             transform: scale(1.08);
+            filter: brightness(0.65);
         }
 
-        .card-body-custom {
-            padding: 15px;
-            text-align: center;
-            background-color: white;
+        /* Overlay on hover */
+        .foto-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.35s ease;
             z-index: 2;
         }
 
-        .nome-categoria {
+        .foto-overlay .overlay-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: var(--cor-primaria);
-            font-weight: 700;
             font-size: 1.2rem;
+            transform: scale(0.6) rotate(-10deg);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-categoria:hover .foto-overlay {
+            opacity: 1;
+        }
+
+        .card-categoria:hover .foto-overlay .overlay-icon {
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* Category tag on image */
+        .categoria-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: var(--cor-primaria);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            z-index: 3;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .card-categoria:hover .categoria-tag {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .card-body-custom {
+            padding: 20px 16px 18px;
+            text-align: center;
+            background-color: white;
+            z-index: 2;
+            border-top: 3px solid transparent;
+            transition: border-color var(--transition-base);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-categoria:hover .card-body-custom {
+            border-top-color: var(--cor-primaria);
+        }
+
+        .nome-categoria {
+            color: var(--cor-texto-escuro);
+            font-weight: 700;
+            font-size: 1.05rem;
             margin-bottom: 0;
-            transition: color 0.3s ease;
+            transition: color var(--transition-base);
+            line-height: 1.3;
         }
 
         .card-categoria:hover .nome-categoria {
-            color: var(--cor-primaria-hover);
+            color: var(--cor-primaria);
         }
 
+        .card-desc {
+            color: var(--cor-texto-medio);
+            font-size: 0.78rem;
+            margin: 0;
+            font-weight: 400;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease 0.05s, max-height 0.3s ease;
+        }
+
+        .card-categoria:hover .card-desc {
+            opacity: 1;
+            max-height: 30px;
+        }
+
+        /* ===== STAGGERED ANIMATION ===== */
+        .card-item {
+            opacity: 0;
+            transform: translateY(24px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            padding: 70px 20px;
+        }
+
+        .empty-state-icon {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background-color: var(--cor-primaria-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            border: 2px solid rgba(41, 142, 148, 0.12);
+        }
+
+        .empty-state-icon i {
+            font-size: 2rem;
+            color: var(--cor-primaria);
+        }
+
+        .empty-state h4 {
+            color: var(--cor-texto-escuro);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+        }
+
+        .empty-state p {
+            color: var(--cor-texto-medio);
+            max-width: 340px;
+            margin: 0 auto;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* ===== "SEM RESULTADOS" ===== */
+        #mensagemSemResultados {
+            animation: fadeInUp 0.4s ease;
+        }
+
+        #mensagemSemResultados i {
+            color: #c2cdd5 !important;
+        }
+
+        #mensagemSemResultados h4 {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        #mensagemSemResultados p {
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 991px) {
             .navbar-brand img {
                 margin-left: 0 !important;
@@ -273,32 +544,66 @@
                 transform: scale(0.98);
                 padding-left: 15px !important;
             }
+
+            .header-section::before,
+            .header-section::after {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
+            .main-container {
+                padding: 28px 15px 40px;
+            }
+
+            .titulo-resultados {
+                font-size: 1.5rem;
+            }
 
             .search-box {
+                border-radius: 14px;
+                padding: 5px;
                 flex-direction: column;
-                background: transparent;
-                box-shadow: none;
-                border: none;
-                padding: 0;
-                gap: 10px;
+                gap: 8px;
+            }
+
+            .search-icon {
+                display: none;
             }
 
             .search-input {
-                border-radius: 8px !important;
+                border-radius: 10px !important;
                 width: 100% !important;
                 font-size: 0.95rem;
                 padding: 12px 15px;
-                background-color: white;
-                border: 1px solid rgba(41, 142, 148, 0.2);
+                background-color: var(--cor-primaria-subtle);
+                border: 1px solid rgba(41, 142, 148, 0.12);
             }
 
             .btn-search {
-                border-radius: 8px !important;
+                border-radius: 10px !important;
                 width: 100%;
                 padding: 12px;
+            }
+
+            .foto-container {
+                height: 165px;
+            }
+
+            .card-body-custom {
+                padding: 16px 14px 14px;
+            }
+
+            .nome-categoria {
+                font-size: 0.98rem;
+            }
+
+            .categoria-tag {
+                display: none;
+            }
+
+            .card-desc {
+                display: none;
             }
         }
     </style>
@@ -331,10 +636,18 @@
                         <a href="{{ url_for('meu_perfil') }}" class="nav-link"
                             style="text-transform: none; font-size: 0.95rem;" title="Acessar Meu Perfil">
                             Olá, <strong>{{ current_user.nome.split()[0] }}</strong>
+                            {% if notificacoes_count and notificacoes_count > 0 %}
+                            <span class="badge bg-danger rounded-pill ms-1" style="font-size: 0.7rem; padding: 0.25em 0.5em; vertical-align: super;">{{ notificacoes_count }}</span>
+                            {% endif %}
                         </a>
                     </li>
                     <li class="nav-item d-lg-none mt-2">
-                        <a class="nav-link" href="{{ url_for('meu_perfil') }}">Meu Perfil</a>
+                        <a class="nav-link" href="{{ url_for('meu_perfil') }}">
+                            Meu Perfil
+                            {% if notificacoes_count and notificacoes_count > 0 %}
+                            <span class="badge bg-danger rounded-pill ms-1">{{ notificacoes_count }}</span>
+                            {% endif %}
+                        </a>
                     </li>
                     <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
                         <a class="nav-link btn-login-nav border border-white rounded-pill px-4"
@@ -421,13 +734,20 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="gridCategorias">
 
             {% for cat in categorias %}
-            <div class="col card-item" data-singular="{{ cat.nome | lower }}">
+            <div class="col card-item" data-singular="{{ cat.nome | lower }}" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
                 <a href="{{ url_for('busca_profissionais', categoria=cat.nome) }}" class="card-categoria">
                     <div class="foto-container">
+                        <span class="categoria-tag">{{ cat.nome }}</span>
                         <img src="{{ cat.img }}" alt="{{ cat.nome }}">
+                        <div class="foto-overlay">
+                            <div class="overlay-icon">
+                                <i class="bi bi-arrow-right"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body-custom">
                         <h3 class="nome-categoria">{{ plurais.get(cat.nome, cat.nome ~ 's') }}</h3>
+                        <p class="card-desc">Ver profissionais disponíveis</p>
                     </div>
                 </a>
             </div>
@@ -485,7 +805,133 @@
         }
     </script>
 
+    <!-- PWA: Banner de Instalação -->
+    <style>
+        .pwa-install-banner {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #298e94 0%, #1d6b70 100%);
+            color: white;
+            padding: 16px 20px;
+            z-index: 99999;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            animation: pwa-slide-up 0.4s ease-out;
+            font-family: 'Poppins', sans-serif;
+        }
+        @keyframes pwa-slide-up {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .pwa-install-banner .pwa-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .pwa-install-banner .pwa-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            background: white;
+            padding: 4px;
+        }
+        .pwa-install-banner .pwa-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .pwa-install-banner .pwa-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin: 0;
+            line-height: 1.3;
+        }
+        .pwa-install-banner .pwa-desc {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 2px 0 0;
+            line-height: 1.3;
+        }
+        .pwa-install-banner .pwa-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .pwa-install-banner .pwa-btn-install {
+            background: white;
+            color: #298e94;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .pwa-install-banner .pwa-btn-install:hover {
+            background: #e0f7f7;
+            transform: scale(1.03);
+        }
+        .pwa-install-banner .pwa-btn-close {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        .pwa-install-banner .pwa-btn-close:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: white;
+        }
+        /* iOS specific instructions */
+        .pwa-ios-instructions {
+            font-size: 12px;
+            opacity: 0.95;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            line-height: 1.5;
+        }
+        .pwa-ios-instructions svg {
+            vertical-align: middle;
+            margin: 0 2px;
+        }
+    </style>
+
+    <div id="pwaInstallBanner" class="pwa-install-banner">
+        <div class="pwa-content">
+            <img src="/static/img/icons/icon-192x192.png" alt="ProFinder" class="pwa-icon">
+            <div class="pwa-text">
+                <p class="pwa-title">Instalar ProFinder</p>
+                <p class="pwa-desc" id="pwaDesc">Adicione à sua tela inicial para acesso rápido!</p>
+                <div id="pwaIosInstructions" class="pwa-ios-instructions" style="display:none;">
+                    Toque em <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z"/></svg> <strong>Compartilhar</strong> e depois em <strong>"Adicionar à Tela de Início"</strong>
+                </div>
+            </div>
+            <div class="pwa-actions">
+                <button class="pwa-btn-install" id="pwaInstallBtn" onclick="pwaInstall()">Instalar</button>
+                <button class="pwa-btn-close" id="pwaCloseBtn" onclick="pwaDismiss()" aria-label="Fechar">✕</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ===== SERVICE WORKER REGISTRATION =====
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
@@ -493,6 +939,91 @@
                     .catch(err => console.log('Falha ao registrar o ServiceWorker: ', err));
             });
         }
+
+        // ===== PWA INSTALL BANNER =====
+        let pwaInstallEvent = null;
+
+        // Detecta se já está em modo standalone (já instalado)
+        function isPwaInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+        }
+
+        // Detecta iOS (Safari)
+        function isIos() {
+            return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
+        }
+
+        // Detecta se é Safari no iOS (não Chrome/Firefox no iOS)
+        function isIosSafari() {
+            return isIos() && /safari/i.test(navigator.userAgent) && !/crios|fxios|opios/i.test(navigator.userAgent);
+        }
+
+        // Mostra o banner
+        function showPwaBanner() {
+            const banner = document.getElementById('pwaInstallBanner');
+            if (banner) banner.style.display = 'block';
+        }
+
+        // Instalar (Android/Chrome)
+        function pwaInstall() {
+            if (pwaInstallEvent) {
+                pwaInstallEvent.prompt();
+                pwaInstallEvent.userChoice.then(result => {
+                    if (result.outcome === 'accepted') {
+                        console.log('PWA instalado com sucesso!');
+                    }
+                    pwaInstallEvent = null;
+                    document.getElementById('pwaInstallBanner').style.display = 'none';
+                });
+            }
+        }
+
+        // Dispensar banner
+        function pwaDismiss() {
+            document.getElementById('pwaInstallBanner').style.display = 'none';
+            localStorage.setItem('pwa_banner_dismissed', Date.now().toString());
+        }
+
+        // Verifica se o banner foi dispensado recentemente (7 dias)
+        function wasBannerDismissed() {
+            const dismissed = localStorage.getItem('pwa_banner_dismissed');
+            if (!dismissed) return false;
+            const sevenDays = 7 * 24 * 60 * 60 * 1000;
+            return (Date.now() - parseInt(dismissed)) < sevenDays;
+        }
+
+        // Captura o evento beforeinstallprompt (Chrome/Android/Edge)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            pwaInstallEvent = e;
+            console.log('beforeinstallprompt capturado!');
+
+            if (!isPwaInstalled() && !wasBannerDismissed()) {
+                showPwaBanner();
+            }
+        });
+
+        // Para iOS: mostra banner com instruções manuais
+        window.addEventListener('load', () => {
+            if (isIos() && !isPwaInstalled() && !wasBannerDismissed()) {
+                const installBtn = document.getElementById('pwaInstallBtn');
+                const iosInstructions = document.getElementById('pwaIosInstructions');
+                const pwaDesc = document.getElementById('pwaDesc');
+
+                if (installBtn) installBtn.style.display = 'none';
+                if (iosInstructions) iosInstructions.style.display = 'block';
+                if (pwaDesc) pwaDesc.textContent = 'Instale o app no seu iPhone:';
+
+                showPwaBanner();
+            }
+        });
+
+        // Esconde o banner se o app foi instalado
+        window.addEventListener('appinstalled', () => {
+            document.getElementById('pwaInstallBanner').style.display = 'none';
+            console.log('ProFinder instalado com sucesso!');
+        });
     </script>
 </body>
 

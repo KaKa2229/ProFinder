@@ -163,6 +163,13 @@ with app.app_context():
         db.session.execute(text("ALTER TABLE solicitacao_servico ADD COLUMN prazo_desejado VARCHAR(50)"))
         db.session.commit()
 
+@app.context_processor
+def inject_notifications():
+    if current_user.is_authenticated and current_user.tipo_conta == 'profissional':
+        count = SolicitacaoServico.query.filter_by(profissional_id=current_user.id, status='pendente').count()
+        return dict(notificacoes_count=count)
+    return dict(notificacoes_count=0)
+
 # ROTAS DE NAVEGAÇÃO BÁSICAS E PWA
 from flask import send_from_directory
 
@@ -173,6 +180,10 @@ def manifest():
 @app.route('/service-worker.js')
 def service_worker():
     return send_from_directory(app.static_folder, 'service-worker.js', mimetype='application/javascript')
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.static_folder, 'img', 'icons'), 'favicon.ico', mimetype='image/x-icon')
 
 @app.route('/offline')
 def offline():
@@ -532,10 +543,27 @@ def avaliar_servico(solicitacao_id):
             profissional.avaliacao = round(media, 1)
             db.session.commit()
             
-        flash("Avaliação enviada com sucesso! Obrigado pelo seu feedback.", "success")
+        flash("Serviço avaliado com sucesso!", "success")
     else:
         flash("Ação inválida. Apenas pode avaliar serviços que foram concluídos.", "danger")
         
+    return redirect(url_for('meu_perfil'))
+
+@app.route('/excluir-solicitacao/<int:id>', methods=['POST'])
+@login_required
+def excluir_solicitacao(id):
+    if current_user.tipo_conta != 'cliente':
+        flash('Acesso não autorizado.', 'danger')
+        return redirect(url_for('index'))
+        
+    solicitacao = SolicitacaoServico.query.get_or_404(id)
+    if solicitacao.cliente_id != current_user.id:
+        flash('Acesso negado. Esta solicitação não lhe pertence.', 'danger')
+        return redirect(url_for('meu_perfil'))
+        
+    db.session.delete(solicitacao)
+    db.session.commit()
+    flash('Solicitação de serviço excluída com sucesso!', 'success')
     return redirect(url_for('meu_perfil'))
 
 # ROTA: FAVORITAR/DESFAVORITAR PROFISSIONAL

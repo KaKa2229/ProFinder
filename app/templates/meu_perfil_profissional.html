@@ -6,6 +6,8 @@
     <title>ProFinder - Meu Perfil Profissional</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#298e94">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/icons/icon-192x192.png">
 
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -375,7 +377,10 @@
                     
                     {% if current_user.is_authenticated %}
                         <li class="nav-item ms-lg-3 mt-3 mt-lg-0 d-none d-lg-block">
-                            <span class="nav-link active" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong></span>
+                            <span class="nav-link active" style="text-transform: none; font-size: 0.95rem;">Olá, <strong>{{ current_user.nome.split()[0] }}</strong>
+                            {% if notificacoes_count and notificacoes_count > 0 %}
+                            <span class="badge bg-danger rounded-pill ms-1" style="font-size: 0.7rem; padding: 0.25em 0.5em; vertical-align: super;">{{ notificacoes_count }}</span>
+                            {% endif %}</span>
                         </li>
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
                             <a class="nav-link btn-login-nav border border-white rounded-pill px-4" href="{{ url_for('logout') }}" style="background-color: rgba(255,255,255,0.1);">Sair</a>
@@ -784,7 +789,133 @@
         });
     </script>
 
+    <!-- PWA: Banner de Instalação -->
+    <style>
+        .pwa-install-banner {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #298e94 0%, #1d6b70 100%);
+            color: white;
+            padding: 16px 20px;
+            z-index: 99999;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            animation: pwa-slide-up 0.4s ease-out;
+            font-family: 'Poppins', sans-serif;
+        }
+        @keyframes pwa-slide-up {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .pwa-install-banner .pwa-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .pwa-install-banner .pwa-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            background: white;
+            padding: 4px;
+        }
+        .pwa-install-banner .pwa-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .pwa-install-banner .pwa-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin: 0;
+            line-height: 1.3;
+        }
+        .pwa-install-banner .pwa-desc {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 2px 0 0;
+            line-height: 1.3;
+        }
+        .pwa-install-banner .pwa-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .pwa-install-banner .pwa-btn-install {
+            background: white;
+            color: #298e94;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .pwa-install-banner .pwa-btn-install:hover {
+            background: #e0f7f7;
+            transform: scale(1.03);
+        }
+        .pwa-install-banner .pwa-btn-close {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        .pwa-install-banner .pwa-btn-close:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: white;
+        }
+        /* iOS specific instructions */
+        .pwa-ios-instructions {
+            font-size: 12px;
+            opacity: 0.95;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            line-height: 1.5;
+        }
+        .pwa-ios-instructions svg {
+            vertical-align: middle;
+            margin: 0 2px;
+        }
+    </style>
+
+    <div id="pwaInstallBanner" class="pwa-install-banner">
+        <div class="pwa-content">
+            <img src="/static/img/icons/icon-192x192.png" alt="ProFinder" class="pwa-icon">
+            <div class="pwa-text">
+                <p class="pwa-title">Instalar ProFinder</p>
+                <p class="pwa-desc" id="pwaDesc">Adicione à sua tela inicial para acesso rápido!</p>
+                <div id="pwaIosInstructions" class="pwa-ios-instructions" style="display:none;">
+                    Toque em <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z"/></svg> <strong>Compartilhar</strong> e depois em <strong>"Adicionar à Tela de Início"</strong>
+                </div>
+            </div>
+            <div class="pwa-actions">
+                <button class="pwa-btn-install" id="pwaInstallBtn" onclick="pwaInstall()">Instalar</button>
+                <button class="pwa-btn-close" id="pwaCloseBtn" onclick="pwaDismiss()" aria-label="Fechar">✕</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ===== SERVICE WORKER REGISTRATION =====
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
@@ -792,6 +923,91 @@
                     .catch(err => console.log('Falha ao registrar o ServiceWorker: ', err));
             });
         }
+
+        // ===== PWA INSTALL BANNER =====
+        let pwaInstallEvent = null;
+
+        // Detecta se já está em modo standalone (já instalado)
+        function isPwaInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+        }
+
+        // Detecta iOS (Safari)
+        function isIos() {
+            return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
+        }
+
+        // Detecta se é Safari no iOS (não Chrome/Firefox no iOS)
+        function isIosSafari() {
+            return isIos() && /safari/i.test(navigator.userAgent) && !/crios|fxios|opios/i.test(navigator.userAgent);
+        }
+
+        // Mostra o banner
+        function showPwaBanner() {
+            const banner = document.getElementById('pwaInstallBanner');
+            if (banner) banner.style.display = 'block';
+        }
+
+        // Instalar (Android/Chrome)
+        function pwaInstall() {
+            if (pwaInstallEvent) {
+                pwaInstallEvent.prompt();
+                pwaInstallEvent.userChoice.then(result => {
+                    if (result.outcome === 'accepted') {
+                        console.log('PWA instalado com sucesso!');
+                    }
+                    pwaInstallEvent = null;
+                    document.getElementById('pwaInstallBanner').style.display = 'none';
+                });
+            }
+        }
+
+        // Dispensar banner
+        function pwaDismiss() {
+            document.getElementById('pwaInstallBanner').style.display = 'none';
+            localStorage.setItem('pwa_banner_dismissed', Date.now().toString());
+        }
+
+        // Verifica se o banner foi dispensado recentemente (7 dias)
+        function wasBannerDismissed() {
+            const dismissed = localStorage.getItem('pwa_banner_dismissed');
+            if (!dismissed) return false;
+            const sevenDays = 7 * 24 * 60 * 60 * 1000;
+            return (Date.now() - parseInt(dismissed)) < sevenDays;
+        }
+
+        // Captura o evento beforeinstallprompt (Chrome/Android/Edge)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            pwaInstallEvent = e;
+            console.log('beforeinstallprompt capturado!');
+
+            if (!isPwaInstalled() && !wasBannerDismissed()) {
+                showPwaBanner();
+            }
+        });
+
+        // Para iOS: mostra banner com instruções manuais
+        window.addEventListener('load', () => {
+            if (isIos() && !isPwaInstalled() && !wasBannerDismissed()) {
+                const installBtn = document.getElementById('pwaInstallBtn');
+                const iosInstructions = document.getElementById('pwaIosInstructions');
+                const pwaDesc = document.getElementById('pwaDesc');
+
+                if (installBtn) installBtn.style.display = 'none';
+                if (iosInstructions) iosInstructions.style.display = 'block';
+                if (pwaDesc) pwaDesc.textContent = 'Instale o app no seu iPhone:';
+
+                showPwaBanner();
+            }
+        });
+
+        // Esconde o banner se o app foi instalado
+        window.addEventListener('appinstalled', () => {
+            document.getElementById('pwaInstallBanner').style.display = 'none';
+            console.log('ProFinder instalado com sucesso!');
+        });
     </script>
     <!-- MODAL: EXCLUIR CONTA -->
     <div class="modal fade" id="modalExcluirConta" tabindex="-1" aria-hidden="true">
